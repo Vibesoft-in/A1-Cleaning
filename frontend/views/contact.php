@@ -469,20 +469,20 @@ function handleVorxusFormSubmit(e) {
 
 <!-- Vorxus Scoped Styles (Strict 4-Color Theme: Deep Green #0B2922, Fresh Green #22A06B, Soft Mint #EAF3EE, White #FFFFFF) -->
 <style>
-/* Page Wrapper - Clean White Canvas */
+/* Page Wrapper */
 .vorxus-contact-page {
-  background: #FFFFFF;
-  color: #0B2922;
+  background: #0B2922;
+  color: #FFFFFF;
   overflow-x: hidden;
 }
 
 /* ==========================================================================
-   1. HERO SECTION (Clean White / Soft Mint Gradient)
+   1. HERO SECTION (Vorxus Style - Compact & Breathable)
    ========================================================================== */
 .vorxus-hero-section {
   padding: 2.75rem 0 2.5rem;
-  background: linear-gradient(180deg, #F4F8F5 0%, #FFFFFF 100%);
-  border-bottom: 1px solid #E2ECE5;
+  background: radial-gradient(circle at 50% 15%, rgba(34, 160, 107, 0.20) 0%, rgba(11, 41, 34, 1) 75%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .vorxus-title-wrap {
   max-width: 640px;
@@ -491,7 +491,7 @@ function handleVorxusFormSubmit(e) {
 .vorxus-main-title {
   font-size: clamp(1.75rem, 2.6vw, 2.2rem);
   font-weight: 800;
-  color: #0B2922;
+  color: #FFFFFF;
   letter-spacing: -0.02em;
   margin-bottom: 0.65rem;
   display: flex;
@@ -500,22 +500,22 @@ function handleVorxusFormSubmit(e) {
   gap: 0.5rem;
 }
 .vorxus-title-pill {
-  background: #0B2922;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #0B2922;
   padding: 0.12rem 0.75rem;
   border-radius: 6px;
   display: inline-block;
-  box-shadow: 0 3px 12px rgba(11, 41, 34, 0.18);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
   line-height: 1.25;
 }
 .vorxus-lead {
   font-size: 0.88rem;
-  color: #556B63;
+  color: #A3BFB3;
   line-height: 1.5;
   margin: 0;
 }
 
-/* 3 Highlight Cards Grid - White Surface & Mint Accents */
+/* 3 Highlight Cards Grid - Compact & Breathable */
 .vorxus-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -531,27 +531,28 @@ function handleVorxusFormSubmit(e) {
   }
 }
 .vorxus-info-card {
-  background: #FFFFFF;
-  border: 1.5px solid #E2ECE5;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 14px;
   padding: 1.35rem 1.35rem 1.2rem;
   text-align: left;
   display: flex;
   flex-direction: column;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s, box-shadow 0.25s;
-  box-shadow: 0 4px 18px rgba(11, 41, 34, 0.04);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(6px);
 }
 .vorxus-info-card:hover {
   transform: translateY(-3px);
-  border-color: #22A06B;
-  box-shadow: 0 10px 28px rgba(34, 160, 107, 0.12);
+  border-color: rgba(34, 160, 107, 0.45);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
 }
 .vorxus-card-icon-wrap {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #EAF3EE;
-  border: 1.5px solid #D2E3D8;
+  background: rgba(34, 160, 107, 0.14);
+  border: 1.5px solid rgba(34, 160, 107, 0.35);
   color: #22A06B;
   display: flex;
   align-items: center;
@@ -565,14 +566,14 @@ function handleVorxusFormSubmit(e) {
 .vorxus-card-val {
   font-size: 1.08rem;
   font-weight: 800;
-  color: #0B2922;
+  color: #FFFFFF;
   margin-bottom: 0.35rem;
   letter-spacing: -0.01em;
   word-break: break-word;
 }
 .vorxus-card-desc {
   font-size: 0.78rem;
-  color: #556B63;
+  color: #8FA89C;
   line-height: 1.48;
   margin: 0 0 1rem;
   flex: 1;
@@ -581,17 +582,17 @@ function handleVorxusFormSubmit(e) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid #EEF4F0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
   padding-top: 0.75rem;
 }
 .vorxus-pill-tag {
-  background: #EAF3EE;
-  color: #0B2922;
+  background: rgba(255, 255, 255, 0.06);
+  color: #D2E4DC;
   font-size: 0.68rem;
   font-weight: 700;
   padding: 0.22rem 0.65rem;
   border-radius: 14px;
-  border: 1px solid #D2E3D8;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   letter-spacing: 0.02em;
 }
 .vorxus-action-link {
@@ -605,7 +606,7 @@ function handleVorxusFormSubmit(e) {
   transition: transform 0.2s ease, color 0.2s;
 }
 .vorxus-action-link:hover {
-  color: #198754;
+  color: #34D399;
   transform: translateX(3px);
 }
 .vorxus-action-link.text-whatsapp {
@@ -613,13 +614,14 @@ function handleVorxusFormSubmit(e) {
 }
 
 /* ==========================================================================
-   2. TRUST / CERTIFICATION RIBBON (Clean Off-White)
+   2. TRUST / CERTIFICATION RIBBON (Pure White Background & Black Text)
    ========================================================================== */
 .vorxus-trust-ribbon {
-  background: #F8FBF9;
-  border-top: 1px solid #E2ECE5;
-  border-bottom: 1px solid #E2ECE5;
-  padding: 0.85rem 0;
+  background: #FFFFFF;
+  border-top: 1px solid #E5EFE9;
+  border-bottom: 1px solid #E5EFE9;
+  padding: 0.95rem 0;
+  box-shadow: 0 2px 10px rgba(11, 41, 34, 0.04);
 }
 .vorxus-trust-items-row {
   display: flex;
@@ -631,24 +633,32 @@ function handleVorxusFormSubmit(e) {
 .vorxus-trust-item {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.76rem;
+  gap: 0.45rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: #0B2922;
+}
+.vorxus-trust-item span:not(.material-symbols-outlined) {
+  color: #0B2922;
+  font-weight: 700;
+}
+.vorxus-trust-item .material-symbols-outlined {
+  color: #22A06B !important;
+  font-size: 20px;
 }
 @media (max-width: 768px) {
   .vorxus-trust-items-row {
     justify-content: center;
-    gap: 0.65rem 1rem;
+    gap: 0.75rem 1.25rem;
   }
 }
 
 /* ==========================================================================
-   3. TWO-COLUMN SECTION: GET IN TOUCH + FORM (Clean White)
+   3. TWO-COLUMN SECTION: GET IN TOUCH + FORM (Vorxus Style - Compact)
    ========================================================================== */
 .vorxus-main-section {
   padding: 3rem 0 3.25rem;
-  background: #FFFFFF;
+  background: #0B2922;
 }
 .vorxus-2col-layout {
   display: grid;
@@ -681,13 +691,13 @@ function handleVorxusFormSubmit(e) {
 .vorxus-section-heading {
   font-size: clamp(1.45rem, 2.2vw, 1.85rem);
   font-weight: 800;
-  color: #0B2922;
+  color: #FFFFFF;
   line-height: 1.25;
   margin: 0 0 0.75rem;
 }
 .vorxus-section-lead {
   font-size: 0.84rem;
-  color: #556B63;
+  color: #8FA89C;
   line-height: 1.5;
   margin: 0 0 1.25rem;
 }
@@ -701,9 +711,9 @@ function handleVorxusFormSubmit(e) {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #EAF3EE;
-  border: 1.5px solid #D2E3D8;
-  color: #0B2922;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -716,13 +726,11 @@ function handleVorxusFormSubmit(e) {
 .vorxus-social-circle:hover {
   background: #22A06B;
   border-color: #22A06B;
-  color: #FFFFFF;
   transform: translateY(-2px);
 }
 .vorxus-social-circle.circle-whatsapp:hover {
   background: #25D366;
   border-color: #25D366;
-  color: #FFFFFF;
 }
 
 /* Map Card */
@@ -732,14 +740,14 @@ function handleVorxusFormSubmit(e) {
 .vorxus-map-title {
   font-size: 1.05rem;
   font-weight: 800;
-  color: #0B2922;
+  color: #FFFFFF;
   margin: 0 0 0.65rem;
 }
 .vorxus-map-wrapper {
   border-radius: 12px;
   overflow: hidden;
-  border: 1.5px solid #E2ECE5;
-  box-shadow: 0 4px 18px rgba(11, 41, 34, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   margin-bottom: 0.65rem;
 }
 .vorxus-map-wrapper iframe {
@@ -750,17 +758,18 @@ function handleVorxusFormSubmit(e) {
   align-items: center;
   gap: 0.35rem;
   font-size: 0.76rem;
-  color: #556B63;
+  color: #85A394;
   line-height: 1.4;
 }
 
-/* Right Column: Form Card (Clean White Surface & Mint Inputs) */
+/* Right Column: Form Card (Vorxus Style - Compact) */
 .vorxus-form-card {
-  background: #FFFFFF;
-  border: 1.5px solid #E2ECE5;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 16px;
   padding: 1.65rem 1.65rem;
-  box-shadow: 0 8px 30px rgba(11, 41, 34, 0.05);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
 }
 @media (max-width: 580px) {
   .vorxus-form-card {
@@ -773,12 +782,12 @@ function handleVorxusFormSubmit(e) {
 .vorxus-form-title {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #0B2922;
+  color: #FFFFFF;
   margin: 0 0 0.3rem;
 }
 .vorxus-form-desc {
   font-size: 0.78rem;
-  color: #556B63;
+  color: #8FA89C;
   margin: 0;
   line-height: 1.45;
 }
@@ -800,15 +809,15 @@ function handleVorxusFormSubmit(e) {
   display: block;
   font-size: 0.74rem;
   font-weight: 700;
-  color: #0B2922;
+  color: #C0D6CB;
   margin-bottom: 0.35rem;
 }
 .vorxus-input {
   width: 100%;
-  background: #F8FBF9;
-  border: 1.5px solid #D5E4DB;
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
-  color: #0B2922;
+  color: #FFFFFF;
   padding: 0.6rem 0.85rem;
   font-size: 0.84rem;
   font-family: inherit;
@@ -818,11 +827,11 @@ function handleVorxusFormSubmit(e) {
 }
 .vorxus-input:focus {
   border-color: #22A06B;
-  background: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(34, 160, 107, 0.16);
+  background: rgba(0, 0, 0, 0.38);
+  box-shadow: 0 0 0 2px rgba(34, 160, 107, 0.25);
 }
 .vorxus-input::placeholder {
-  color: #8AA195;
+  color: #5D796C;
 }
 .vorxus-select {
   appearance: none;
@@ -834,8 +843,8 @@ function handleVorxusFormSubmit(e) {
   cursor: pointer;
 }
 .vorxus-select option {
-  background: #FFFFFF;
-  color: #0B2922;
+  background: #0B2922;
+  color: #FFFFFF;
 }
 .vorxus-textarea {
   resize: vertical;
@@ -859,12 +868,12 @@ function handleVorxusFormSubmit(e) {
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 16px rgba(34, 160, 107, 0.28);
+  box-shadow: 0 4px 16px rgba(34, 160, 107, 0.3);
 }
 .vorxus-btn-submit:hover {
   background: #198754;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(34, 160, 107, 0.38);
+  box-shadow: 0 6px 20px rgba(34, 160, 107, 0.4);
 }
 .vorxus-btn-submit:active {
   transform: scale(0.98);
@@ -880,7 +889,7 @@ function handleVorxusFormSubmit(e) {
   justify-content: center;
   gap: 0.35rem;
   font-size: 0.72rem;
-  color: #556B63;
+  color: #7D9C8D;
   margin-top: 0.75rem;
   text-align: center;
 }
