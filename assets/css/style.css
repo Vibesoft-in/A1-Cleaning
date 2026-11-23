@@ -2144,7 +2144,7 @@ body.is-header-scrolled .a1-site-header-fixed-wrap .ownwash-topbar {
   background: rgba(11, 41, 34, 0.65);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 99998;
+  z-index: 100000 !important;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -2165,7 +2165,7 @@ body.is-header-scrolled .a1-site-header-fixed-wrap .ownwash-topbar {
   height: 100vh;
   height: 100dvh;
   background-color: #F6FAF7;
-  z-index: 99999;
+  z-index: 100005 !important;
   display: flex;
   flex-direction: column;
   box-shadow: -8px 0 32px rgba(11, 41, 34, 0.28);
@@ -2185,13 +2185,14 @@ body.drawer-open {
 /* Drawer Header with Gradient */
 .a1-drawer-header {
   background: linear-gradient(135deg, #0B2922 0%, #134638 100%);
-  padding: 1.5rem 1.25rem 1.35rem;
+  padding: 1.25rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   color: #FFFFFF;
   position: relative;
+  flex-shrink: 0 !important;
 }
 
 .a1-drawer-user-block {
@@ -2237,53 +2238,87 @@ body.drawer-open {
   line-height: 1.2;
 }
 
+/* Guaranteed Perfect Circular Close Button (Never Oval) */
 .a1-drawer-close-btn {
   width: 36px !important;
   height: 36px !important;
   min-width: 36px !important;
-  min-height: 36px !important;
   max-width: 36px !important;
+  min-height: 36px !important;
   max-height: 36px !important;
   aspect-ratio: 1 / 1 !important;
   border-radius: 50% !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  box-sizing: border-box !important;
-  background: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   color: var(--color-deep-green) !important;
   border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
   cursor: pointer;
-  display: inline-flex !important;
+  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18) !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
   transition: transform 0.2s ease, background 0.2s ease !important;
+  line-height: 1 !important;
 }
 
 .a1-drawer-close-btn:hover {
   background: #FFFFFF !important;
-  transform: scale(1.08) !important;
+  transform: scale(1.06);
 }
 
 .a1-drawer-close-btn .material-symbols-outlined {
   font-size: 20px !important;
-  line-height: 1 !important;
   font-weight: 700 !important;
+  line-height: 1 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-/* Drawer Scrollable Content */
+/* Drawer Smooth Scrollable Content */
 .a1-drawer-content {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 1rem 1rem 1.35rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: contain !important;
+  padding: 1rem 1rem calc(2.5rem + env(safe-area-inset-bottom, 20px)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+}
+
+.a1-drawer-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.a1-drawer-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.a1-drawer-content::-webkit-scrollbar-thumb {
+  background: rgba(11, 41, 34, 0.15);
+  border-radius: 4px;
+}
+
+.a1-drawer-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fresh-green);
+}
+
+/* Ensure no drawer child is squished/collapsed by flexbox */
+.a1-drawer-action-cards,
+.a1-drawer-nav-card,
+.a1-drawer-auth-card,
+.a1-drawer-footer-card {
+  flex-shrink: 0 !important;
 }
 
 /* 2 Quick Action Cards */
@@ -2358,14 +2393,14 @@ body.drawer-open {
   display: flex;
   align-items: center;
   gap: 0.85rem;
-  padding: 0.72rem 1rem;
+  padding: 0.85rem 1rem;
   color: var(--color-deep-green);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 700;
   border-bottom: 1px solid #F0F4F2;
   transition: background 0.18s ease, color 0.18s ease;
-  min-height: 44px;
+  min-height: 48px;
 }
 
 .a1-drawer-nav-list li:last-child .a1-drawer-nav-item {
@@ -2379,8 +2414,8 @@ body.drawer-open {
 }
 
 .a1-drawer-item-icon {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 8px;
   background: #F4F8F5;
   color: var(--color-deep-green);
@@ -2414,114 +2449,6 @@ body.drawer-open {
 .a1-drawer-nav-item:hover .a1-drawer-arrow {
   color: var(--color-fresh-green);
   transform: translateX(2px);
-}
-
-/* Dedicated Contact Us Section in Sidebar */
-.a1-drawer-contact-card {
-  background: #FFFFFF;
-  border: 1px solid rgba(34, 160, 107, 0.25);
-  border-left: 4px solid var(--color-fresh-green);
-  border-radius: 16px;
-  padding: 0.85rem 1rem;
-  box-shadow: 0 4px 16px rgba(11, 41, 34, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  position: relative;
-}
-
-.a1-drawer-contact-head {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.a1-drawer-contact-badge-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--color-soft-mint);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.a1-drawer-contact-badge-icon .material-symbols-outlined {
-  font-size: 20px;
-}
-
-.a1-drawer-contact-head-text {
-  flex: 1;
-  min-width: 0;
-}
-
-.a1-drawer-contact-tag {
-  display: inline-block;
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: var(--color-fresh-green);
-  text-transform: uppercase;
-  margin-bottom: 2px;
-}
-
-.a1-drawer-contact-title {
-  display: block;
-  font-size: 0.92rem;
-  color: var(--color-deep-green);
-  font-weight: 800;
-  line-height: 1.25;
-}
-
-.a1-drawer-contact-desc {
-  font-size: 0.72rem;
-  color: var(--color-text-muted);
-  margin: 3px 0 0;
-  line-height: 1.3;
-}
-
-.a1-drawer-contact-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-}
-
-.a1-drawer-contact-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding: 0.5rem 0.65rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-decoration: none;
-  min-height: 36px !important;
-  max-height: 36px !important;
-  box-sizing: border-box;
-  transition: all 0.2s ease;
-}
-
-.a1-drawer-contact-btn.primary {
-  background: var(--color-deep-green);
-  color: #FFFFFF;
-}
-
-.a1-drawer-contact-btn.primary:hover {
-  background: var(--color-fresh-green);
-}
-
-.a1-drawer-contact-btn.secondary {
-  background: var(--color-soft-mint);
-  color: var(--color-deep-green);
-  border: 1px solid rgba(34, 160, 107, 0.22);
-}
-
-.a1-drawer-contact-btn.secondary:hover {
-  background: var(--color-fresh-green);
-  color: #FFFFFF;
-  border-color: var(--color-fresh-green);
 }
 
 /* Auth / Sign In Card inside Drawer (Exact Match to Refixel) */
@@ -8341,7 +8268,7 @@ input, select, textarea {
   font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
 }
 
-button:not(.a1-pkg-btn-view):not(.a1-pkg-btn-add):not(.a1-quick-addon-btn):not(.a1-drawer-close-btn):not(.poster-close-btn):not(.drawer-close-btn):not(.a1-drawer-contact-btn), .btn, .a1-pkg-btn, .tab-filter-btn {
+button:not(.a1-pkg-btn-view):not(.a1-pkg-btn-add):not(.a1-quick-addon-btn):not(.a1-drawer-close-btn):not(.a1-filter-fab), .btn, .a1-pkg-btn, .tab-filter-btn {
   min-height: 44px; /* WCAG & Mobile touch-target rule */
 }
 

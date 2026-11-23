@@ -49,13 +49,13 @@ $servicesList = require __DIR__ . '/../../backend/data/services.php';
         </div>
       </a>
 
-      <a href="<?= SITE_URL ?>/contact/" class="a1-drawer-action-card <?= ($currentRoute ?? '') === 'contact' ? 'active' : '' ?>">
+      <a href="tel:<?= BUSINESS_PHONE_RAW ?>" class="a1-drawer-action-card">
         <div class="a1-drawer-action-icon bg-mint">
           <span class="material-symbols-outlined text-fresh-green">support_agent</span>
         </div>
         <div class="a1-drawer-action-info">
-          <strong>Contact Us</strong>
-          <span>Helpdesk &amp; 24/7 Desk</span>
+          <strong>Need Help?</strong>
+          <span>24/7 Helpline</span>
         </div>
       </a>
     </div>
@@ -88,17 +88,17 @@ $servicesList = require __DIR__ . '/../../backend/data/services.php';
         </li>
 
         <li>
-          <a href="<?= SITE_URL ?>/about/" class="a1-drawer-nav-item <?= ($currentRoute ?? '') === 'about' ? 'active' : '' ?>">
-            <span class="a1-drawer-item-icon"><span class="material-symbols-outlined">info</span></span>
-            <span class="a1-drawer-item-label">About Us</span>
+          <a href="<?= SITE_URL ?>/contact/" class="a1-drawer-nav-item <?= ($currentRoute ?? '') === 'contact' ? 'active' : '' ?>">
+            <span class="a1-drawer-item-icon"><span class="material-symbols-outlined">call</span></span>
+            <span class="a1-drawer-item-label">Contact Us</span>
             <span class="material-symbols-outlined a1-drawer-arrow">chevron_right</span>
           </a>
         </li>
 
         <li>
-          <a href="<?= SITE_URL ?>/contact/" class="a1-drawer-nav-item <?= ($currentRoute ?? '') === 'contact' ? 'active' : '' ?>">
-            <span class="a1-drawer-item-icon"><span class="material-symbols-outlined">call</span></span>
-            <span class="a1-drawer-item-label">Contact Us</span>
+          <a href="<?= SITE_URL ?>/about/" class="a1-drawer-nav-item <?= ($currentRoute ?? '') === 'about' ? 'active' : '' ?>">
+            <span class="a1-drawer-item-icon"><span class="material-symbols-outlined">info</span></span>
+            <span class="a1-drawer-item-label">About Us</span>
             <span class="material-symbols-outlined a1-drawer-arrow">chevron_right</span>
           </a>
         </li>
@@ -110,31 +110,15 @@ $servicesList = require __DIR__ . '/../../backend/data/services.php';
             <span class="material-symbols-outlined a1-drawer-arrow">chevron_right</span>
           </a>
         </li>
-      </ul>
-    </div>
 
-    <!-- 4. Dedicated Contact Us & Helpdesk Section Card -->
-    <div class="a1-drawer-contact-card">
-      <div class="a1-drawer-contact-head">
-        <div class="a1-drawer-contact-badge-icon">
-          <span class="material-symbols-outlined text-fresh-green">support_agent</span>
-        </div>
-        <div class="a1-drawer-contact-head-text">
-          <span class="a1-drawer-contact-tag">24/7 CUSTOMER CARE</span>
-          <strong class="a1-drawer-contact-title">Contact &amp; Help Desk</strong>
-          <p class="a1-drawer-contact-desc">Got questions or need an instant doorstep quote?</p>
-        </div>
-      </div>
-      <div class="a1-drawer-contact-actions">
-        <a href="<?= SITE_URL ?>/contact/" class="a1-drawer-contact-btn primary">
-          <span class="material-symbols-outlined" style="font-size: 16px;">contact_page</span>
-          <span>Contact Us Page</span>
-        </a>
-        <a href="tel:<?= BUSINESS_PHONE_RAW ?>" class="a1-drawer-contact-btn secondary" aria-label="Call +91 79063 66271">
-          <span class="material-symbols-outlined" style="font-size: 16px;">call</span>
-          <span>Call Desk</span>
-        </a>
-      </div>
+        <li>
+          <a href="<?= SITE_URL ?>/book-now/" class="a1-drawer-nav-item <?= ($currentRoute ?? '') === 'book-now' ? 'active' : '' ?>">
+            <span class="a1-drawer-item-icon"><span class="material-symbols-outlined">calendar_month</span></span>
+            <span class="a1-drawer-item-label">Book Now</span>
+            <span class="material-symbols-outlined a1-drawer-arrow">chevron_right</span>
+          </a>
+        </li>
+      </ul>
     </div>
 
     <!-- 4. Sign In / My Account Card (Matching Refixel App Architecture) -->
