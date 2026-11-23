@@ -82,7 +82,8 @@ require __DIR__ . '/../components/header.php';
           <span class="vorxus-title-pill">Contact</span> Us
         </h1>
         <p class="vorxus-lead">
-          Connect with A1 Cleaning's local operations desk. We deliver verified doorstep mechanized cleaning across Kashipur, Jaspur, Ramnagar, and surrounding towns.
+          <span class="desc-desktop">Connect with A1 Cleaning's local operations desk. We deliver verified doorstep mechanized cleaning across Kashipur, Jaspur, Ramnagar, and surrounding towns.</span>
+          <span class="desc-mobile">Verified doorstep cleaning across Kashipur, Jaspur &amp; Ramnagar.</span>
         </p>
       </div>
 
@@ -94,14 +95,17 @@ require __DIR__ . '/../components/header.php';
           <div class="vorxus-card-icon-wrap">
             <span class="material-symbols-outlined">call</span>
           </div>
-          <div class="vorxus-card-val"><?= BUSINESS_PHONE ?></div>
+          <div class="vorxus-card-main-info">
+            <div class="vorxus-card-val"><?= BUSINESS_PHONE ?></div>
+            <div class="vorxus-card-sub-mobile">24/7 Helpline</div>
+          </div>
           <p class="vorxus-card-desc">
             Direct operations desk for instant bookings, schedule planning, and rapid emergency dispatch.
           </p>
           <div class="vorxus-card-footer">
             <span class="vorxus-pill-tag">Phone Number</span>
             <a href="tel:<?= BUSINESS_PHONE_RAW ?>" class="vorxus-action-link">
-              <span>Call Us Now</span>
+              <span>Call Now</span>
               <span class="material-symbols-outlined icon-xs">arrow_forward</span>
             </a>
           </div>
@@ -112,14 +116,17 @@ require __DIR__ . '/../components/header.php';
           <div class="vorxus-card-icon-wrap">
             <span class="material-symbols-outlined">mark_email_read</span>
           </div>
-          <div class="vorxus-card-val"><?= BUSINESS_EMAIL ?></div>
+          <div class="vorxus-card-main-info">
+            <div class="vorxus-card-val"><?= BUSINESS_EMAIL ?></div>
+            <div class="vorxus-card-sub-mobile">Email &amp; WhatsApp</div>
+          </div>
           <p class="vorxus-card-desc">
             Send corporate inquiries, quotation requests, or chat directly with our team on WhatsApp 7 days a week.
           </p>
           <div class="vorxus-card-footer">
             <span class="vorxus-pill-tag">Email &amp; Chat</span>
             <a href="<?= BUSINESS_WHATSAPP_LINK ?>" target="_blank" rel="noopener" class="vorxus-action-link text-whatsapp">
-              <span>WhatsApp Us</span>
+              <span>WhatsApp</span>
               <span class="material-symbols-outlined icon-xs">arrow_forward</span>
             </a>
           </div>
@@ -130,14 +137,17 @@ require __DIR__ . '/../components/header.php';
           <div class="vorxus-card-icon-wrap">
             <span class="material-symbols-outlined">location_on</span>
           </div>
-          <div class="vorxus-card-val"><?= BUSINESS_CITY ?>, <?= BUSINESS_STATE ?></div>
+          <div class="vorxus-card-main-info">
+            <div class="vorxus-card-val"><?= BUSINESS_CITY ?>, <?= BUSINESS_STATE ?></div>
+            <div class="vorxus-card-sub-mobile">Kumaun Market, Ramnagar Rd</div>
+          </div>
           <p class="vorxus-card-desc">
             <?= BUSINESS_STREET ?>, <?= BUSINESS_CITY ?> - <?= BUSINESS_POSTCODE ?>. Serving 60km operational radius.
           </p>
           <div class="vorxus-card-footer">
             <span class="vorxus-pill-tag">Our Location</span>
             <a href="#vorxus-map-card" class="vorxus-action-link">
-              <span>View On Map</span>
+              <span>View Map</span>
               <span class="material-symbols-outlined icon-xs">arrow_downward</span>
             </a>
           </div>
@@ -188,26 +198,29 @@ require __DIR__ . '/../components/header.php';
         <!-- Left Column: Get In Touch, Direct Channels & Map -->
         <div class="vorxus-col-left">
           
-          <div class="vorxus-section-tag">( GET IN TOUCH )</div>
-          <h2 class="vorxus-section-heading">We Are Ready to Make Your Space Spotless</h2>
-          <p class="vorxus-section-lead">
-            Whether you need a deep home sanitization before a festival, sofa stain extraction, or corporate facility maintenance, our Kashipur mobile units are equipped and ready.
-          </p>
+          <div class="vorxus-col-left-head">
+            <div class="vorxus-section-tag">( GET IN TOUCH )</div>
+            <h2 class="vorxus-section-heading">We Are Ready to Make Your Space Spotless</h2>
+            <p class="vorxus-section-lead">
+              <span class="desc-desktop">Whether you need a deep home sanitization before a festival, sofa stain extraction, or corporate facility maintenance, our Kashipur mobile units are equipped and ready.</span>
+              <span class="desc-mobile">Doorstep deep cleaning &amp; sanitization units ready across Kashipur.</span>
+            </p>
 
-          <!-- Quick Channel Pills -->
-          <div class="vorxus-social-channels">
-            <a href="tel:<?= BUSINESS_PHONE_RAW ?>" class="vorxus-social-circle" title="Call Us Directly">
-              <span class="material-symbols-outlined">call</span>
-            </a>
-            <a href="<?= BUSINESS_WHATSAPP_LINK ?>" target="_blank" rel="noopener" class="vorxus-social-circle circle-whatsapp" title="Chat on WhatsApp">
-              <span class="material-symbols-outlined">chat</span>
-            </a>
-            <a href="mailto:<?= BUSINESS_EMAIL ?>" class="vorxus-social-circle" title="Email Us">
-              <span class="material-symbols-outlined">mail</span>
-            </a>
-            <a href="https://maps.google.com/?q=Kashipur+Uttarakhand" target="_blank" rel="noopener" class="vorxus-social-circle" title="Open in Google Maps">
-              <span class="material-symbols-outlined">map</span>
-            </a>
+            <!-- Quick Channel Pills -->
+            <div class="vorxus-social-channels">
+              <a href="tel:<?= BUSINESS_PHONE_RAW ?>" class="vorxus-social-circle" title="Call Us Directly">
+                <span class="material-symbols-outlined">call</span>
+              </a>
+              <a href="<?= BUSINESS_WHATSAPP_LINK ?>" target="_blank" rel="noopener" class="vorxus-social-circle circle-whatsapp" title="Chat on WhatsApp">
+                <span class="material-symbols-outlined">chat</span>
+              </a>
+              <a href="mailto:<?= BUSINESS_EMAIL ?>" class="vorxus-social-circle" title="Email Us">
+                <span class="material-symbols-outlined">mail</span>
+              </a>
+              <a href="https://maps.google.com/?q=Kashipur+Uttarakhand" target="_blank" rel="noopener" class="vorxus-social-circle" title="Open in Google Maps">
+                <span class="material-symbols-outlined">map</span>
+              </a>
+            </div>
           </div>
 
           <!-- Find Us Here Heading & Map Card -->
@@ -227,7 +240,7 @@ require __DIR__ . '/../components/header.php';
             </div>
             <div class="vorxus-map-meta">
               <span class="material-symbols-outlined icon-xs text-fresh-green">near_me</span>
-              <span>Serving Kashipur, Jaspur, Ramnagar, Bazpur, Kundeshwari &amp; Jim Corbett belt.</span>
+              <span>Serving Kashipur, Jaspur, Ramnagar, Bazpur &amp; Corbett belt.</span>
             </div>
           </div>
 
@@ -240,7 +253,8 @@ require __DIR__ . '/../components/header.php';
             <div class="vorxus-form-header">
               <h3 class="vorxus-form-title">Send Us a Message</h3>
               <p class="vorxus-form-desc">
-                Fill in your details below. Our customer care supervisor will respond within 15 minutes with customized pricing.
+                <span class="desc-desktop">Fill in your details below. Our customer care supervisor will respond within 15 minutes with customized pricing.</span>
+                <span class="desc-mobile">Fast response &amp; customized quote within 15 minutes.</span>
               </p>
             </div>
 
@@ -289,7 +303,7 @@ require __DIR__ . '/../components/header.php';
               <!-- Row 4: Message -->
               <div class="vorxus-form-group">
                 <label for="contact-message" class="vorxus-label">Message :</label>
-                <textarea id="contact-message" class="vorxus-input vorxus-textarea" rows="4" placeholder="Tell us about your space (e.g. 3BHK flat, 5-seater L-shape sofa, immediate deep clean required)..."></textarea>
+                <textarea id="contact-message" class="vorxus-input vorxus-textarea" rows="3" placeholder="Tell us about your space (e.g. 3BHK flat, 5-seater L-shape sofa, immediate deep clean required)..."></textarea>
               </div>
 
               <!-- Submit Button -->
@@ -325,7 +339,8 @@ require __DIR__ . '/../components/header.php';
         <span class="contact-faq-badge">❓ GOT QUESTIONS?</span>
         <h2 class="contact-faq-title">Frequently Asked <span class="text-fresh-green">Questions</span></h2>
         <p class="contact-faq-sub">
-          Everything you need to know about booking, pricing, mechanized equipment, service warranty, and technician verification in Kashipur, Jaspur &amp; Ramnagar.
+          <span class="desc-desktop">Everything you need to know about booking, pricing, mechanized equipment, service warranty, and technician verification in Kashipur, Jaspur &amp; Ramnagar.</span>
+          <span class="desc-mobile">Quick answers about booking, pricing &amp; guarantees.</span>
         </p>
       </div>
 
@@ -355,7 +370,10 @@ require __DIR__ . '/../components/header.php';
           <span class="material-symbols-outlined bottom-box-icon">headset_mic</span>
           <div>
             <strong>Still have questions or need a custom quote?</strong>
-            <p>Our Kashipur service coordinators are available on WhatsApp and call 7 days a week.</p>
+            <p>
+              <span class="desc-desktop">Our Kashipur service coordinators are available on WhatsApp and call 7 days a week.</span>
+              <span class="desc-mobile">Available 7 days a week on WhatsApp &amp; call.</span>
+            </p>
           </div>
         </div>
         <div class="bottom-box-actions">
@@ -454,6 +472,20 @@ function handleVorxusFormSubmit(e) {
 
 <!-- Vorxus Scoped Styles (Strict 4-Color Theme: Deep Green #0B2922, Fresh Green #22A06B, Soft Mint #EAF3EE, White #FFFFFF) -->
 <style>
+/* Responsive Dual Text Utilities */
+.desc-desktop {
+  display: inline;
+}
+.desc-mobile {
+  display: none;
+}
+.vorxus-card-main-info {
+  display: contents;
+}
+.vorxus-card-sub-mobile {
+  display: none;
+}
+
 /* Page Wrapper */
 .vorxus-contact-page {
   background: #0B2922;
@@ -1105,19 +1137,365 @@ button.contact-faq-trigger {
 .btn-call-faq:hover {
   background: #D7EBE0;
 }
-@media (max-width: 640px) {
+/* ==========================================================================
+   5. MOBILE VIEWPORT OPTIMIZATIONS (Max-Width: 768px) - PRODUCTION READY
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Dual Text Swapping: Hide Desktop, Show Mobile */
+  .desc-desktop {
+    display: none !important;
+  }
+  .desc-mobile {
+    display: inline !important;
+  }
+
+  /* 1. Hero Section Compact Spacing */
+  .vorxus-hero-section {
+    padding: 1.5rem 0 1.25rem !important;
+  }
+  .vorxus-title-wrap {
+    margin: 0 auto 1.15rem !important;
+    padding: 0 0.5rem !important;
+  }
+  .vorxus-main-title {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.35rem !important;
+    gap: 0.35rem !important;
+  }
+  .vorxus-title-pill {
+    padding: 0.1rem 0.55rem !important;
+    font-size: 1.45rem !important;
+  }
+  .vorxus-lead {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    max-width: 330px !important;
+    margin: 0 auto !important;
+  }
+
+  /* 3 Contact Cards - Sleek Compact Interactive App Tiles */
+  .vorxus-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.55rem !important;
+    max-width: 100% !important;
+    padding: 0 0.35rem !important;
+  }
+  .vorxus-info-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0.65rem 0.85rem !important;
+    border-radius: 12px !important;
+    gap: 0.75rem !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18) !important;
+  }
+  .vorxus-card-icon-wrap {
+    width: 36px !important;
+    height: 36px !important;
+    margin-bottom: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  .vorxus-card-icon-wrap span {
+    font-size: 18px !important;
+  }
+  .vorxus-card-main-info {
+    display: block !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    text-align: left !important;
+  }
+  .vorxus-card-val {
+    font-size: 0.86rem !important;
+    font-weight: 800 !important;
+    color: #FFFFFF !important;
+    margin-bottom: 0 !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .vorxus-card-sub-mobile {
+    display: block !important;
+    font-size: 0.7rem !important;
+    color: #8FA89C !important;
+    margin-top: 2px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .vorxus-card-desc {
+    display: none !important;
+  }
+  .vorxus-card-footer {
+    border-top: none !important;
+    padding-top: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+  }
+  .vorxus-pill-tag {
+    display: none !important;
+  }
+  .vorxus-action-link {
+    background: #22A06B !important;
+    color: #FFFFFF !important;
+    padding: 0.35rem 0.75rem !important;
+    border-radius: 20px !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.2rem !important;
+    white-space: nowrap !important;
+    box-shadow: 0 2px 8px rgba(34, 160, 107, 0.3) !important;
+  }
+  .vorxus-action-link.text-whatsapp {
+    background: #25D366 !important;
+    color: #FFFFFF !important;
+  }
+  .vorxus-action-link span.material-symbols-outlined {
+    font-size: 13px !important;
+  }
+
+  /* 2. Trust Ribbon - Horizontal Swipeable Mint Badges */
+  .vorxus-trust-ribbon {
+    padding: 0.55rem 0 !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .vorxus-trust-ribbon::-webkit-scrollbar {
+    display: none !important;
+  }
+  .vorxus-trust-items-row {
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    gap: 0.5rem !important;
+    padding: 0 0.75rem !important;
+    width: max-content !important;
+  }
+  .vorxus-trust-item {
+    font-size: 0.72rem !important;
+    background: #F4F8F6 !important;
+    border: 1px solid #DCECE2 !important;
+    padding: 0.3rem 0.65rem !important;
+    border-radius: 20px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+  .vorxus-trust-item .material-symbols-outlined {
+    font-size: 16px !important;
+  }
+
+  /* 3. Main Section Mobile (Soft Mint / Light Green Canvas) */
+  .vorxus-main-section {
+    padding: 1.5rem 0 1.75rem !important;
+  }
+  .vorxus-2col-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.25rem !important;
+  }
+  .vorxus-col-left {
+    display: contents !important;
+  }
+  .vorxus-col-left-head {
+    order: 1 !important;
+    width: 100% !important;
+  }
+  .vorxus-col-right {
+    order: 2 !important;
+    width: 100% !important;
+  }
+  .vorxus-map-block {
+    order: 3 !important;
+    width: 100% !important;
+    margin-top: 0.35rem !important;
+  }
+  .vorxus-section-tag {
+    font-size: 0.68rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  .vorxus-section-heading {
+    font-size: 1.35rem !important;
+    line-height: 1.25 !important;
+    margin: 0 0 0.35rem !important;
+  }
+  .vorxus-section-lead {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    margin: 0 0 0.75rem !important;
+  }
+  .vorxus-social-channels {
+    gap: 0.55rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .vorxus-social-circle {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .vorxus-social-circle span {
+    font-size: 16px !important;
+  }
+
+  /* Compact Form Container Card */
+  .vorxus-form-card {
+    padding: 1rem 0.85rem !important;
+    border-radius: 12px !important;
+  }
+  .vorxus-form-header {
+    margin-bottom: 0.75rem !important;
+  }
+  .vorxus-form-title {
+    font-size: 1.15rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .vorxus-form-desc {
+    font-size: 0.74rem !important;
+    line-height: 1.35 !important;
+  }
+  .vorxus-form-row-2col {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+  .vorxus-form-group {
+    margin-bottom: 0.65rem !important;
+  }
+  .vorxus-label {
+    font-size: 0.72rem !important;
+    margin-bottom: 0.22rem !important;
+  }
+  .vorxus-input {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 16px !important; /* iOS no zoom rule */
+    border-radius: 6px !important;
+  }
+  .vorxus-textarea {
+    min-height: 58px !important;
+    height: 58px !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+  .vorxus-form-submit-wrap {
+    margin-top: 0.75rem !important;
+  }
+  .vorxus-btn-submit {
+    padding: 0.65rem 1rem !important;
+    font-size: 0.84rem !important;
+    border-radius: 6px !important;
+  }
+  .vorxus-form-guarantee {
+    font-size: 0.68rem !important;
+    margin-top: 0.45rem !important;
+  }
+
+  /* Compact Map */
+  .vorxus-map-title {
+    font-size: 0.95rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+  .vorxus-map-wrapper {
+    border-radius: 10px !important;
+    margin-bottom: 0.4rem !important;
+  }
+  .vorxus-map-wrapper iframe {
+    height: 165px !important;
+  }
+  .vorxus-map-meta {
+    font-size: 0.72rem !important;
+  }
+
+  /* 4. FAQ Section Mobile Optimization */
+  .contact-faq-section {
+    padding: 1.75rem 0 2rem !important;
+  }
+  .contact-faq-head {
+    margin: 0 auto 1.15rem !important;
+    padding: 0 0.5rem !important;
+  }
+  .contact-faq-badge {
+    font-size: 0.66rem !important;
+    padding: 0.22rem 0.65rem !important;
+    margin-bottom: 0.3rem !important;
+  }
+  .contact-faq-title {
+    font-size: 1.35rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .contact-faq-sub {
+    font-size: 0.78rem !important;
+    line-height: 1.38 !important;
+  }
+  .contact-faq-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.45rem !important;
+    padding: 0 0.25rem !important;
+  }
+  .contact-faq-card {
+    min-height: auto !important;
+    border-radius: 10px !important;
+  }
+  button.contact-faq-trigger {
+    min-height: auto !important;
+    padding: 0.65rem 0.85rem !important;
+    gap: 0.65rem !important;
+  }
+  .contact-faq-question {
+    font-size: 0.82rem !important;
+    line-height: 1.3 !important;
+  }
+  .contact-faq-icon {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 14px !important;
+  }
+  .contact-faq-body {
+    padding: 0 0.85rem 0.65rem !important;
+    padding-top: 0.45rem !important;
+  }
+  .contact-faq-body p {
+    font-size: 0.75rem !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Compact Bottom Help Box */
   .contact-faq-bottom-box {
-    flex-direction: column;
-    align-items: flex-start;
+    margin-top: 1.15rem !important;
+    padding: 0.85rem !important;
+    border-radius: 12px !important;
+    gap: 0.75rem !important;
+  }
+  .bottom-box-content {
+    gap: 0.65rem !important;
+  }
+  .bottom-box-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 20px !important;
+  }
+  .bottom-box-content strong {
+    font-size: 0.84rem !important;
+  }
+  .bottom-box-content p {
+    font-size: 0.72rem !important;
   }
   .bottom-box-actions {
-    width: 100%;
-    flex-direction: column;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
   }
   .btn-whatsapp-faq,
   .btn-call-faq {
-    width: 100%;
-    justify-content: center;
+    width: 100% !important;
+    padding: 0.55rem 0.5rem !important;
+    font-size: 0.76rem !important;
+    border-radius: 6px !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
   }
 }
 
