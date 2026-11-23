@@ -477,128 +477,132 @@ function handleVorxusFormSubmit(e) {
 }
 
 /* ==========================================================================
-   1. HERO SECTION (Vorxus Style)
+   1. HERO SECTION (Vorxus Style - Compact & Breathable)
    ========================================================================== */
 .vorxus-hero-section {
-  padding: 4.5rem 0 3.5rem;
-  background: radial-gradient(circle at 50% 15%, rgba(34, 160, 107, 0.22) 0%, rgba(11, 41, 34, 1) 72%);
+  padding: 2.75rem 0 2.5rem;
+  background: radial-gradient(circle at 50% 15%, rgba(34, 160, 107, 0.20) 0%, rgba(11, 41, 34, 1) 75%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .vorxus-title-wrap {
-  max-width: 720px;
-  margin: 0 auto 3rem;
+  max-width: 640px;
+  margin: 0 auto 2.25rem;
 }
 .vorxus-main-title {
-  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-size: clamp(1.75rem, 2.6vw, 2.2rem);
   font-weight: 800;
   color: #FFFFFF;
-  letter-spacing: -0.025em;
-  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.65rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.65rem;
+  gap: 0.5rem;
 }
 .vorxus-title-pill {
   background: #FFFFFF;
   color: #0B2922;
-  padding: 0.15rem 0.95rem;
-  border-radius: 8px;
+  padding: 0.12rem 0.75rem;
+  border-radius: 6px;
   display: inline-block;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  line-height: 1.25;
 }
 .vorxus-lead {
-  font-size: 1.05rem;
-  color: #B2CDC2;
-  line-height: 1.6;
+  font-size: 0.88rem;
+  color: #A3BFB3;
+  line-height: 1.5;
   margin: 0;
 }
 
-/* 3 Highlight Cards Grid */
+/* 3 Highlight Cards Grid - Compact & Breathable */
 .vorxus-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  max-width: 1140px;
+  gap: 1.25rem;
+  max-width: 1060px;
   margin: 0 auto;
 }
 @media (max-width: 900px) {
   .vorxus-cards-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.85rem;
+    max-width: 520px;
   }
 }
 .vorxus-info-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  padding: 2rem 1.65rem;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 1.35rem 1.35rem 1.2rem;
   text-align: left;
   display: flex;
   flex-direction: column;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s, box-shadow 0.25s;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(6px);
 }
 .vorxus-info-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   border-color: rgba(34, 160, 107, 0.45);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
 }
 .vorxus-card-icon-wrap {
-  width: 50px;
-  height: 50px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: rgba(34, 160, 107, 0.15);
-  border: 1.5px solid rgba(34, 160, 107, 0.4);
+  background: rgba(34, 160, 107, 0.14);
+  border: 1.5px solid rgba(34, 160, 107, 0.35);
   color: #22A06B;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.85rem;
+  flex-shrink: 0;
 }
 .vorxus-card-icon-wrap span {
-  font-size: 24px;
+  font-size: 20px;
 }
 .vorxus-card-val {
-  font-size: 1.35rem;
+  font-size: 1.08rem;
   font-weight: 800;
   color: #FFFFFF;
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.35rem;
   letter-spacing: -0.01em;
   word-break: break-word;
 }
 .vorxus-card-desc {
-  font-size: 0.88rem;
-  color: #A3BFB3;
-  line-height: 1.55;
-  margin: 0 0 1.5rem;
+  font-size: 0.78rem;
+  color: #8FA89C;
+  line-height: 1.48;
+  margin: 0 0 1rem;
   flex: 1;
 }
 .vorxus-card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding-top: 0.75rem;
 }
 .vorxus-pill-tag {
-  background: rgba(255, 255, 255, 0.08);
-  color: #EAF3EE;
-  font-size: 0.74rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #D2E4DC;
+  font-size: 0.68rem;
   font-weight: 700;
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.22rem 0.65rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  letter-spacing: 0.02em;
 }
 .vorxus-action-link {
   color: #22A06B;
-  font-size: 0.86rem;
+  font-size: 0.78rem;
   font-weight: 700;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.25rem;
   transition: transform 0.2s ease, color 0.2s;
 }
 .vorxus-action-link:hover {
@@ -615,47 +619,49 @@ function handleVorxusFormSubmit(e) {
 .vorxus-trust-ribbon {
   background: #081F1A;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  padding: 1.25rem 0;
+  padding: 0.85rem 0;
 }
 .vorxus-trust-items-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.25rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 .vorxus-trust-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.84rem;
+  gap: 0.4rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  color: #C0D6CB;
+  color: #B5CCC2;
 }
 @media (max-width: 768px) {
   .vorxus-trust-items-row {
     justify-content: center;
-    gap: 0.85rem 1.25rem;
+    gap: 0.65rem 1rem;
   }
 }
 
 /* ==========================================================================
-   3. TWO-COLUMN SECTION: GET IN TOUCH + FORM (Vorxus Style)
+   3. TWO-COLUMN SECTION: GET IN TOUCH + FORM (Vorxus Style - Compact)
    ========================================================================== */
 .vorxus-main-section {
-  padding: 4.5rem 0 4rem;
+  padding: 3rem 0 3.25rem;
   background: #0B2922;
 }
 .vorxus-2col-layout {
   display: grid;
   grid-template-columns: 1fr 1.05fr;
-  gap: 3.5rem;
+  gap: 2.75rem;
   align-items: start;
+  max-width: 1060px;
+  margin: 0 auto;
 }
 @media (max-width: 960px) {
   .vorxus-2col-layout {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 2rem;
   }
 }
 
@@ -666,43 +672,46 @@ function handleVorxusFormSubmit(e) {
 }
 .vorxus-section-tag {
   color: #22A06B;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.45rem;
 }
 .vorxus-section-heading {
-  font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+  font-size: clamp(1.45rem, 2.2vw, 1.85rem);
   font-weight: 800;
   color: #FFFFFF;
   line-height: 1.25;
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
 }
 .vorxus-section-lead {
-  font-size: 0.96rem;
-  color: #A3BFB3;
-  line-height: 1.6;
-  margin: 0 0 1.75rem;
+  font-size: 0.84rem;
+  color: #8FA89C;
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
 }
 .vorxus-social-channels {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 2.25rem;
+  gap: 0.65rem;
+  margin-bottom: 1.75rem;
 }
 .vorxus-social-circle {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   transition: all 0.2s ease;
+}
+.vorxus-social-circle span {
+  font-size: 18px;
 }
 .vorxus-social-circle:hover {
   background: #22A06B;
@@ -716,63 +725,66 @@ function handleVorxusFormSubmit(e) {
 
 /* Map Card */
 .vorxus-map-block {
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 .vorxus-map-title {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: #FFFFFF;
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.65rem;
 }
 .vorxus-map-wrapper {
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-  margin-bottom: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  margin-bottom: 0.65rem;
+}
+.vorxus-map-wrapper iframe {
+  height: 240px;
 }
 .vorxus-map-meta {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.82rem;
-  color: #92AE9F;
-  line-height: 1.45;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  color: #85A394;
+  line-height: 1.4;
 }
 
-/* Right Column: Form Card (Vorxus Style) */
+/* Right Column: Form Card (Vorxus Style - Compact) */
 .vorxus-form-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 2.5rem 2.25rem;
-  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  padding: 1.65rem 1.65rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
 }
 @media (max-width: 580px) {
   .vorxus-form-card {
-    padding: 1.75rem 1.25rem;
+    padding: 1.25rem 1rem;
   }
 }
 .vorxus-form-header {
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.25rem;
 }
 .vorxus-form-title {
-  font-size: 1.55rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #FFFFFF;
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.3rem;
 }
 .vorxus-form-desc {
-  font-size: 0.88rem;
-  color: #A3BFB3;
+  font-size: 0.78rem;
+  color: #8FA89C;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 .vorxus-form-row-2col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.15rem;
+  gap: 0.85rem;
 }
 @media (max-width: 580px) {
   .vorxus-form-row-2col {
@@ -781,23 +793,23 @@ function handleVorxusFormSubmit(e) {
   }
 }
 .vorxus-form-group {
-  margin-bottom: 1.15rem;
+  margin-bottom: 0.85rem;
 }
 .vorxus-label {
   display: block;
-  font-size: 0.82rem;
+  font-size: 0.74rem;
   font-weight: 700;
-  color: #D2E4DC;
-  margin-bottom: 0.45rem;
+  color: #C0D6CB;
+  margin-bottom: 0.35rem;
 }
 .vorxus-input {
   width: 100%;
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
   color: #FFFFFF;
-  padding: 0.75rem 1rem;
-  font-size: 0.92rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.84rem;
   font-family: inherit;
   outline: none;
   transition: all 0.2s ease;
@@ -805,19 +817,19 @@ function handleVorxusFormSubmit(e) {
 }
 .vorxus-input:focus {
   border-color: #22A06B;
-  background: rgba(0, 0, 0, 0.45);
-  box-shadow: 0 0 0 3px rgba(34, 160, 107, 0.25);
+  background: rgba(0, 0, 0, 0.38);
+  box-shadow: 0 0 0 2px rgba(34, 160, 107, 0.25);
 }
 .vorxus-input::placeholder {
-  color: #6C8578;
+  color: #5D796C;
 }
 .vorxus-select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2322A06B' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2322A06B' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 14px;
-  padding-right: 2.25rem;
+  background-position: right 0.85rem center;
+  background-size: 12px;
+  padding-right: 2rem;
   cursor: pointer;
 }
 .vorxus-select option {
@@ -826,32 +838,32 @@ function handleVorxusFormSubmit(e) {
 }
 .vorxus-textarea {
   resize: vertical;
-  min-height: 95px;
+  min-height: 75px;
 }
 .vorxus-form-submit-wrap {
-  margin-top: 1.5rem;
+  margin-top: 1.15rem;
 }
 .vorxus-btn-submit {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   background: #22A06B;
   color: #FFFFFF;
-  font-size: 0.96rem;
+  font-size: 0.88rem;
   font-weight: 800;
-  padding: 0.9rem 1.5rem;
-  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 6px 20px rgba(34, 160, 107, 0.35);
+  box-shadow: 0 4px 16px rgba(34, 160, 107, 0.3);
 }
 .vorxus-btn-submit:hover {
   background: #198754;
   transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(34, 160, 107, 0.45);
+  box-shadow: 0 6px 20px rgba(34, 160, 107, 0.4);
 }
 .vorxus-btn-submit:active {
   transform: scale(0.98);
@@ -866,74 +878,76 @@ function handleVorxusFormSubmit(e) {
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  font-size: 0.76rem;
-  color: #8CA79A;
-  margin-top: 1rem;
+  font-size: 0.72rem;
+  color: #7D9C8D;
+  margin-top: 0.75rem;
   text-align: center;
 }
 
 /* ==========================================================================
-   4. FREQUENTLY ASKED QUESTIONS SECTION (Refixel Style 2-Column Responsive)
+   4. FREQUENTLY ASKED QUESTIONS SECTION (Refixel Style 2-Column Responsive - Compact)
    ========================================================================== */
 .contact-faq-section {
   background: #F8FBF9;
   color: #0B2922;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 4.5rem 0 5rem;
+  padding: 3rem 0 3.5rem;
 }
 .contact-faq-head {
-  max-width: 720px;
-  margin: 0 auto 3rem;
+  max-width: 640px;
+  margin: 0 auto 2.25rem;
 }
 .contact-faq-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   background: #EAF3EE;
   color: #0B2922;
   border: 1px solid #D2E3D8;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.06em;
-  padding: 0.4rem 1.1rem;
+  padding: 0.3rem 0.85rem;
   border-radius: 50px;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.65rem;
   text-transform: uppercase;
 }
 .contact-faq-title {
-  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
   font-weight: 800;
   color: #0B2922;
-  margin: 0 0 0.65rem;
+  margin: 0 0 0.45rem;
   letter-spacing: -0.02em;
 }
 .contact-faq-sub {
   color: #556B63;
-  font-size: 1rem;
-  line-height: 1.55;
+  font-size: 0.86rem;
+  line-height: 1.45;
   margin: 0;
 }
 .contact-faq-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
+  gap: 1rem;
   align-items: start;
+  max-width: 1060px;
+  margin: 0 auto;
 }
 @media (max-width: 860px) {
   .contact-faq-grid {
     grid-template-columns: 1fr;
-    gap: 0.85rem;
+    gap: 0.75rem;
   }
 }
 .contact-faq-col {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 .contact-faq-card {
   background: #FFFFFF;
   border: 1.5px solid #E2ECE5;
-  border-radius: 14px;
+  border-radius: 12px;
   transition: all 0.22s ease;
   box-shadow: 0 2px 8px rgba(11, 41, 34, 0.02);
   overflow: hidden;
@@ -951,16 +965,16 @@ function handleVorxusFormSubmit(e) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.15rem 1.35rem;
+  padding: 0.9rem 1.15rem;
   background: transparent;
   border: none;
   cursor: pointer;
   text-align: left;
-  gap: 1rem;
+  gap: 0.85rem;
   font-family: inherit;
 }
 .contact-faq-question {
-  font-size: 0.96rem;
+  font-size: 0.86rem;
   font-weight: 700;
   color: #0B2922;
   line-height: 1.4;
@@ -971,15 +985,15 @@ function handleVorxusFormSubmit(e) {
   font-weight: 800;
 }
 .contact-faq-icon {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #F0F5F2;
   color: #0B2922;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 600;
   flex-shrink: 0;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -992,42 +1006,45 @@ function handleVorxusFormSubmit(e) {
 }
 .contact-faq-body {
   display: none;
-  padding: 0 1.35rem 1.25rem;
+  padding: 0 1.15rem 1rem;
   border-top: 1px dashed #EAF3EE;
-  padding-top: 0.85rem;
+  padding-top: 0.75rem;
 }
 .contact-faq-body p {
   margin: 0;
   color: #4B5E55;
-  font-size: 0.88rem;
-  line-height: 1.6;
+  font-size: 0.8rem;
+  line-height: 1.55;
 }
 
 /* Bottom Callout Box */
 .contact-faq-bottom-box {
-  margin-top: 2.75rem;
+  margin-top: 2.25rem;
   background: #FFFFFF;
   border: 1.5px solid #E2ECE5;
-  border-radius: 16px;
-  padding: 1.35rem 1.75rem;
+  border-radius: 14px;
+  padding: 1.15rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1.25rem;
   flex-wrap: wrap;
   box-shadow: 0 3px 12px rgba(11, 41, 34, 0.04);
+  max-width: 1060px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .bottom-box-content {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 .bottom-box-icon {
-  font-size: 34px;
+  font-size: 26px;
   color: #22A06B;
   background: #EAF3EE;
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1035,7 +1052,7 @@ function handleVorxusFormSubmit(e) {
   flex-shrink: 0;
 }
 .bottom-box-content strong {
-  font-size: 1.02rem;
+  font-size: 0.94rem;
   color: #0B2922;
   display: block;
   margin-bottom: 2px;
@@ -1043,7 +1060,7 @@ function handleVorxusFormSubmit(e) {
 .bottom-box-content p {
   margin: 0;
   color: #556B63;
-  font-size: 0.86rem;
+  font-size: 0.8rem;
 }
 .bottom-box-actions {
   display: flex;
