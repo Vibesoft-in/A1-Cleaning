@@ -2957,14 +2957,14 @@ body.a1-sheet-lock .tab-whatsapp {
 .a1-quick-addon-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 6px 8px;
+  justify-content: center;
+  padding: 5px 8px;
   background: #FFFFFF;
   border: 1.5px solid #E5E7EB;
-  border-radius: 10px;
+  border-radius: 9px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  min-height: 68px;
+  min-height: 48px;
   position: relative;
   box-sizing: border-box;
 }
@@ -2988,8 +2988,8 @@ body.a1-sheet-lock .tab-whatsapp {
 }
 
 .a1-quick-addon-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 5px;
   background: #EAF3EE;
   color: #22A06B;
@@ -3001,7 +3001,7 @@ body.a1-sheet-lock .tab-whatsapp {
 }
 
 .a1-quick-addon-icon .material-symbols-outlined {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .a1-quick-addon-card.is-selected .a1-quick-addon-icon {
@@ -3009,25 +3009,36 @@ body.a1-sheet-lock .tab-whatsapp {
   color: #FFFFFF;
 }
 
+.a1-quick-addon-action-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.a1-quick-addon-price {
+  font-size: 0.70rem;
+  font-weight: 800;
+  color: #22A06B;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
 .a1-quick-addon-btn {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 1px 6px;
+  justify-content: center;
+  padding: 1px 7px;
   border-radius: 999px;
   border: 1px solid #22A06B;
   background: #FFFFFF;
   color: #22A06B;
-  font-size: 0.64rem;
+  font-size: 0.60rem;
   font-weight: 800;
   cursor: pointer;
   flex-shrink: 0;
   transition: all 0.2s ease;
   line-height: 1.15;
-}
-
-.a1-quick-addon-btn .material-symbols-outlined {
-  font-size: 10px;
+  height: 18px;
 }
 
 .a1-quick-addon-btn.is-added,
@@ -3039,7 +3050,6 @@ body.a1-sheet-lock .tab-whatsapp {
 .a1-quick-addon-bottom-info {
   display: flex;
   flex-direction: column;
-  gap: 1px;
   width: 100%;
 }
 
@@ -3054,11 +3064,14 @@ body.a1-sheet-lock .tab-whatsapp {
   text-overflow: ellipsis;
 }
 
-.a1-quick-addon-price {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #22A06B;
-  letter-spacing: -0.01em;
+@media (max-width: 480px) {
+  .a1-addon-price-pill {
+    font-size: 0.62rem !important;
+    padding: 2px 5px !important;
+  }
+  .a1-addon-check-indicator {
+    font-size: 0.54rem !important;
+  }
 }
 
 /* Section 3: Horizontal Price Calculation Formula Track */
@@ -4920,13 +4933,15 @@ function renderQuickAddDrawerContent(pkg, basePrice, serviceAddons) {
           <div class="a1-quick-addon-icon">
             <span class="material-symbols-outlined">${a.icon || 'cleaning_services'}</span>
           </div>
-          <button type="button" class="a1-quick-addon-btn ${isAct ? 'is-added' : ''}">
-            ${isAct ? '<span class="material-symbols-outlined" style="font-size: 11px;">check</span><span>Added</span>' : '<span class="material-symbols-outlined" style="font-size: 11px;">add</span><span>Add</span>'}
-          </button>
+          <div class="a1-quick-addon-action-group">
+            <span class="a1-quick-addon-price">+₹${a.price.toLocaleString('en-IN')}</span>
+            <button type="button" class="a1-quick-addon-btn ${isAct ? 'is-added' : ''}">
+              ${isAct ? 'Added' : 'Add'}
+            </button>
+          </div>
         </div>
         <div class="a1-quick-addon-bottom-info">
           <h4 class="a1-quick-addon-name" title="${a.name}">${a.name}</h4>
-          <span class="a1-quick-addon-price">+₹${a.price.toLocaleString('en-IN')}</span>
         </div>
       </div>
     `;
@@ -5065,9 +5080,7 @@ function toggleQuickAddon(key, name, price, cardEl) {
     const btn = cardEl.querySelector('.a1-quick-addon-btn');
     if (btn) {
       btn.classList.toggle('is-added', isAct);
-      btn.innerHTML = isAct 
-        ? '<span class="material-symbols-outlined" style="font-size: 11px;">check</span><span>Added</span>' 
-        : '<span class="material-symbols-outlined" style="font-size: 11px;">add</span><span>Add</span>';
+      btn.textContent = isAct ? 'Added' : 'Add';
     }
   }
 
