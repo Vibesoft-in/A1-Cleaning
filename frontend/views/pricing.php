@@ -5914,28 +5914,28 @@ function getServiceBaConfig(serviceKey) {
     "kitchen-cleaning": {
       pairs: [
         {
-          id: 'chimney',
+          id: 'chimney-stove',
           title: 'Chimney & Gas Stove',
           desc: 'Burnt oil grease & sticky yellow carbon deposits dissolved',
           icon: 'cooking',
-          before: `${root}/assets/images/pricing/before-after/kitchen-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/kitchen-after.jpg`
+          before: `${root}/assets/images/before-after/kitchen%20%20cleaning/Greasy%20Gas%20Stove%20Before%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/kitchen%20%20cleaning/Spotless%20Three-Burner%20Gas%20Stove.png`
         },
         {
-          id: 'backsplash',
-          title: 'Tile Backsplash & Grout',
+          id: 'modular-kitchen',
+          title: 'Modular Kitchen & Slabs',
           desc: 'Oily cooking splatters and yellow film eradicated',
-          icon: 'grid_view',
-          before: `${root}/assets/images/pricing/before-after/kitchen-backsplash-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/kitchen-backsplash-after.jpg`
+          icon: 'countertops',
+          before: `${root}/assets/images/before-after/kitchen%20%20cleaning/Greasy%20Kitchen%20Before%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/kitchen%20%20cleaning/Spotless%20L-Shaped%20Kitchen%20After%20Cleaning.png`
         },
         {
           id: 'sink-steel',
           title: 'Stainless Sink & Faucets',
           desc: 'Stained stainless steel polished to spotless mirror shine',
           icon: 'faucet',
-          before: `${root}/assets/images/pricing/before-after/kitchen-sink-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/kitchen-sink-after.jpg`
+          before: `${root}/assets/images/before-after/kitchen%20%20cleaning/Dirty%20Kitchen%20Sink%20Before%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/kitchen%20%20cleaning/Spotless%20Sink%20After%20Cleaning.png`
         }
       ],
       addons: [
@@ -5948,28 +5948,28 @@ function getServiceBaConfig(serviceKey) {
     "sofa-cleaning": {
       pairs: [
         {
-          id: 'sofa-fabric',
+          id: 'sofa-sectional',
           title: 'Fabric Sectional Sofa',
           desc: 'Stubborn tea, coffee spills and dark sweat rings extracted',
           icon: 'chair',
-          before: `${root}/assets/images/pricing/before-after/sofa-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/sofa-after.jpg`
+          before: `${root}/assets/images/before-after/sofa%20cleaning/Stained%20Sectional%20Sofa%20Before%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/sofa%20cleaning/Freshly%20Cleaned%20Beige%20Sectional%20Sofa.png`
         },
         {
-          id: 'sofa-cushions',
-          title: 'Throw Cushions & Bolsters',
+          id: 'sofa-loveseat',
+          title: 'Living Room Loveseat',
           desc: 'Deep foam sanitization & dust mite eradication',
-          icon: 'airline_seat_recline_extra',
-          before: `${root}/assets/images/pricing/before-after/sofa-cushion-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/sofa-cushion-after.jpg`
+          icon: 'weekend',
+          before: `${root}/assets/images/before-after/sofa%20cleaning/Stained%20Taupe%20Loveseat%20in%20Sunlit%20Living%20Room.png`,
+          after: `${root}/assets/images/before-after/sofa%20cleaning/Freshly%20Cleaned%20Brown%20Loveseat.png`
         },
         {
           id: 'sofa-armchair',
           title: 'Accent Armchair Upholstery',
           desc: 'Restored original upholstery brightness and velvety softness',
           icon: 'chair',
-          before: `${root}/assets/images/pricing/before-after/sofa-chair-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/sofa-chair-after.jpg`
+          before: `${root}/assets/images/before-after/sofa%20cleaning/Worn%20Teal%20Armchair%20by%20the%20Window.png`,
+          after: `${root}/assets/images/before-after/sofa%20cleaning/Spotless%20Teal%20Armchair%20in%20a%20Bright%20Room.png`
         }
       ],
       addons: [
@@ -5982,114 +5982,114 @@ function getServiceBaConfig(serviceKey) {
     "water-tank-cleaning": {
       pairs: [
         {
-          id: 'tank-sludge',
-          title: 'Sludge & Silt Extraction',
-          desc: 'Heavy muddy silt deposits pumped out and floor scrubbed',
+          id: 'tank-blue',
+          title: 'Water Tank Deep Interior',
+          desc: 'Heavy muddy silt deposits pumped out and walls scrubbed',
           icon: 'water_drop',
-          before: `${root}/assets/images/pricing/before-after/tank-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/tank-after.jpg`
+          before: `${root}/assets/images/before-after/tank%20cleaning/Grimy%20Blue%20Water%20Tank%20Interior.png`,
+          after: `${root}/assets/images/before-after/tank%20cleaning/Clean%20Blue%20Water%20Tank%20Interior.png`
         },
         {
-          id: 'tank-sintex',
-          title: 'Overhead Sintex Tank Algae',
+          id: 'tank-valve',
+          title: 'Chamber & Float Valve',
           desc: '120-bar high-pressure scrub eliminates all green algae slime',
-          icon: 'cleaning_services',
-          before: `${root}/assets/images/pricing/before-after/tank-sintex-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/tank-sintex-after.jpg`
+          icon: 'sanitizer',
+          before: `${root}/assets/images/before-after/tank%20cleaning/Grimy%20Water%20Tank%20Interior%20with%20Float%20Valve.png`,
+          after: `${root}/assets/images/before-after/tank%20cleaning/Clean%20Water%20Tank%20Interior.png`
         },
         {
-          id: 'tank-sump',
-          title: 'Underground Sump Chamber',
+          id: 'tank-rooftop',
+          title: 'Rooftop Water Tank Unit',
           desc: '100% bacteria-free potable drinking water storage ready',
-          icon: 'sanitizer',
-          before: `${root}/assets/images/pricing/before-after/tank-sump-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/tank-sump-after.jpg`
+          icon: 'roofing',
+          before: `${root}/assets/images/before-after/tank%20cleaning/Weathered%20Rooftop%20Water%20Tank.png`,
+          after: `${root}/assets/images/before-after/tank%20cleaning/Clean%20Water%20Tank%20on%20a%20Wet%20Rooftop.png`
         }
       ],
       addons: [
-        { key: 'uv-treatment', name: 'Anti-Bacterial UV Ray Pass', price: 250, icon: 'wb_iridescent' },
-        { key: 'pipe-flushing', name: 'Delivery Pipe Line Flush', price: 200, icon: 'plumbing' },
-        { key: 'overhead-mini', name: 'Additional 500L Loft Tank', price: 300, icon: 'water_drop' },
-        { key: 'water-test', name: 'Post-Clean TDS/PH Audit', price: 149, icon: 'science' }
+        { key: 'pipe-flush', name: 'Distribution Pipeline Flush', price: 300, icon: 'plumbing' },
+        { key: 'uv-disinfect', name: 'UV Chamber Sterilization', price: 250, icon: 'wb_sunny' },
+        { key: 'overflow-filter', name: 'Overflow Mesh Netting', price: 150, icon: 'filter_alt' },
+        { key: 'algae-shield', name: 'Anti-Algae Food-Grade Coat', price: 400, icon: 'shield' }
       ]
     },
     "home-cleaning": {
       pairs: [
         {
-          id: 'home-marble',
-          title: 'Marble Floor Buffing',
-          desc: 'Scratched dull floors machine-buffed to high-gloss mirror shine',
-          icon: 'diamond',
-          before: `${root}/assets/images/pricing/before-after/home-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/home-after.jpg`
+          id: 'home-living',
+          title: 'Modern Living Room',
+          desc: 'Dusty living space transformed into spotless gleaming retreat',
+          icon: 'living',
+          before: `${root}/assets/images/before-after/full%20home%20deep%20cleaning/Dusty%20Living%20Room%20Before%20Deep%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/full%20home%20deep%20cleaning/Freshly%20Cleaned%20Modern%20Living%20Room.png`
         },
         {
-          id: 'home-windows',
-          title: 'Window Tracks & Glass',
-          desc: 'Clogged dirt tracks vacuumed and glass polished crystal clear',
-          icon: 'window',
-          before: `${root}/assets/images/pricing/before-after/home-window-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/home-window-after.jpg`
+          id: 'home-balcony',
+          title: 'Balcony & Glass Enclosure',
+          desc: 'Weather crust, dust and grime scrubbed crystal clean',
+          icon: 'deck',
+          before: `${root}/assets/images/before-after/full%20home%20deep%20cleaning/Dirty%20Balcony%20Before%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/full%20home%20deep%20cleaning/Bright%20Balcony%20Afterglow.png`
         },
         {
-          id: 'home-fan',
-          title: 'Ceiling Fan & Chandelier',
-          desc: 'Greasy dust carpet lifted from blades and motor housings',
-          icon: 'mode_fan',
-          before: `${root}/assets/images/pricing/before-after/home-fan-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/home-fan-after.jpg`
+          id: 'home-entrance',
+          title: 'Foyer & Main Entrance',
+          desc: 'Spotless modern entrance with sanitized thresholds and floors',
+          icon: 'door_front',
+          before: `${root}/assets/images/before-after/full%20home%20deep%20cleaning/Dirty%20Entrance%20Before%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/full%20home%20deep%20cleaning/Spotless%20Modern%20Entrance%20After%20Cleaning.png`
         }
       ],
       addons: [
-        { key: 'balcony-scrub', name: 'Balcony Pressure Scrub', price: 300, icon: 'deck' },
-        { key: 'window-track', name: 'Window Tracks & Glaze', price: 150, icon: 'window' },
-        { key: 'cobweb-vacuum', name: 'High-Ceiling Cobweb Vac', price: 100, icon: 'vertical_align_top' },
-        { key: 'kitchen-degrease', name: 'Heavy Kitchen Degrease', price: 350, icon: 'kitchen' }
+        { key: 'fridge-interior', name: 'Fridge Interior Sanitization', price: 250, icon: 'kitchen' },
+        { key: 'mattress-steam', name: 'Master Mattress Steam Vac', price: 350, icon: 'bed' },
+        { key: 'fan-motor', name: 'Exhaust & Fan Motor Degrease', price: 200, icon: 'mode_fan' },
+        { key: 'balcony-jet', name: 'Pressure Wash Balcony Floor', price: 250, icon: 'deck' }
       ]
     },
     "carpet-cleaning": {
       pairs: [
         {
-          id: 'carpet-stains',
-          title: 'Plush Carpet Stains',
+          id: 'carpet-geometric',
+          title: 'Geometric Living Room Rug',
           desc: 'Ground-in mud, food spills and pet stains completely extracted',
           icon: 'layers',
-          before: `${root}/assets/images/pricing/before-after/carpet-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/carpet-after.jpg`
+          before: `${root}/assets/images/before-after/carpet%20and%20rug%20wash/Heavily%20Soiled%20Geometric%20Living%20Room%20Rug.png`,
+          after: `${root}/assets/images/before-after/carpet%20and%20rug%20wash/Pristine%20Geometric%20Rug%20in%20Bright%20Living%20Room.png`
         },
         {
-          id: 'carpet-runner',
-          title: 'Hallway Carpet Runner',
-          desc: 'High-traffic foot lane dirt extracted and wool fibers fluffed',
-          icon: 'auto_awesome',
-          before: `${root}/assets/images/pricing/before-after/carpet-runner-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/carpet-runner-after.jpg`
-        },
-        {
-          id: 'carpet-rug',
-          title: 'Delicate Wool Area Rug',
-          desc: 'pH-balanced gentle injection wash safe for premium rugs',
+          id: 'carpet-shaggy',
+          title: 'Plush Shaggy Area Rug',
+          desc: 'High-traffic foot lane dirt extracted and deep fibers fluffed',
           icon: 'texture',
-          before: `${root}/assets/images/pricing/before-after/carpet-rug-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/carpet-rug-after.jpg`
+          before: `${root}/assets/images/before-after/carpet%20and%20rug%20wash/Heavily%20Soiled%20Shag%20Rug%20on%20Tile.png`,
+          after: `${root}/assets/images/before-after/carpet%20and%20rug%20wash/Freshly%20Cleaned%20Shaggy%20Rug.png`
+        },
+        {
+          id: 'carpet-quatrefoil',
+          title: 'Quatrefoil Designer Rug',
+          desc: 'pH-balanced gentle injection wash safe for premium rugs',
+          icon: 'gradient',
+          before: `${root}/assets/images/before-after/carpet%20and%20rug%20wash/Worn%20Geometric%20Rug%20in%20a%20Sunlit%20Living%20Room.png`,
+          after: `${root}/assets/images/before-after/carpet%20and%20rug%20wash/Freshly%20Cleaned%20Quatrefoil%20Rug.png`
         }
       ],
       addons: [
-        { key: 'carpet-perfume', name: 'Odor Neutralizer & Sanitizer', price: 150, icon: 'air' },
-        { key: 'stain-shield', name: 'Fiber Stain Guard Spray', price: 200, icon: 'shield' },
-        { key: 'fringe-bleach', name: 'White Fringe Detailing', price: 150, icon: 'brush' },
-        { key: 'anti-mite', name: 'Anti-Mite Thermal Steam', price: 199, icon: 'bug_report' }
+        { key: 'carpet-deodor', name: 'Pet Odor Bio-Enzyme Flush', price: 200, icon: 'air' },
+        { key: 'carpet-scotch', name: 'Hydrophobic Stain Shield', price: 300, icon: 'shield' },
+        { key: 'carpet-fringe', name: 'Hand-Combed Fringe Detailing', price: 150, icon: 'brush' },
+        { key: 'carpet-under', name: 'Anti-Skid Underpad Sanitize', price: 150, icon: 'layers' }
       ]
     },
     "balcony-cleaning": {
       pairs: [
         {
-          id: 'balcony-tiles',
-          title: 'Weather-Stained Tiles',
+          id: 'balcony-floor',
+          title: 'Weather-Stained Balcony',
           desc: 'Rain mineral crust, mud and algae rotary scrubbed clean',
-          icon: 'balcony',
-          before: `${root}/assets/images/pricing/before-after/balcony-tiles-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/balcony-tiles-after.jpg`
+          icon: 'deck',
+          before: `${root}/assets/images/before-after/full%20home%20deep%20cleaning/Dirty%20Balcony%20Before%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/full%20home%20deep%20cleaning/Bright%20Balcony%20Afterglow.png`
         },
         {
           id: 'balcony-glass',
@@ -6103,77 +6103,77 @@ function getServiceBaConfig(serviceKey) {
           id: 'balcony-drain',
           title: 'Balcony Water Drain Gully',
           desc: 'Unclogged silt and disinfected wastewater outflow channel',
-          icon: 'water_drop',
+          icon: 'water',
           before: `${root}/assets/images/pricing/before-after/balcony-drain-before.jpg`,
           after: `${root}/assets/images/pricing/before-after/balcony-drain-after.jpg`
         }
       ],
       addons: [
-        { key: 'railing-polish', name: 'Steel Railing Chrome Polish', price: 150, icon: 'faucet' },
-        { key: 'bird-net-wash', name: 'Bird Net & Sill Wash', price: 200, icon: 'fence' },
-        { key: 'exterior-wall', name: 'Exterior Wall Spot Cleaning', price: 250, icon: 'format_paint' },
-        { key: 'pot-deck-wash', name: 'Planter Area Power Scrub', price: 150, icon: 'yard' }
+        { key: 'bird-netting', name: 'Pigeon Dropping Bio-Enzyme', price: 250, icon: 'pest_control' },
+        { key: 'plant-pot', name: 'Planter Ring Rust Descaling', price: 150, icon: 'potted_plant' },
+        { key: 'grill-wipe', name: 'Safety Iron Grill Wipe-Down', price: 200, icon: 'grid_on' },
+        { key: 'exterior-wall', name: 'Balcony Ledge Pressure Blast', price: 200, icon: 'format_paint' }
       ]
     },
     "curtain-cleaning": {
       pairs: [
         {
-          id: 'curtain-steam',
-          title: 'Fabric Thermal Steam',
+          id: 'curtain-beige',
+          title: 'Beige Window Drapes',
           desc: '140°C pressurized dry steam lifts years of trapped road dust',
           icon: 'curtains',
-          before: `${root}/assets/images/pricing/before-after/curtain-steam-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/curtain-steam-after.jpg`
+          before: `${root}/assets/images/before-after/curtain%20before%20%20after/Stained%20Beige%20Curtains%20on%20Tiled%20Wall.png`,
+          after: `${root}/assets/images/before-after/curtain%20before%20%20after/Freshly%20Cleaned%20Beige%20Curtains.png`
         },
         {
-          id: 'curtain-sheer',
-          title: 'Sheer Net Curtains',
-          desc: 'Dingy pollution film removed and bright white freshness restored',
-          icon: 'air',
-          before: `${root}/assets/images/pricing/before-after/curtain-sheer-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/curtain-sheer-after.jpg`
+          id: 'curtain-cream',
+          title: 'Spotless Cream Curtains',
+          desc: 'Dingy pollution film removed and bright fabric freshness restored',
+          icon: 'curtains_closed',
+          before: `${root}/assets/images/before-after/curtain%20before%20%20after/Grimy%20Curtains%20with%20Trailing%20Houseplant.png`,
+          after: `${root}/assets/images/before-after/curtain%20before%20%20after/Spotless%20Cream%20Curtains%20on%20Brass%20Rod.png`
         },
         {
-          id: 'curtain-track',
-          title: 'Curtain Rods & Pelmet',
-          desc: 'Microfiber vacuum wipe of top hidden brackets and tracks',
-          icon: 'view_agenda',
-          before: `${root}/assets/images/pricing/before-after/curtain-track-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/curtain-track-after.jpg`
+          id: 'curtain-slate',
+          title: 'Slate-Blue Living Curtains',
+          desc: 'Microfiber extraction wipe of trapped dust without dismantling',
+          icon: 'roller_shades',
+          before: `${root}/assets/images/before-after/curtain%20before%20%20after/Soiled%20Slate%20Blue%20Curtain%20in%20Living%20Room.png`,
+          after: `${root}/assets/images/before-after/curtain%20before%20%20after/Spotless%20Slate-Blue%20Curtains.png`
         }
       ],
       addons: [
-        { key: 'sheer-curtain', name: 'Extra Sheer Net Curtain', price: 150, icon: 'curtains' },
-        { key: 'pelmet-deep', name: 'Wooden Pelmet Box Vacuum', price: 150, icon: 'shelves' },
-        { key: 'anti-allergen', name: 'Anti-Allergen Fabric Spray', price: 199, icon: 'medical_services' },
-        { key: 'track-grease', name: 'Roller Track Silicone Lubricate', price: 100, icon: 'build' }
+        { key: 'steam-disinfect', name: 'Hospital-Grade Fabric Sanitize', price: 150, icon: 'sanitizer' },
+        { key: 'tieback-wash', name: 'Curtain Pelmet & Tieback Wash', price: 100, icon: 'dry_cleaning' },
+        { key: 'anti-allergen', name: 'Pollen & Mite Barrier Coat', price: 200, icon: 'shield' },
+        { key: 'perfume-mist', name: 'French Lavender Fresh Mist', price: 99, icon: 'air' }
       ]
     },
     "move-in-move-out": {
       pairs: [
         {
-          id: 'move-wardrobe',
-          title: 'Cupboards & Wardrobes',
-          desc: 'Inside and outside wet wipe, fungus removal, pest spray ready',
-          icon: 'shelves',
-          before: `${root}/assets/images/pricing/before-after/move-wardrobe-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/move-wardrobe-after.jpg`
+          id: 'move-scene',
+          title: 'Turnover Move-In Cleaning',
+          desc: 'Complete handover sanitization for hassle-free move-in',
+          icon: 'flight_takeoff',
+          before: `${root}/assets/images/before-after/move%20in%20and%20out%20%20before%20%20after/Before%20Move-In%20Cleaning%20Scene.png`,
+          after: `${root}/assets/images/before-after/move%20in%20and%20out%20%20before%20%20after/Spotless%20Move-In%20Cleaning%20After.png`
         },
         {
-          id: 'move-kitchen',
-          title: 'Modular Kitchen Cabinets',
-          desc: 'Complete turnover sanitization for hassle-free handover',
-          icon: 'kitchen',
-          before: `${root}/assets/images/pricing/before-after/move-kitchen-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/move-kitchen-after.jpg`
+          id: 'move-bedroom',
+          title: 'Sunlit Bedroom Readying',
+          desc: 'Deep turnover sanitization, clean wardrobes and pest-spray ready',
+          icon: 'bed',
+          before: `${root}/assets/images/before-after/move%20in%20and%20out%20%20before%20%20after/Sunlit%20Bedroom%20Before%20Moving%20In.png`,
+          after: `${root}/assets/images/before-after/move%20in%20and%20out%20%20before%20%20after/Warm%20Modern%20Bedroom%20Retreat.png`
         },
         {
-          id: 'move-doors',
-          title: 'Switches, Doors & Handles',
-          desc: 'Disinfected touchpoints and streak-free glass doors',
-          icon: 'door_front',
-          before: `${root}/assets/images/pricing/before-after/move-doors-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/move-doors-after.jpg`
+          id: 'move-living',
+          title: 'Living Room Turnover Mess',
+          desc: 'Deep debris vacuuming and sparkling streak-free floor polish',
+          icon: 'chair',
+          before: `${root}/assets/images/before-after/move%20in%20and%20out%20%20before%20%20after/Sunlit%20Living%20Room%20in%20Move-Out%20Mess.png`,
+          after: `${root}/assets/images/before-after/move%20in%20and%20out%20%20before%20%20after/Sunlit%20Beige%20Living%20Room%20Retreat.png`
         }
       ],
       addons: [
@@ -6186,28 +6186,28 @@ function getServiceBaConfig(serviceKey) {
     "post-construction": {
       pairs: [
         {
-          id: 'postcon-paint',
-          title: 'Cement & Paint Splatters',
+          id: 'postcon-interior',
+          title: 'Renovation Interior & Cement',
           desc: 'Safe non-acidic manual scraping removes all contractor splatters',
           icon: 'construction',
-          before: `${root}/assets/images/pricing/before-after/postcon-paint-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/postcon-paint-after.jpg`
+          before: `${root}/assets/images/before-after/post%20construction%20before%20%20after/Dusty%20Apartment%20Renovation%20Interior.png`,
+          after: `${root}/assets/images/before-after/post%20construction%20before%20%20after/Newly%20Renovated%20Reflective%20Living%20Room.png`
         },
         {
-          id: 'postcon-grout',
-          title: 'Floor Tile Grout Haze',
-          desc: 'Single-disc rotary scrubbing clears chalky white haze',
-          icon: 'grid_view',
-          before: `${root}/assets/images/pricing/before-after/postcon-grout-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/postcon-grout-after.jpg`
+          id: 'postcon-stairwell',
+          title: 'Granite Stairwell with Debris',
+          desc: 'Single-disc rotary scrubbing clears chalky white haze & grit',
+          icon: 'stairs',
+          before: `${root}/assets/images/before-after/post%20construction%20before%20%20after/Dusty%20Renovation%20Stairwell%20with%20Debris.png`,
+          after: `${root}/assets/images/before-after/post%20construction%20before%20%20after/Pristine%20Polished%20Granite%20Staircase.png`
         },
         {
-          id: 'postcon-window',
-          title: 'Window Glass Adhesive Film',
-          desc: 'Protective plastic film peeled off and glass buffed crystal clear',
-          icon: 'window',
-          before: `${root}/assets/images/pricing/before-after/postcon-window-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/postcon-window-after.jpg`
+          id: 'postcon-terrace',
+          title: 'Rooftop Renovation Terrace',
+          desc: 'Industrial debris extraction and high-pressure jet wash',
+          icon: 'deck',
+          before: `${root}/assets/images/before-after/post%20construction%20before%20%20after/Dusty%20Rooftop%20Renovation%20Terrace.png`,
+          after: `${root}/assets/images/before-after/post%20construction%20before%20%20after/Spotless%20Rooftop%20Terrace%20with%20City%20Views.png`
         }
       ],
       addons: [
@@ -6220,28 +6220,28 @@ function getServiceBaConfig(serviceKey) {
     "commercial-cleaning": {
       pairs: [
         {
-          id: 'office-floor',
-          title: 'High-Traffic Office Floor',
-          desc: 'Commercial rotary buffer brings high-gloss reflection to tiles',
+          id: 'office-exec',
+          title: 'Messy Executive Cabin',
+          desc: 'Commercial buffer and dust extraction for executive clarity',
           icon: 'corporate_fare',
-          before: `${root}/assets/images/pricing/before-after/office-floor-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/office-floor-after.jpg`
+          before: `${root}/assets/images/before-after/office%20and%20%20%20commercial%20%20%20before%20%20after/Messy%20Executive%20Office%20Before%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/office%20and%20%20%20commercial%20%20%20before%20%20after/Polished%20Executive%20Office%20with%20City%20Views.png`
         },
         {
-          id: 'office-carpet',
-          title: 'Conference Room Carpet',
-          desc: 'Industrial extraction pulls out coffee spots and traffic tracks',
-          icon: 'layers',
-          before: `${root}/assets/images/pricing/before-after/office-carpet-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/office-carpet-after.jpg`
+          id: 'office-corridor',
+          title: 'High-Traffic Office Corridor',
+          desc: 'Industrial rotary scrub leaves mirror shine on granite tiles',
+          icon: 'meeting_room',
+          before: `${root}/assets/images/before-after/office%20and%20%20%20commercial%20%20%20before%20%20after/Littered%20Modern%20Office%20Corridor.png`,
+          after: `${root}/assets/images/before-after/office%20and%20%20%20commercial%20%20%20before%20%20after/Polished%20Modern%20Office%20Hallway.png`
         },
         {
-          id: 'office-glass',
-          title: 'Glass Partition & Doors',
-          desc: 'Fingerprint and smudge-free transparent executive cabin glass',
-          icon: 'window',
-          before: `${root}/assets/images/pricing/before-after/office-glass-before.jpg`,
-          after: `${root}/assets/images/pricing/before-after/office-glass-after.jpg`
+          id: 'office-openplan',
+          title: 'Open-Plan Workstation Hub',
+          desc: 'Deep sanitization of desk partitions, floors and touchpoints',
+          icon: 'domain',
+          before: `${root}/assets/images/before-after/office%20and%20%20%20commercial%20%20%20before%20%20after/Messy%20Modern%20Office%20Before%20Cleaning.png`,
+          after: `${root}/assets/images/before-after/office%20and%20%20%20commercial%20%20%20before%20%20after/Spotless%20Modern%20Open-Plan%20Office.png`
         }
       ],
       addons: [
