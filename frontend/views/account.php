@@ -44,6 +44,23 @@ require __DIR__ . '/../components/header.php';
           </div>
         </div>
 
+        <!-- Mobile Active Tab Indicator & Filter Trigger (Shown only on <= 991px) -->
+        <div class="account-mobile-tab-pill-bar" id="account-mobile-tab-pill-bar" onclick="window.openAccountMobileDrawer && window.openAccountMobileDrawer()" title="Tap to switch tabs">
+          <div class="mobile-tab-pill-left">
+            <span class="material-symbols-outlined mobile-tab-pill-icon" id="mobile-pill-icon">dashboard</span>
+            <div class="mobile-tab-pill-text">
+              <span class="mobile-tab-pill-sub">ACTIVE TAB</span>
+              <strong class="mobile-tab-pill-title" id="mobile-pill-title">Overview</strong>
+            </div>
+          </div>
+          <button type="button" class="mobile-tab-filter-trigger" aria-label="Open Filter Menu">
+            <span class="material-symbols-outlined icon-xs">tune</span>
+            <span>Tabs</span>
+            <span class="mobile-trigger-badge" id="mobile-trigger-coupons-badge">3</span>
+            <span class="material-symbols-outlined icon-xs">keyboard_arrow_down</span>
+          </button>
+        </div>
+
         <!-- Sidebar Navigation Menu -->
         <nav class="sidebar-nav-menu">
           <ul class="sidebar-nav-list" role="tablist">
@@ -911,6 +928,169 @@ require __DIR__ . '/../components/header.php';
   </section><!-- /.account-right-main -->
 </main><!-- /.account-portal-fullpage -->
 
+<!-- Mobile Floating Action Filter Button (Shown only on <= 991px, Refixel Style) -->
+<button type="button" 
+        class="account-mobile-filter-fab" 
+        id="account-mobile-filter-fab" 
+        aria-label="Open Account Navigation" 
+        aria-expanded="false" 
+        aria-controls="account-mobile-drawer"
+        title="View Coupons, Wallet & Account Menu">
+  <span class="material-symbols-outlined fab-icon">tune</span>
+  <span class="fab-badge" id="fab-coupons-badge" title="3 Active Coupons">3</span>
+</button>
+
+<!-- Mobile Navigation Drawer Backdrop -->
+<div class="account-drawer-backdrop" id="account-drawer-backdrop" aria-hidden="true"></div>
+
+<!-- Mobile Navigation Drawer / Offcanvas (Refixel Style) -->
+<aside class="account-mobile-drawer" id="account-mobile-drawer" aria-label="Account Navigation Menu" aria-hidden="true">
+  
+  <!-- Drawer Header -->
+  <div class="account-drawer-header">
+    <div class="drawer-header-title-wrap">
+      <span class="material-symbols-outlined drawer-header-icon">tune</span>
+      <h3 class="drawer-header-title">Account Menu</h3>
+    </div>
+    <button type="button" class="drawer-close-btn" id="account-drawer-close-btn" aria-label="Close Account Menu">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  <!-- Drawer User Profile Mini Card -->
+  <div class="drawer-user-card">
+    <div class="drawer-avatar-wrap">
+      <span class="drawer-avatar-initial" id="drawer-avatar-initial">G</span>
+    </div>
+    <div class="drawer-user-info">
+      <div class="drawer-user-name" id="drawer-user-name">Gaurav Bisht</div>
+      <div class="drawer-user-badge">
+        <span class="material-symbols-outlined icon-xs">verified</span> CleanClub™ Member
+      </div>
+    </div>
+  </div>
+
+  <!-- Drawer Menu Navigation List -->
+  <nav class="drawer-nav-menu">
+    <div class="drawer-nav-group-title">NAVIGATION &amp; REWARDS</div>
+    <ul class="drawer-nav-list" role="tablist">
+      
+      <!-- 1. Overview -->
+      <li class="drawer-nav-item" role="presentation">
+        <button type="button" class="drawer-nav-link active" data-drawer-tab="tab-overview" role="tab" aria-selected="true">
+          <div class="drawer-nav-icon-box">
+            <span class="material-symbols-outlined">dashboard</span>
+          </div>
+          <div class="drawer-nav-text-col">
+            <span class="drawer-nav-label">Overview</span>
+            <span class="drawer-nav-desc">Summary &amp; Milestone Progress</span>
+          </div>
+          <span class="material-symbols-outlined drawer-nav-arrow">chevron_right</span>
+        </button>
+      </li>
+
+      <!-- 2. Active Coupons -->
+      <li class="drawer-nav-item" role="presentation">
+        <button type="button" class="drawer-nav-link" data-drawer-tab="tab-coupons" role="tab" aria-selected="false">
+          <div class="drawer-nav-icon-box">
+            <span class="material-symbols-outlined">local_activity</span>
+          </div>
+          <div class="drawer-nav-text-col">
+            <span class="drawer-nav-label">Active Coupons</span>
+            <span class="drawer-nav-desc">Discounts &amp; 3 Live Vouchers</span>
+          </div>
+          <span class="drawer-item-badge badge-green" id="drawer-coupons-badge">3 Active</span>
+          <span class="material-symbols-outlined drawer-nav-arrow">chevron_right</span>
+        </button>
+      </li>
+
+      <!-- 3. Coin Wallet -->
+      <li class="drawer-nav-item" role="presentation">
+        <button type="button" class="drawer-nav-link" data-drawer-tab="tab-wallet" role="tab" aria-selected="false">
+          <div class="drawer-nav-icon-box">
+            <span class="material-symbols-outlined">account_balance_wallet</span>
+          </div>
+          <div class="drawer-nav-text-col">
+            <span class="drawer-nav-label">Coin Wallet</span>
+            <span class="drawer-nav-desc">CleanCoins balance &amp; rules</span>
+          </div>
+          <span class="drawer-item-badge badge-gold" id="drawer-coins-badge">50 🪙</span>
+          <span class="material-symbols-outlined drawer-nav-arrow">chevron_right</span>
+        </button>
+      </li>
+
+      <!-- 4. Cleaning History -->
+      <li class="drawer-nav-item" role="presentation">
+        <button type="button" class="drawer-nav-link" data-drawer-tab="tab-history" role="tab" aria-selected="false">
+          <div class="drawer-nav-icon-box">
+            <span class="material-symbols-outlined">history</span>
+          </div>
+          <div class="drawer-nav-text-col">
+            <span class="drawer-nav-label">Cleaning History</span>
+            <span class="drawer-nav-desc">Past doorstep bookings</span>
+          </div>
+          <span class="drawer-item-badge badge-subtle">1</span>
+          <span class="material-symbols-outlined drawer-nav-arrow">chevron_right</span>
+        </button>
+      </li>
+
+      <!-- 5. Invoices & Receipts -->
+      <li class="drawer-nav-item" role="presentation">
+        <button type="button" class="drawer-nav-link" data-drawer-tab="tab-invoices" role="tab" aria-selected="false">
+          <div class="drawer-nav-icon-box">
+            <span class="material-symbols-outlined">receipt_long</span>
+          </div>
+          <div class="drawer-nav-text-col">
+            <span class="drawer-nav-label">Invoices &amp; Receipts</span>
+            <span class="drawer-nav-desc">GST compliant tax receipts</span>
+          </div>
+          <span class="drawer-item-badge badge-subtle">1</span>
+          <span class="material-symbols-outlined drawer-nav-arrow">chevron_right</span>
+        </button>
+      </li>
+
+      <!-- 6. Settings & Addresses -->
+      <li class="drawer-nav-item" role="presentation">
+        <button type="button" class="drawer-nav-link" data-drawer-tab="tab-settings" role="tab" aria-selected="false">
+          <div class="drawer-nav-icon-box">
+            <span class="material-symbols-outlined">settings</span>
+          </div>
+          <div class="drawer-nav-text-col">
+            <span class="drawer-nav-label">Settings &amp; Addresses</span>
+            <span class="drawer-nav-desc">Edit profile &amp; saved locations</span>
+          </div>
+          <span class="material-symbols-outlined drawer-nav-arrow">chevron_right</span>
+        </button>
+      </li>
+
+    </ul>
+  </nav>
+
+  <!-- Drawer Help Widget (Refixel Style "Need Help Choosing?") -->
+  <div class="drawer-help-card">
+    <div class="drawer-help-head">
+      <div class="drawer-help-icon-wrap">
+        <span class="material-symbols-outlined">support_agent</span>
+      </div>
+      <div class="drawer-help-text">
+        <strong class="drawer-help-title">Need Assistance?</strong>
+        <p class="drawer-help-desc">Talk to our Kashipur customer care coordinator for custom quotes or slot changes.</p>
+      </div>
+    </div>
+    <a href="https://wa.me/917906366271?text=Hi%20A1%20Cleaning,%20I%20need%20help%20with%20my%20account" target="_blank" rel="noopener" class="btn btn-drawer-whatsapp">
+      <span class="material-symbols-outlined icon-sm">chat</span> WhatsApp Help
+    </a>
+  </div>
+
+  <!-- Drawer Sign Out Link -->
+  <div class="drawer-logout-wrap">
+    <a href="<?= SITE_URL ?>/" class="drawer-logout-btn" onclick="if(confirm('Are you sure you want to log out?')){ alert('Logged out successfully.'); }">
+      <span class="material-symbols-outlined icon-sm">logout</span> Sign Out
+    </a>
+  </div>
+
+</aside>
+
 <!-- Floating Toast Notification for Settings & Copy Actions -->
 <div id="account-toast" class="account-floating-toast" role="status" aria-live="polite">
   <span class="material-symbols-outlined icon-sm toast-icon">check_circle</span>
@@ -920,9 +1100,19 @@ require __DIR__ . '/../components/header.php';
 <!-- Tab Navigation & Settings Script -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  // 1. Sidebar Tab Switching Logic
+  // 1. Sidebar & Drawer Tab Switching Logic
   const navButtons = document.querySelectorAll('.sidebar-nav-link[data-tab-target]');
+  const drawerLinks = document.querySelectorAll('.drawer-nav-link[data-drawer-tab]');
   const tabPanels = document.querySelectorAll('.account-tab-panel');
+
+  const tabMetaMap = {
+    'tab-overview': { name: 'Overview', icon: 'dashboard' },
+    'tab-coupons': { name: 'Active Coupons', icon: 'local_activity' },
+    'tab-wallet': { name: 'Coin Wallet', icon: 'account_balance_wallet' },
+    'tab-history': { name: 'Cleaning History', icon: 'history' },
+    'tab-invoices': { name: 'Invoices & Receipts', icon: 'receipt_long' },
+    'tab-settings': { name: 'Settings & Addresses', icon: 'settings' }
+  };
 
   window.switchAccountTab = function (targetId) {
     if (!targetId) return;
@@ -934,10 +1124,23 @@ document.addEventListener('DOMContentLoaded', function () {
       btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
     });
 
+    drawerLinks.forEach(function (btn) {
+      const isTarget = btn.getAttribute('data-drawer-tab') === targetId;
+      btn.classList.toggle('active', isTarget);
+      btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+    });
+
     tabPanels.forEach(function (panel) {
       const isTarget = panel.id === targetId;
       panel.classList.toggle('active', isTarget);
     });
+
+    // Update Mobile Status Pill
+    const meta = tabMetaMap[targetId] || tabMetaMap['tab-overview'];
+    const pillTitle = document.getElementById('mobile-pill-title');
+    const pillIcon = document.getElementById('mobile-pill-icon');
+    if (pillTitle) pillTitle.textContent = meta.name;
+    if (pillIcon) pillIcon.textContent = meta.icon;
 
     // Update URL hash smoothly without scrolling
     const cleanHash = targetId.replace('tab-', '');
@@ -962,9 +1165,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Scroll to top of panels on mobile
     if (window.innerWidth <= 991) {
-      const mainPanels = document.querySelector('.account-main-panels');
-      if (mainPanels) {
-        mainPanels.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const targetPanel = document.getElementById(targetId);
+      if (targetPanel) {
+        targetPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
   };
@@ -973,6 +1176,57 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.addEventListener('click', function () {
       const targetId = this.getAttribute('data-tab-target');
       window.switchAccountTab(targetId);
+    });
+  });
+
+  // Mobile Drawer Toggle Handlers
+  const drawer = document.getElementById('account-mobile-drawer');
+  const backdrop = document.getElementById('account-drawer-backdrop');
+  const fab = document.getElementById('account-mobile-filter-fab');
+  const closeBtn = document.getElementById('account-drawer-close-btn');
+
+  window.openAccountMobileDrawer = function () {
+    if (!drawer || !backdrop) return;
+    drawer.classList.add('active');
+    backdrop.classList.add('active');
+    drawer.setAttribute('aria-hidden', 'false');
+    if (fab) fab.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('account-drawer-open');
+  };
+
+  window.closeAccountMobileDrawer = function () {
+    if (!drawer || !backdrop) return;
+    drawer.classList.remove('active');
+    backdrop.classList.remove('active');
+    drawer.setAttribute('aria-hidden', 'true');
+    if (fab) fab.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('account-drawer-open');
+  };
+
+  if (fab) {
+    fab.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (drawer && drawer.classList.contains('active')) {
+        window.closeAccountMobileDrawer();
+      } else {
+        window.openAccountMobileDrawer();
+      }
+    });
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', window.closeAccountMobileDrawer);
+  if (backdrop) backdrop.addEventListener('click', window.closeAccountMobileDrawer);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && drawer && drawer.classList.contains('active')) {
+      window.closeAccountMobileDrawer();
+    }
+  });
+
+  drawerLinks.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const targetId = this.getAttribute('data-drawer-tab');
+      window.switchAccountTab(targetId);
+      window.closeAccountMobileDrawer();
     });
   });
 
@@ -1101,12 +1355,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const meterFill = document.getElementById('wallet-meter-fill');
     const badgeEl = document.getElementById('wallet-progress-badge');
     const sidebarBadge = document.getElementById('sidebar-coins-badge');
+    const drawerCoinsBadge = document.getElementById('drawer-coins-badge');
     const statCoinsVal = document.getElementById('stat-coins-val');
 
     if (balanceNum) balanceNum.textContent = count;
     if (meterFill) meterFill.style.width = pct + '%';
     if (badgeEl) badgeEl.textContent = count + ' / ' + totalTarget + ' Coins (' + pct + '%)';
     if (sidebarBadge) sidebarBadge.textContent = count + ' 🪙';
+    if (drawerCoinsBadge) drawerCoinsBadge.textContent = count + ' 🪙';
     if (statCoinsVal) statCoinsVal.textContent = count + ' CleanCoins';
   };
 
@@ -1119,6 +1375,10 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('profile-full-name').value = data.name;
         document.getElementById('sidebar-user-name').textContent = data.name;
         document.getElementById('sidebar-avatar-initial').textContent = data.name.charAt(0).toUpperCase();
+        const drawerName = document.getElementById('drawer-user-name');
+        const drawerInitial = document.getElementById('drawer-avatar-initial');
+        if (drawerName) drawerName.textContent = data.name;
+        if (drawerInitial) drawerInitial.textContent = data.name.charAt(0).toUpperCase();
       }
       if (data.phone) {
         document.getElementById('profile-phone').value = data.phone;
@@ -1165,6 +1425,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (name) {
       document.getElementById('sidebar-user-name').textContent = name;
       document.getElementById('sidebar-avatar-initial').textContent = name.charAt(0).toUpperCase();
+      const drawerName = document.getElementById('drawer-user-name');
+      const drawerInitial = document.getElementById('drawer-avatar-initial');
+      if (drawerName) drawerName.textContent = name;
+      if (drawerInitial) drawerInitial.textContent = name.charAt(0).toUpperCase();
     }
     if (phone) {
       document.getElementById('sidebar-user-phone').innerHTML = '<span class="material-symbols-outlined icon-xs">call</span> ' + phone;
