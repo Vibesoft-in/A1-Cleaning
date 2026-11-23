@@ -59,36 +59,46 @@ require __DIR__ . '/../components/header.php';
       </p>
     </div>
 
-    <!-- 9 Services Catalog Grid -->
+    <!-- 11 Services Catalog Grid (Clean, High-Res Branded Photos) -->
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.75rem;">
-      <?php foreach ($servicesList as $sSlug => $sData): 
+      <?php 
+      $seenSlugs = [];
+      $uniqueServices = [];
+      foreach ($servicesList as $sSlug => $sData) {
+          $canon = $sData['slug'] ?? $sSlug;
+          if (!isset($seenSlugs[$canon])) {
+              $seenSlugs[$canon] = true;
+              $uniqueServices[$canon] = $sData;
+          }
+      }
+      foreach ($uniqueServices as $sSlug => $sData): 
         $imgPath = SITE_URL . '/assets/images/services/' . $sSlug . '.jpg';
       ?>
-        <article style="background: var(--color-white); border: 1.5px solid var(--color-border); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease;">
+        <article style="background: var(--color-white); border: 1.5px solid var(--color-border); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease;">
           
           <div>
-            <!-- Service Thumbnail Media -->
-            <div style="height: 200px; position: relative; overflow: hidden; background: var(--color-soft-mint);">
-              <img src="<?= $imgPath ?>" alt="<?= htmlspecialchars($sData['name']) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
-              <div style="position: absolute; top: 12px; right: 12px; background: rgba(11, 41, 34, 0.85); backdrop-filter: blur(4px); color: #FFFFFF; font-size: 0.75rem; font-weight: 800; padding: 0.3rem 0.75rem; border-radius: var(--radius-pill); border: 1px solid rgba(255, 255, 255, 0.2);">
+            <!-- Service Thumbnail Media (High-Res 1:1 Clean Aspect) -->
+            <div style="height: 190px; position: relative; overflow: hidden; background: #F4F8F5;">
+              <img src="<?= $imgPath ?>" alt="<?= htmlspecialchars($sData['name']) ?>" style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;" loading="lazy" onerror="this.onerror=null; this.src='<?= SITE_URL ?>/assets/images/pricing/<?= $sSlug ?>.jpg';">
+              <div style="position: absolute; top: 12px; right: 12px; background: rgba(11, 41, 34, 0.85); backdrop-filter: blur(4px); color: #FFFFFF; font-size: 0.75rem; font-weight: 800; padding: 0.28rem 0.7rem; border-radius: var(--radius-pill); border: 1px solid rgba(255, 255, 255, 0.2);">
                 From <?= htmlspecialchars($sData['starting_price']) ?>
               </div>
-              <div style="position: absolute; bottom: 12px; left: 12px; background: var(--color-fresh-green); color: #FFFFFF; font-size: 0.7rem; font-weight: 800; padding: 0.22rem 0.65rem; border-radius: var(--radius-pill); display: inline-flex; align-items: center; gap: 3px;">
-                <span class="material-symbols-outlined icon-xs">schedule</span> <?= htmlspecialchars($sData['time_estimate']) ?>
+              <div style="position: absolute; bottom: 10px; left: 12px; background: var(--color-fresh-green); color: #FFFFFF; font-size: 0.7rem; font-weight: 800; padding: 0.22rem 0.65rem; border-radius: var(--radius-pill); display: inline-flex; align-items: center; gap: 3px; max-width: calc(100% - 24px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <span class="material-symbols-outlined icon-xs">schedule</span> <?= htmlspecialchars(explode(' (', $sData['time_estimate'])[0]) ?>
               </div>
             </div>
 
             <!-- Card Content Body -->
-            <div style="padding: 1.5rem;">
-              <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--color-deep-green); margin-bottom: 0.45rem;">
+            <div style="padding: 1.35rem 1.5rem 1rem;">
+              <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--color-deep-green); margin-bottom: 0.4rem;">
                 <?= htmlspecialchars($sData['name']) ?>
               </h3>
-              <p style="font-size: 0.85rem; color: var(--color-text-body); line-height: 1.45; margin-bottom: 1rem;">
+              <p style="font-size: 0.84rem; color: var(--color-text-body); line-height: 1.45; margin-bottom: 0.85rem;">
                 <?= htmlspecialchars($sData['short_desc']) ?>
               </p>
 
               <!-- Top Checklist Highlights -->
-              <ul style="list-style: none; padding: 0; margin: 0 0 1.25rem; display: flex; flex-direction: column; gap: 0.4rem;">
+              <ul style="list-style: none; padding: 0; margin: 0 0 1rem; display: flex; flex-direction: column; gap: 0.35rem;">
                 <?php 
                   $sampleChecklist = array_slice($sData['checklist'], 0, 3);
                   foreach ($sampleChecklist as $point): 
@@ -103,7 +113,7 @@ require __DIR__ . '/../components/header.php';
           </div>
 
           <!-- Card Bottom CTA Action Row -->
-          <div style="padding: 1rem 1.5rem; background: #F8FBF9; border-top: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; gap: 0.65rem;">
+          <div style="padding: 0.85rem 1.5rem; background: #F8FBF9; border-top: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; gap: 0.65rem;">
             <a href="<?= SITE_URL ?>/services/<?= $sSlug ?>/" style="font-size: 0.82rem; font-weight: 800; color: var(--color-deep-green); text-decoration: none; display: inline-flex; align-items: center; gap: 2px;">
               View Details <span class="material-symbols-outlined icon-xs">arrow_forward</span>
             </a>
