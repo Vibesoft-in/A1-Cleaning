@@ -3027,23 +3027,30 @@ body.a1-sheet-lock .tab-whatsapp {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1px 7px;
-  border-radius: 999px;
-  border: 1px solid #22A06B;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 50% !important;
+  border: 1.5px solid #22A06B;
   background: #FFFFFF;
   color: #22A06B;
-  font-size: 0.60rem;
-  font-weight: 800;
   cursor: pointer;
+  padding: 0;
   flex-shrink: 0;
-  transition: all 0.2s ease;
-  line-height: 1.15;
-  height: 18px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.a1-quick-addon-btn .material-symbols-outlined {
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .a1-quick-addon-btn.is-added,
 .a1-quick-addon-card.is-selected .a1-quick-addon-btn {
   background: #22A06B;
+  border-color: #22A06B;
   color: #FFFFFF;
 }
 
@@ -4935,8 +4942,8 @@ function renderQuickAddDrawerContent(pkg, basePrice, serviceAddons) {
           </div>
           <div class="a1-quick-addon-action-group">
             <span class="a1-quick-addon-price">+₹${a.price.toLocaleString('en-IN')}</span>
-            <button type="button" class="a1-quick-addon-btn ${isAct ? 'is-added' : ''}">
-              ${isAct ? 'Added' : 'Add'}
+            <button type="button" class="a1-quick-addon-btn ${isAct ? 'is-added' : ''}" aria-label="Toggle addon">
+              <span class="material-symbols-outlined">${isAct ? 'check' : 'add'}</span>
             </button>
           </div>
         </div>
@@ -5080,7 +5087,7 @@ function toggleQuickAddon(key, name, price, cardEl) {
     const btn = cardEl.querySelector('.a1-quick-addon-btn');
     if (btn) {
       btn.classList.toggle('is-added', isAct);
-      btn.textContent = isAct ? 'Added' : 'Add';
+      btn.innerHTML = `<span class="material-symbols-outlined">${isAct ? 'check' : 'add'}</span>`;
     }
   }
 
