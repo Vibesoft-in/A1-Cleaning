@@ -5541,6 +5541,15 @@ function initPopupSwipeTouch(slider) {
 }
 
 function openPackageFullDetails(index) {
+  // Desktop & Larger Devices (>768px): Open dedicated full service view page in a new window/tab
+  if (window.innerWidth > 768) {
+    const root = '<?= SITE_URL ?>';
+    const serviceUrl = `${root}/services/${currentServiceKey}/?package=${index}`;
+    window.open(serviceUrl, '_blank');
+    return;
+  }
+
+  // Mobile / Small Devices (<=768px): Open interactive bottom sheet modal
   currentBottomSheetPackageIndex = index;
   const backdrop = document.getElementById('a1PkgBottomSheetBackdrop');
   const sheet = document.getElementById('a1PkgBottomSheet');
