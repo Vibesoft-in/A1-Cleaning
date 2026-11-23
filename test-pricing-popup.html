@@ -850,13 +850,15 @@
       </div>
 
       <div class="a1-expert-actions">
-        <a href="tel:917906366271" class="btn-a1-expert-call">
+        <a href="tel:917906366271" class="btn-a1-expert-call" aria-label="Call A1 Cleaning Expert">
           <span class="material-symbols-outlined icon-sm">call</span>
-          <span>Call Now <?= BUSINESS_PHONE ?></span>
+          <span class="a1-expert-desktop-text">Call Now +91 79063 66271</span>
+          <span class="a1-expert-mobile-text">Call Now</span>
         </a>
-        <a href="https://wa.me/917906366271?text=Hi%20A1%20Cleaning,%20I%20need%20a%20free%20quote%20consultation." target="_blank" rel="noopener" class="btn-a1-expert-wa">
+        <a href="https://wa.me/917906366271?text=Hi%20A1%20Cleaning,%20I%20need%20a%20free%20quote%20consultation." target="_blank" rel="noopener" class="btn-a1-expert-wa" aria-label="Book on WhatsApp">
           <span class="material-symbols-outlined icon-sm">chat</span>
-          <span>Book on WhatsApp</span>
+          <span class="a1-expert-desktop-text">Book on WhatsApp</span>
+          <span class="a1-expert-mobile-text">WhatsApp</span>
         </a>
       </div>
     </div>
@@ -2044,6 +2046,14 @@ body.a1-sheet-lock .tab-whatsapp {
   box-shadow: 0 4px 18px rgba(11, 41, 34, 0.16) !important;
 }
 
+/* Expert Banner Desktop & Mobile Rules */
+.a1-expert-mobile-text {
+  display: none;
+}
+.a1-expert-desktop-text {
+  display: inline;
+}
+
 /* Desktop: Slide wrappers behave as contents so desktop carousel stays intact */
 @media (min-width: 769px) {
   .a1-services-slide,
@@ -2058,6 +2068,63 @@ body.a1-sheet-lock .tab-whatsapp {
 
 /* Mobile: 3 columns x 2 rows per slide (6 services per view), swipeable horizontally */
 @media (max-width: 768px) {
+  /* Expert Banner Phone View: Amne Samne (Side by Side 2-Columns) & Compact Size */
+  .a1-expert-banner {
+    padding: 1.5rem 1.15rem !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+    border-radius: 20px !important;
+  }
+  .a1-expert-title {
+    font-size: clamp(1.2rem, 4.2vw, 1.45rem) !important;
+    line-height: 1.25 !important;
+  }
+  .a1-expert-sub {
+    font-size: 0.86rem !important;
+    line-height: 1.45 !important;
+  }
+  .a1-expert-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+    align-items: stretch !important;
+    margin-top: 0.25rem !important;
+  }
+  .btn-a1-expert-call,
+  .btn-a1-expert-wa {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    padding: 0.55rem 0.4rem !important;
+    font-size: 0.8rem !important;
+    font-weight: 800 !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    height: 38px !important;
+    border-radius: 50px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    flex: 1 1 0 !important;
+    letter-spacing: -0.01em !important;
+  }
+  .btn-a1-expert-call .icon-sm,
+  .btn-a1-expert-wa .icon-sm {
+    font-size: 15px !important;
+    width: 15px !important;
+    height: 15px !important;
+    line-height: 15px !important;
+  }
+  .a1-expert-mobile-text {
+    display: inline !important;
+  }
+  .a1-expert-desktop-text {
+    display: none !important;
+  }
   .a1-services-slider {
     display: flex !important;
     flex-direction: row !important;
