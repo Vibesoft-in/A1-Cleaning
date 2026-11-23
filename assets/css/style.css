@@ -7101,52 +7101,96 @@ body:has(.account-portal-fullpage) .theme-footer {
 }
 
 .a1-addon-chip-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1.15rem;
-  background: #FCFDFD;
-  border: 1px dashed #C8DDD1;
-  border-radius: 12px;
-  font-size: 0.92rem;
-  transition: all 0.2s ease;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.85rem !important;
+  padding: 0.75rem 1rem !important;
+  background: #FFFFFF !important;
+  border: 1.5px solid #D6E8DC !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(11, 41, 34, 0.03) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease !important;
 }
 
 .a1-addon-chip-row:hover {
-  background: #F4F9F6;
-  border-color: var(--color-fresh-green);
+  background: #F8FBF9 !important;
+  border-color: var(--color-fresh-green) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(34, 160, 107, 0.08) !important;
 }
 
 .a1-addon-chip-name {
-  color: var(--color-deep-green);
-  font-weight: 700;
+  color: var(--color-deep-green) !important;
+  font-weight: 700 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.35 !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  word-break: break-word !important;
 }
 
 .a1-addon-chip-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
 }
 
 .a1-addon-chip-price {
-  font-weight: 800;
-  color: var(--color-fresh-green);
+  font-weight: 800 !important;
+  font-size: 0.82rem !important;
+  color: #198754 !important;
+  background: #EAF3EE !important;
+  border: 1px solid #D2E4DC !important;
+  padding: 0.25rem 0.65rem !important;
+  border-radius: 20px !important;
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  letter-spacing: 0.01em !important;
+  line-height: 1.2 !important;
 }
 
 .a1-addon-chip-del {
-  background: none;
-  border: none;
-  color: #92A59A;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  font-size: 1.2rem;
-  transition: color 0.2s;
+  width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 50% !important;
+  background: #F1F5F3 !important;
+  color: #6C8276 !important;
+  border: 1px solid #E0ECE4 !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+  transition: all 0.2s ease !important;
+  box-sizing: border-box !important;
 }
 
 .a1-addon-chip-del:hover {
-  color: #D32F2F;
+  background: #FEE2E2 !important;
+  border-color: #FECACA !important;
+  color: #DC2626 !important;
+  transform: scale(1.08) !important;
+}
+
+.a1-addon-chip-del .material-symbols-outlined {
+  font-size: 16px !important;
+  line-height: 1 !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .a1-addons-empty-card {
@@ -8268,7 +8312,7 @@ input, select, textarea {
   font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
 }
 
-button:not(.a1-pkg-btn-view):not(.a1-pkg-btn-add):not(.a1-quick-addon-btn):not(.a1-drawer-close-btn):not(.a1-filter-fab), .btn, .a1-pkg-btn, .tab-filter-btn {
+button:not(.a1-pkg-btn-view):not(.a1-pkg-btn-add):not(.a1-quick-addon-btn):not(.a1-drawer-close-btn):not(.a1-filter-fab):not(.a1-addon-chip-del), .btn, .a1-pkg-btn, .tab-filter-btn {
   min-height: 44px; /* WCAG & Mobile touch-target rule */
 }
 
