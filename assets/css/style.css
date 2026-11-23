@@ -7656,7 +7656,7 @@ input, select, textarea {
   font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
 }
 
-button:not(.a1-pkg-btn-view):not(.a1-pkg-btn-add), .btn, .a1-pkg-btn, .tab-filter-btn {
+button:not(.a1-pkg-btn-view):not(.a1-pkg-btn-add):not(.a1-quick-addon-btn), .btn, .a1-pkg-btn, .tab-filter-btn {
   min-height: 44px; /* WCAG & Mobile touch-target rule */
 }
 
