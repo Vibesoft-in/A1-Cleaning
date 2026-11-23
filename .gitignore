@@ -1,0 +1,28 @@
+# Dependencies & Caches
+node_modules/
+vendor/
+
+# Temporary Scratchpad & Test Profiles
+scratch/
+temp_chrome_profile*
+
+# Large Archives (GitHub rejects files > 100MB)
+*.zip
+*.tar.gz
+*.rar
+
+# Executables & Binaries
+*.exe
+*.dll
+
+# Environment & Credentials
+.env
+.env.local
+
+# Operating System & Editor Files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log
