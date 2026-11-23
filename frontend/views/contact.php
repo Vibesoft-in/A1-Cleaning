@@ -329,39 +329,24 @@ require __DIR__ . '/../components/header.php';
         </p>
       </div>
 
-      <!-- 2-Column Responsive Accordion Grid -->
+      <!-- 2-Column Responsive Accordion Grid (Direct Paired Grid for Pixel-Perfect Horizontal Alignment) -->
       <div class="contact-faq-grid">
-        
-        <!-- Col 1 (Questions 1 to 4) -->
-        <div class="contact-faq-col">
-          <?php for ($i = 0; $i < 4; $i++): $faq = $faqList[$i]; ?>
-            <div class="contact-faq-card <?= ($i === 0) ? 'is-open' : '' ?>">
-              <button type="button" class="contact-faq-trigger" onclick="toggleContactFaq(this)" aria-expanded="<?= ($i === 0) ? 'true' : 'false' ?>">
-                <span class="contact-faq-question"><?= htmlspecialchars($faq['q']) ?></span>
-                <span class="contact-faq-icon" aria-hidden="true">+</span>
-              </button>
-              <div class="contact-faq-body" <?= ($i === 0) ? 'style="display: block;"' : '' ?>>
-                <p><?= htmlspecialchars($faq['a']) ?></p>
-              </div>
+        <?php
+        // Ordered in matched horizontal pairs: Row 1 (0, 4), Row 2 (1, 5), Row 3 (2, 6), Row 4 (3, 7)
+        $faqOrder = [0, 4, 1, 5, 2, 6, 3, 7];
+        foreach ($faqOrder as $faqIdx):
+            $faq = $faqList[$faqIdx];
+        ?>
+          <div class="contact-faq-card" data-faq-id="<?= $faqIdx ?>">
+            <button type="button" class="contact-faq-trigger" onclick="toggleContactFaq(this)" aria-expanded="false">
+              <span class="contact-faq-question"><?= htmlspecialchars($faq['q']) ?></span>
+              <span class="contact-faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="contact-faq-body">
+              <p><?= htmlspecialchars($faq['a']) ?></p>
             </div>
-          <?php endfor; ?>
-        </div>
-
-        <!-- Col 2 (Questions 5 to 8) -->
-        <div class="contact-faq-col">
-          <?php for ($i = 4; $i < 8; $i++): $faq = $faqList[$i]; ?>
-            <div class="contact-faq-card">
-              <button type="button" class="contact-faq-trigger" onclick="toggleContactFaq(this)" aria-expanded="false">
-                <span class="contact-faq-question"><?= htmlspecialchars($faq['q']) ?></span>
-                <span class="contact-faq-icon" aria-hidden="true">+</span>
-              </button>
-              <div class="contact-faq-body">
-                <p><?= htmlspecialchars($faq['a']) ?></p>
-              </div>
-            </div>
-          <?php endfor; ?>
-        </div>
-
+          </div>
+        <?php endforeach; ?>
       </div>
 
       <!-- Bottom Help Callout Box (Refixel Style Support Card) -->
@@ -946,7 +931,7 @@ function handleVorxusFormSubmit(e) {
 .contact-faq-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 0.85rem 1.25rem;
   align-items: start;
   max-width: 1060px;
   margin: 0 auto;
@@ -957,11 +942,6 @@ function handleVorxusFormSubmit(e) {
     gap: 0.75rem;
   }
 }
-.contact-faq-col {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
 .contact-faq-card {
   background: #FFFFFF;
   border: 1.5px solid #E2ECE5;
@@ -969,6 +949,10 @@ function handleVorxusFormSubmit(e) {
   transition: all 0.22s ease;
   box-shadow: 0 2px 8px rgba(11, 41, 34, 0.02);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 66px;
+  height: 100%;
 }
 .contact-faq-card:hover {
   border-color: #B8D6C6;
@@ -978,25 +962,28 @@ function handleVorxusFormSubmit(e) {
   border-color: #22A06B;
   box-shadow: 0 4px 18px rgba(34, 160, 107, 0.1);
 }
-.contact-faq-trigger {
+button.contact-faq-trigger {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.9rem 1.15rem;
+  padding: 0.85rem 1.15rem;
   background: transparent;
   border: none;
   cursor: pointer;
   text-align: left;
   gap: 0.85rem;
   font-family: inherit;
+  min-height: 66px !important;
+  box-sizing: border-box;
 }
 .contact-faq-question {
   font-size: 0.86rem;
   font-weight: 700;
   color: #0B2922;
-  line-height: 1.4;
+  line-height: 1.35;
   transition: color 0.18s ease;
+  flex: 1;
 }
 .contact-faq-card.is-open .contact-faq-question {
   color: #22A06B;
