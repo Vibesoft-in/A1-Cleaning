@@ -111,7 +111,7 @@ require __DIR__ . '/../components/header.php';
             </svg>
           </div>
         </div>
-        <p class="rev-video-subheading">Continuous 3D arched video ribbon showcasing our verified doorstep cleaning results across Uttarakhand.</p>
+        <p class="rev-video-subheading">Swipe or drag in any direction (left &amp; right) to explore verified doorstep cleaning results across Uttarakhand.</p>
       </div>
 
       <div class="rev-cylinder-viewport" id="cylinderViewport">
@@ -636,43 +636,51 @@ require __DIR__ . '/../components/header.php';
   line-height: 1.55;
 }
 
-/* 3D Viewport: Perspective 1300px + Room for Hourglass Arch (No edge fade) */
+/* 3D Viewport: Perspective 1300px + Interactive Grab / Swipeable Track (Matching Image 2) */
 .rev-cylinder-viewport {
   width: 100%;
   position: relative;
   overflow: hidden;
-  padding: 2.8rem 0 1.8rem;
+  padding: 3rem 0 2rem;
   perspective: 1300px;
   perspective-origin: 50% 50%;
   user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+.rev-cylinder-viewport.is-dragging {
+  cursor: grabbing;
+}
+.rev-cylinder-viewport.is-dragging .rev-cylinder-card {
+  pointer-events: none;
 }
 
-/* Continuous 3D Marquee Track */
+/* 3D Ribbon Track: Uniform Spacing, Zero Overlap */
 .rev-cylinder-track {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   width: max-content;
   transform-style: preserve-3d;
   will-change: transform;
 }
 
-/* Compact Sleek Vertical 9:16 Cards (~155px x 275px) - Full Opacity */
+/* Uniform Vertical 9:16 Cards (~185px x 320px) - Matching Reference 1:1, Full Opacity, No Collisions */
 .rev-cylinder-card {
-  width: 155px;
-  height: 275px;
-  border-radius: 16px;
+  width: 185px;
+  height: 320px;
+  border-radius: 20px;
   overflow: hidden;
   position: relative;
   background: #0B2922;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
   flex-shrink: 0;
   cursor: pointer;
   transform-origin: center center;
   transform-style: preserve-3d;
   will-change: transform;
-  opacity: 1; /* Full opacity - No fading */
+  opacity: 1; /* Solid 100% opacity - No fade */
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
@@ -694,15 +702,15 @@ require __DIR__ . '/../components/header.php';
 /* Tiny Category Pill at Top Left */
 .rev-cylinder-pill {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 12px;
+  left: 12px;
   background: rgba(7, 25, 20, 0.82);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(52, 211, 153, 0.45);
   color: #34D399;
-  font-size: 0.64rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 9999px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -716,7 +724,7 @@ require __DIR__ . '/../components/header.php';
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 14px 10px 10px;
+  padding: 16px 12px 12px;
   background: linear-gradient(to top, rgba(7, 25, 20, 0.95), rgba(7, 25, 20, 0.5) 60%, transparent);
   z-index: 6;
   opacity: 0;
@@ -729,34 +737,34 @@ require __DIR__ . '/../components/header.php';
   transform: translateY(0);
 }
 .rev-cylinder-name {
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: #FFFFFF;
   margin-bottom: 2px;
 }
 .rev-cylinder-serv {
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   color: #A7F3D0;
 }
 
-/* Mobile Responsive */
+/* Mobile Responsive: Proportional Card Sizing */
 @media (max-width: 600px) {
   .rev-cylinder-card {
-    width: 125px;
-    height: 220px;
-    border-radius: 12px;
+    width: 145px;
+    height: 250px;
+    border-radius: 16px;
   }
   .rev-cylinder-track {
-    gap: 8px;
+    gap: 10px;
   }
   .rev-cylinder-pill {
-    top: 7px;
-    left: 7px;
-    font-size: 0.56rem;
-    padding: 2px 6px;
+    top: 8px;
+    left: 8px;
+    font-size: 0.6rem;
+    padding: 2px 7px;
   }
   .rev-cylinder-viewport {
-    padding: 1.5rem 0 0.8rem;
+    padding: 2rem 0 1rem;
   }
 }
 
@@ -2077,9 +2085,9 @@ function cycleReviews(delta) {
 }
 
 // ============================================================================
-// 9. 3D ARCHED CYLINDER VIDEO RIBBON (Inspired by Modern Hero Video Ribbon)
-// Continuous right-to-left auto-scroll at 38px/s, seamless infinite loop
-// Parabolic arch + inward rotateY + depth translateZ per-frame, pauses on hover
+// 9. 3D ARCHED VIDEO RIBBON - INTERACTIVE SWIPEABLE (Matching Reference Image 2)
+// ZERO continuous auto-scroll; fully draggable & swipable in BOTH directions
+// Uniform cards (185px x 320px), uniform gap (16px), zero overlap, parabolic arch
 // ============================================================================
 (function initCylinderMarquee() {
   const track = document.getElementById('cylinderTrack');
@@ -2089,50 +2097,111 @@ function cycleReviews(delta) {
   const cards = Array.from(track.querySelectorAll('.rev-cylinder-card'));
   if (!cards.length) return;
 
+  // SWIPE & DRAG PHYSICS (ZERO AUTO-SCROLL)
   let scrollX = 0;
-  const speed = 38; // 38px per second for elegant cinematic drift
-  let isPaused = false;
+  let isDragging = false;
+  let startX = 0;
+  let lastX = 0;
+  let velocity = 0;
   let hoveredCard = null;
 
-  // Pause on hover
-  viewport.addEventListener('mouseenter', () => { isPaused = true; });
-  viewport.addEventListener('mouseleave', () => { 
-    isPaused = false; 
-    hoveredCard = null; 
-  });
-
   cards.forEach(card => {
-    card.addEventListener('mouseenter', () => { hoveredCard = card; });
+    card.addEventListener('mouseenter', () => { if (!isDragging) hoveredCard = card; });
     card.addEventListener('mouseleave', () => { if (hoveredCard === card) hoveredCard = null; });
   });
 
-  // Touch support for mobile devices
-  viewport.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
-  viewport.addEventListener('touchend', () => { isPaused = false; }, { passive: true });
+  // Ensure all videos play on load
+  cards.forEach(card => {
+    const video = card.querySelector('video');
+    if (video) {
+      video.muted = true;
+      video.playsInline = true;
+      video.play().catch(() => {});
+    }
+  });
 
-  let lastTime = performance.now();
+  // Mouse Drag Events (Desktop)
+  viewport.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    lastX = e.clientX;
+    velocity = 0;
+    viewport.classList.add('is-dragging');
+  });
 
-  function renderLoop(now) {
-    const dt = (now - lastTime) / 1000;
-    lastTime = now;
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const delta = e.clientX - lastX;
+    lastX = e.clientX;
+    velocity = delta;
+    scrollX -= delta; // Direct 1:1 manual drag in any direction
+  });
 
-    // Total width of one original set of 8 videos (with gaps) - Reduced overall size
+  window.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    viewport.classList.remove('is-dragging');
+  });
+
+  // Touch Swipe Events (Mobile)
+  viewport.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    isDragging = true;
+    startX = e.touches[0].clientX;
+    lastX = e.touches[0].clientX;
+    velocity = 0;
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || e.touches.length !== 1) return;
+    const currentX = e.touches[0].clientX;
+    const delta = currentX - lastX;
+    lastX = currentX;
+    velocity = delta;
+    scrollX -= delta; // Direct 1:1 manual swipe
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+  });
+
+  // Optional Mouse Wheel horizontal pan
+  viewport.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+      scrollX += e.deltaX * 0.7;
+    }
+  }, { passive: false });
+
+  function renderLoop() {
     const isMobile = window.innerWidth <= 600;
-    const cardWidth = isMobile ? 125 : 155;
-    const gap = isMobile ? 8 : 12;
+    // Exact dimensions matching Reference Image 2
+    const cardWidth = isMobile ? 145 : 185;
+    const gap = isMobile ? 10 : 16;
     const singleSetWidth = 8 * (cardWidth + gap);
 
-    if (!isPaused && dt > 0 && dt < 0.2) {
-      scrollX += speed * dt;
-      if (scrollX >= singleSetWidth) {
-        scrollX -= singleSetWidth;
+    // Inertia & momentum decay when user releases drag
+    if (!isDragging) {
+      if (Math.abs(velocity) > 0.15) {
+        scrollX -= velocity;
+        velocity *= 0.92; // smooth friction decay
+      } else {
+        velocity = 0;
       }
+    }
+
+    // Circular infinite wrap in BOTH directions (swipe left or right continuously)
+    if (scrollX < 0) {
+      scrollX += singleSetWidth;
+    } else if (scrollX >= singleSetWidth) {
+      scrollX -= singleSetWidth;
     }
 
     // Move track smoothly
     track.style.transform = `translateX(${-scrollX}px)`;
 
-    // Calculate dynamic 3D arched cylinder curve per card
+    // Calculate dynamic 3D arched ribbon per card
     const vpRect = viewport.getBoundingClientRect();
     const centerX = vpRect.left + vpRect.width / 2;
     const halfW = vpRect.width / 2;
@@ -2146,34 +2215,34 @@ function cycleReviews(delta) {
       const d = Math.max(-1.4, Math.min(1.4, dist / halfW));
       const absD = Math.min(1, Math.abs(d));
 
-      // 1. Inward cylinder rotation:
-      // Left cards face inwards to center (+), right cards face inwards to center (-)
+      // 1. Subtle 3D inward cylinder rotation (Image 2 aesthetic)
       const rotY = d * -24;
 
       // 2. Parabolic vertical ribbon arch:
-      const archFactor = isMobile ? 8 : 14;
+      // Center cards sit lower, sides gently lift upward by ~24px
+      const archFactor = isMobile ? 12 : 24;
       const archY = -(d * d) * archFactor;
 
-      // 3. Inverse / Hourglass Scale:
-      // Middle card scales down to ~0.76 so that Left & Right cards look significantly bigger (~1.08)
-      const curveScale = 0.76 + Math.min(0.32, absD * 0.32);
-      const isHov = (card === hoveredCard);
-      const scale = isHov ? curveScale * 1.08 : curveScale;
+      // 3. UNIFORM CARD SCALE (Image 2: ALL cards scale = 1.0!)
+      // No center shrinking -> NO massive empty gap!
+      // No side expanding -> ZERO overlap or collision!
+      const isHov = (card === hoveredCard && !isDragging);
+      const scale = isHov ? 1.05 : 1.0;
 
-      // Combined 3D transform (Arch + rotateY + hourglass scale)
-      card.style.transform = `translateY(${archY.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+      // Combined 3D transform (Arch + rotateY + uniform scale)
+      card.style.transform = `translateY(${archY.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale})`;
       
       // 4. Solid 100% opacity across entire track: No edge fading!
       card.style.opacity = '1';
-      card.style.zIndex = isHov ? 50 : Math.round(15 + absD * 20);
+      card.style.zIndex = isHov ? 50 : Math.round(30 - absD * 10);
 
-      // Performance: pause offscreen videos
+      // Performance: pause far-offscreen videos only
       const video = card.querySelector('video');
       if (video) {
-        const isOffscreen = (cardRect.right < vpRect.left - 200 || cardRect.left > vpRect.right + 200);
-        if (isOffscreen && !video.paused) {
+        const isFarOffscreen = (cardRect.right < -400 || cardRect.left > window.innerWidth + 400);
+        if (isFarOffscreen && !video.paused) {
           video.pause();
-        } else if (!isOffscreen && video.paused) {
+        } else if (!isFarOffscreen && video.paused) {
           video.play().catch(() => {});
         }
       }
