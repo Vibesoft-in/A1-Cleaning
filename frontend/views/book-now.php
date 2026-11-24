@@ -204,7 +204,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
     <div class="vossy-page-header text-center">
       <h1 class="vossy-main-title">Complete Your Booking</h1>
       <p class="vossy-main-sub">
-        Review your service specifications, choose your preferred doorstep arrival slot, and confirm with zero advance payment.
+        <!--Review your service specifications, choose your preferred doorstep arrival slot, and confirm with zero advance payment.-->
       </p>
     </div>
 
@@ -242,7 +242,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
           <?php if ($prefilledAmount || $prefilledPackage): ?>
             <div class="vossy-studio-highlight">
               <div class="vossy-studio-head">
-                <div>
+                <div class="vossy-studio-info">
                   <span class="vossy-studio-badge">Configured in Studio</span>
                   <h3 class="vossy-studio-title"><?= htmlspecialchars($prefilledPackage ?: 'Customized Doorstep Cleaning') ?></h3>
                   <div class="vossy-studio-svc"><?= htmlspecialchars(ucwords(str_replace('-', ' ', $prefilledService))) ?></div>
@@ -562,7 +562,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
                     <span class="vossy-radio-badge">Recommended</span>
                     <strong>Pay After 100% Inspection</strong>
                   </div>
-                  <div class="vossy-radio-sub">Zero advance required. Pay comfortably via UPI, Cash, or Card only after job completion.</div>
+                  <div class="vossy-radio-sub"></div>
                 </div>
               </label>
 
@@ -572,7 +572,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
                   <div class="vossy-radio-title">
                     <strong>Instant UPI / QR Code Confirmation</strong>
                   </div>
-                  <div class="vossy-radio-sub">Receive instant payment link &amp; GST tax invoice on WhatsApp.</div>
+                  <div class="vossy-radio-sub"></div>
                 </div>
               </label>
             </div>
@@ -592,7 +592,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
                 <span class="vossy-total-val" id="formTotalVal">₹<?= htmlspecialchars(number_format($defaultBasePrice)) ?></span>
               </div>
               <p class="vossy-total-subtext">
-                Total includes industrial equipment, certified divergence chemicals, doorstep travel &amp; labor. Zero advance payment will be charged today; full payment is made after your final inspection.
+                
               </p>
             </div>
 
@@ -844,41 +844,48 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 
 /* Studio Highlight Banner */
 .vossy-studio-highlight {
-  background: linear-gradient(135deg, #EFF8F3 0%, #FFFFFF 100%);
+  background: linear-gradient(135deg, #F0F8F4 0%, #FFFFFF 100%);
   border: 1.5px solid #22A06B;
-  border-radius: 14px;
-  padding: 1.15rem 1.35rem;
-  margin-bottom: 1.25rem;
-  box-shadow: 0 4px 14px rgba(34, 160, 107, 0.08);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(34, 160, 107, 0.06);
 }
 .vossy-studio-head {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+.vossy-studio-info {
+  min-width: 0;
+  flex: 1;
 }
 .vossy-studio-badge {
   display: inline-block;
   background: #22A06B;
   color: #FFFFFF;
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   font-weight: 800;
-  padding: 2px 8px;
+  padding: 2px 7px;
   border-radius: 20px;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 4px;
+  letter-spacing: 0.03em;
+  margin-bottom: 3px;
+  line-height: 1.2;
 }
 .vossy-studio-title {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: #0B2922;
-  margin: 0 0 2px;
+  margin: 0 0 1px;
+  line-height: 1.25;
 }
 .vossy-studio-svc {
-  font-size: 0.84rem;
-  color: #4B5E55;
+  font-size: 0.8rem;
+  color: #526E65;
   font-weight: 600;
+  line-height: 1.2;
 }
 .vossy-studio-price-box {
   text-align: right;
@@ -886,23 +893,27 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 .vossy-studio-price-lbl {
   display: block;
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   color: #6C8276;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
 }
 .vossy-studio-price-val {
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 900;
   color: #0B2922;
+  line-height: 1.1;
 }
 .vossy-studio-addons {
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   color: #2D3748;
   background: rgba(34, 160, 107, 0.08);
-  padding: 6px 12px;
-  border-radius: 8px;
-  margin-top: 0.65rem;
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  line-height: 1.35;
 }
 
 /* Vossy Form Cards */
@@ -1939,14 +1950,43 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
     font-size: 0.92rem;
   }
 
-  /* Studio Banner Mobile */
+  /* Studio Banner Mobile - Compact & Side-by-Side (Amne-Samne) */
+  .vossy-studio-highlight {
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
+  }
   .vossy-studio-head {
-    flex-direction: column;
-    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     gap: 0.5rem;
   }
+  .vossy-studio-badge {
+    font-size: 0.58rem;
+    padding: 1px 6px;
+    margin-bottom: 2px;
+  }
+  .vossy-studio-title {
+    font-size: 0.95rem;
+  }
+  .vossy-studio-svc {
+    font-size: 0.76rem;
+  }
   .vossy-studio-price-box {
-    text-align: left;
+    text-align: right;
+  }
+  .vossy-studio-price-lbl {
+    font-size: 0.6rem;
+  }
+  .vossy-studio-price-val {
+    font-size: 1.15rem;
+  }
+  .vossy-studio-addons {
+    font-size: 0.72rem;
+    padding: 4px 8px;
+    margin-top: 0.4rem;
   }
 
   /* Summary Card Mobile */
@@ -1972,8 +2012,21 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
     padding: 0.85rem 0.7rem;
     border-radius: 12px;
   }
+  .vossy-studio-highlight {
+    padding: 0.55rem 0.75rem;
+  }
+  .vossy-studio-title {
+    font-size: 0.88rem;
+  }
+  .vossy-studio-svc {
+    font-size: 0.72rem;
+  }
+  .vossy-studio-price-val {
+    font-size: 1.05rem;
+  }
   .cart-services-heading {
-    font-size: 0.94rem;
+    font-size: 0.86rem;
+    white-space: nowrap;
   }
   .btn-clear-cart {
     font-size: 0.78rem;
