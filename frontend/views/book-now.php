@@ -1,13 +1,19 @@
 <?php
 /**
  * Booking Page View: /book-now/
- * Dynamic Pre-fill & Conversion Funnel
+ * Redesigned Vossy-Style High-Converting Checkout Experience
+ * 2-Column Responsive Layout with Sticky Booking Summary, Verification Accordions & Dynamic Live Recalculations
+ * Strict 4-Color Theme: Deep Green (#0B2922), Fresh Green (#22A06B), Soft Mint (#EAF3EE), White (#FFFFFF)
  */
 require_once __DIR__ . '/../../backend/helpers/security.php';
 
-$pageTitle = "Book Cleaning Service Online | A1 Cleaning";
-$pageDescription = "Book your cleaning in Kashipur, Jaspur or Ramnagar. Share your requirement and get an instant quote on " . BUSINESS_PHONE . ".";
+$pageTitle = "Complete Your Booking | A1 Cleaning Doorstep Mechanized Services";
+$pageDescription = "Book your doorstep mechanized cleaning in Kashipur, Jaspur, Ramnagar or nearby towns. Zero advance payment, verified Kärcher equipment, pay after 100% satisfaction.";
 $canonicalUrl = SeoHelper::getCanonicalUrl('book-now');
+
+// Services & Cities data
+$servicesList = require __DIR__ . '/../../backend/data/services.php';
+$citiesList = require __DIR__ . '/../../backend/data/cities.php';
 
 $prefilledCity = strtolower(trim($_GET['city'] ?? ''));
 $prefilledService = strtolower(trim($_GET['service'] ?? ''));
@@ -15,12 +21,32 @@ $prefilledPackage = trim($_GET['packageName'] ?? ($_GET['package'] ?? ''));
 $prefilledAmount = trim($_GET['amount'] ?? '');
 $prefilledAddons = trim($_GET['addons'] ?? '');
 
+// Match default service
+if (!$prefilledService || !isset($servicesList[$prefilledService])) {
+    $prefilledService = 'home-cleaning';
+}
+$activeServiceData = $servicesList[$prefilledService] ?? reset($servicesList);
+
+// Calculate initial base price
+$defaultBasePrice = 1999;
+if ($prefilledAmount && is_numeric($prefilledAmount)) {
+    $defaultBasePrice = (int)$prefilledAmount;
+} else if (!empty($activeServiceData['packages'][0]['price'])) {
+    $defaultBasePrice = (int)$activeServiceData['packages'][0]['price'];
+} else if (!empty($activeServiceData['starting_price'])) {
+    $num = preg_replace('/[^0-9]/', '', $activeServiceData['starting_price']);
+    if ($num) $defaultBasePrice = (int)$num;
+}
+
+$tomorrowDate = date('Y-m-d', strtotime('+1 day'));
+$tomorrowDisplay = date('D, M j, Y', strtotime('+1 day'));
+
 $autoMessage = '';
 if ($prefilledPackage || $prefilledAmount) {
-  $autoMessage = "Service: " . ucwords(str_replace('-', ' ', $prefilledService)) . 
-    ($prefilledPackage ? " | Package: " . $prefilledPackage : "") . 
-    ($prefilledAddons ? " | Add-ons: " . $prefilledAddons : "") . 
-    ($prefilledAmount ? " | Estimated Amount: ₹" . $prefilledAmount : "");
+    $autoMessage = "Service: " . ucwords(str_replace('-', ' ', $prefilledService)) . 
+        ($prefilledPackage ? " | Package: " . $prefilledPackage : "") . 
+        ($prefilledAddons ? " | Add-ons: " . $prefilledAddons : "") . 
+        ($prefilledAmount ? " | Estimated Total: ₹" . $prefilledAmount : "");
 }
 
 $csrfToken = Security::generateCsrfToken();
@@ -30,136 +56,1360 @@ unset($_SESSION['form_error']);
 require __DIR__ . '/../components/header.php';
 ?>
 
+<!-- Pass Data to Client Script -->
+<script>
+window.A1_SERVICES_MAP = <?= json_encode(array_map(function($s) {
+    $price = 1999;
+    if (!empty($s['packages'][0]['price'])) {
+        $price = (int)$s['packages'][0]['price'];
+    } else if (!empty($s['starting_price'])) {
+        $num = preg_replace('/[^0-9]/', '', $s['starting_price']);
+        if ($num) $price = (int)$num;
+    }
+    return [
+        'name' => $s['name'],
+        'price' => $price,
+        'thumb' => $s['thumb'] ?? '',
+        'time' => $s['time_estimate'] ?? '2 - 3 hours'
+    ];
+}, $servicesList), JSON_UNESCAPED_SLASHES) ?>;
+window.A1_PREFILLED_AMOUNT = <?= json_encode($prefilledAmount ? (int)$prefilledAmount : null) ?>;
+window.A1_PREFILLED_PACKAGE = <?= json_encode($prefilledPackage ?: null) ?>;
+window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
+</script>
 
-
-<section class="section">
+<!-- =======================================================================
+     TOP SECURITY GUARANTEE BANNER (Vossy Style Mint Ribbon)
+     ======================================================================= -->
+<div class="vossy-top-security-bar">
   <div class="container">
-    <div style="max-width: 650px; margin: 0 auto;">
-      <div class="text-center" style="margin-bottom: 2rem;">
-        <h1>Book Your Cleaning Service</h1>
-        <p style="color: var(--color-text-muted);">
-          Fill out the quick form below. Our team will verify slot availability and call you back with a customized quote.
-        </p>
+    <div class="vossy-security-bar-content">
+      <span class="material-symbols-outlined icon-xs">lock</span>
+      <span>100% Verified Safe Booking • Zero Advance Payment • Pay After 100% Satisfaction • Police-Verified Staff</span>
+    </div>
+  </div>
+</div>
+
+<div class="vossy-checkout-page">
+  <div class="container">
+
+    <!-- Page Headline & Intro -->
+    <div class="vossy-page-header text-center">
+      <h1 class="vossy-main-title">Complete Your Booking</h1>
+      <p class="vossy-main-sub">
+        Review your service specifications, choose your preferred doorstep arrival slot, and confirm with zero advance payment.
+      </p>
+    </div>
+
+    <!-- Error Banner if any -->
+    <?php if ($errorMessage): ?>
+      <div class="vossy-alert-danger">
+        <span class="material-symbols-outlined icon-sm">error</span>
+        <span><?= htmlspecialchars($errorMessage) ?></span>
       </div>
+    <?php endif; ?>
 
-      <?php if ($errorMessage): ?>
-        <div style="background-color: #ffebee; color: #c62828; padding: 1rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; border: 1px solid #ffcdd2;">
-          <?= htmlspecialchars($errorMessage) ?>
-        </div>
-      <?php endif; ?>
+    <!-- ===================================================================
+         TWO-COLUMN CHECKOUT CANVAS: FORM (LEFT) + STICKY SUMMARY (RIGHT)
+         =================================================================== -->
+    <div class="vossy-checkout-grid">
 
-      <div style="background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 2rem; box-shadow: var(--shadow-sm);">
-        
-        <?php if ($prefilledAmount || $prefilledPackage): ?>
-          <div style="background: linear-gradient(135deg, #EFF8F3 0%, #FFFFFF 100%); border: 1.5px solid #22A06B; border-radius: 14px; padding: 1.15rem 1.35rem; margin-bottom: 1.5rem; box-shadow: 0 4px 14px rgba(34, 160, 107, 0.08);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 0.4rem;">
-              <div>
-                <span style="display: inline-block; background: #22A06B; color: #fff; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; margin-bottom: 4px;">Configured in Studio</span>
-                <h3 style="margin: 0; font-size: 1.15rem; color: #0B2922; font-weight: 800;"><?= htmlspecialchars($prefilledPackage ?: 'Doorstep Cleaning') ?></h3>
-                <span style="font-size: 0.85rem; color: #4B5563; font-weight: 600;"><?= htmlspecialchars(ucwords(str_replace('-', ' ', $prefilledService))) ?></span>
-              </div>
-              <div style="text-align: right;">
-                <span style="display: block; font-size: 0.72rem; color: #6B7280; font-weight: 700; text-transform: uppercase;">Total Estimate</span>
-                <span style="font-size: 1.4rem; font-weight: 900; color: #0B2922;">₹<?= htmlspecialchars($prefilledAmount) ?></span>
-              </div>
-            </div>
-            <?php if ($prefilledAddons): ?>
-              <div style="font-size: 0.82rem; color: #2D3748; background: rgba(34, 160, 107, 0.08); padding: 6px 12px; border-radius: 8px; margin-top: 0.6rem;">
-                <strong>Includes Add-ons:</strong> <?= htmlspecialchars($prefilledAddons) ?>
-              </div>
-            <?php endif; ?>
-          </div>
-        <?php endif; ?>
-
-        <form action="<?= SITE_URL ?>/backend/actions/submit-booking.php" method="POST" class="validate-booking-form">
-          <!-- CSRF Token -->
+      <!-- LEFT COLUMN: The Step-by-Step Booking Form -->
+      <div class="vossy-form-column">
+        <form action="<?= SITE_URL ?>/backend/actions/submit-booking.php" method="POST" class="validate-booking-form" id="vossy-booking-form">
+          <!-- Hidden Fields & CSRF -->
           <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
-          <input type="hidden" name="source_page" value="<?= htmlspecialchars($_SERVER['HTTP_REFERER'] ?? 'Direct Visit') ?>">
-          <input type="hidden" name="estimated_amount" value="<?= htmlspecialchars($prefilledAmount) ?>">
-          <input type="hidden" name="selected_package" value="<?= htmlspecialchars($prefilledPackage) ?>">
-          <input type="hidden" name="selected_addons" value="<?= htmlspecialchars($prefilledAddons) ?>">
+          <input type="hidden" name="source_page" value="<?= htmlspecialchars($_SERVER['HTTP_REFERER'] ?? 'Direct Visit /book-now/') ?>">
+          <input type="hidden" name="estimated_amount" id="hidden_estimated_amount" value="<?= htmlspecialchars($defaultBasePrice) ?>">
+          <input type="hidden" name="selected_package" id="hidden_selected_package" value="<?= htmlspecialchars($prefilledPackage ?: 'Deep Clean Standard') ?>">
+          <input type="hidden" name="selected_addons" id="hidden_selected_addons" value="<?= htmlspecialchars($prefilledAddons) ?>">
 
-          <!-- Anti-Spam Honeypot Field (Invisible to human eyes) -->
+          <!-- Anti-Spam Honeypot Field -->
           <div style="display: none !important;" aria-hidden="true">
             <label for="website_url">Leave this empty</label>
             <input type="text" name="website_url" id="website_url" tabindex="-1" autocomplete="off">
           </div>
 
-          <!-- Full Name -->
-          <div class="form-group">
-            <label class="form-label" for="name">Your Full Name *</label>
-            <input type="text" id="name" name="name" class="form-control" placeholder="e.g. Rahul Sharma" required>
-          </div>
+          <!-- Studio Configuration Banner (If Coming with Configured Package) -->
+          <?php if ($prefilledAmount || $prefilledPackage): ?>
+            <div class="vossy-studio-highlight">
+              <div class="vossy-studio-head">
+                <div>
+                  <span class="vossy-studio-badge">Configured in Studio</span>
+                  <h3 class="vossy-studio-title"><?= htmlspecialchars($prefilledPackage ?: 'Customized Doorstep Cleaning') ?></h3>
+                  <div class="vossy-studio-svc"><?= htmlspecialchars(ucwords(str_replace('-', ' ', $prefilledService))) ?></div>
+                </div>
+                <div class="vossy-studio-price-box">
+                  <span class="vossy-studio-price-lbl">Studio Estimate</span>
+                  <span class="vossy-studio-price-val">₹<?= htmlspecialchars($prefilledAmount) ?></span>
+                </div>
+              </div>
+              <?php if ($prefilledAddons): ?>
+                <div class="vossy-studio-addons">
+                  <strong>Configured Add-ons:</strong> <?= htmlspecialchars($prefilledAddons) ?>
+                </div>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
 
-          <!-- Mobile Phone -->
-          <div class="form-group">
-            <label class="form-label" for="phone">Phone / WhatsApp Number (10 Digits) *</label>
-            <input type="tel" id="phone" name="phone" class="form-control" placeholder="e.g. 7906366271" maxlength="10" required>
-            <small style="color: var(--color-text-muted); font-size: 0.8rem;">We will call or message you on WhatsApp to confirm.</small>
-          </div>
+          <!-- =============================================================
+               CARD 1: CUSTOMER DETAILS (Matching Reference "Guest Details")
+               ============================================================= -->
+          <div class="vossy-form-card">
+            <div class="vossy-card-header">
+              <h2 class="vossy-card-title">Customer Details</h2>
+              <span class="vossy-step-pill">Step 1 of 4</span>
+            </div>
 
-          <!-- City Dropdown -->
-          <div class="form-group">
-            <label class="form-label" for="city">Select City *</label>
-            <select id="city" name="city" class="form-control" required>
-              <option value="">-- Choose City --</option>
-              <?php foreach ($citiesList as $cSlug => $cData): ?>
-                <option value="<?= htmlspecialchars($cData['name']) ?>" <?= $prefilledCity === $cSlug ? 'selected' : '' ?>>
-                  <?= htmlspecialchars($cData['name']) ?> (Uttarakhand)
-                </option>
-              <?php endforeach; ?>
-              <option value="Other">Other nearby area (Within 60km)</option>
-            </select>
-          </div>
+            <!-- Row 1: Name & Phone -->
+            <div class="vossy-row-2col">
+              <div class="vossy-form-group">
+                <label for="name" class="vossy-label">Your Full Name <span class="vossy-required">*</span></label>
+                <div class="vossy-input-wrap">
+                  <input type="text" id="name" name="name" class="vossy-input" placeholder="e.g. Rahul Sharma" required autocomplete="name">
+                  <span class="vossy-valid-check material-symbols-outlined">check_circle</span>
+                </div>
+              </div>
 
-          <!-- Service Dropdown -->
-          <div class="form-group">
-            <label class="form-label" for="service">Select Service Required *</label>
-            <select id="service" name="service" class="form-control" required>
-              <option value="">-- Choose Cleaning Service --</option>
-              <?php foreach ($servicesList as $sSlug => $sData): ?>
-                <option value="<?= htmlspecialchars($sData['name']) ?>" <?= $prefilledService === $sSlug ? 'selected' : '' ?>>
-                  <?= htmlspecialchars($sData['name']) ?> (From <?= $sData['starting_price'] ?>)
-                </option>
-              <?php endforeach; ?>
-            </select>
-          </div>
+              <div class="vossy-form-group">
+                <label for="phone" class="vossy-label">Phone / WhatsApp Number (10 Digits) <span class="vossy-required">*</span></label>
+                <div class="vossy-input-wrap">
+                  <input type="tel" id="phone" name="phone" class="vossy-input" placeholder="e.g. 7906366271" maxlength="10" required autocomplete="tel">
+                  <span class="vossy-valid-check material-symbols-outlined">check_circle</span>
+                </div>
+                <small class="vossy-input-subtext">We'll call or WhatsApp you to confirm slot details.</small>
+              </div>
+            </div>
 
-          <!-- Preferred Date -->
-          <div class="form-group">
-            <label class="form-label" for="preferred_date">Preferred Service Date</label>
-            <input type="date" id="preferred_date" name="preferred_date" class="form-control" min="<?= date('Y-m-d') ?>">
-          </div>
+            <!-- Row 2: Service Required & Preferred Slot -->
+            <div class="vossy-row-2col">
+              <div class="vossy-form-group">
+                <label for="service" class="vossy-label">Service Required <span class="vossy-required">*</span></label>
+                <select id="service" name="service" class="vossy-input vossy-select" required onchange="handleServiceChange(this.value)">
+                  <?php foreach ($servicesList as $sSlug => $sData): ?>
+                    <option value="<?= htmlspecialchars($sSlug) ?>" <?= ($prefilledService === $sSlug) ? 'selected' : '' ?>>
+                      <?= htmlspecialchars($sData['name']) ?> (From <?= $sData['starting_price'] ?>)
+                    </option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
 
-          <!-- Address / Locality -->
-          <div class="form-group">
-            <label class="form-label" for="address">Address / Colony / Landmark</label>
-            <input type="text" id="address" name="address" class="form-control" placeholder="e.g. Ramnagar Road, Near Cheema Square">
-          </div>
+              <div class="vossy-form-group">
+                <label for="slot_preference" class="vossy-label">Preferred Arrival Slot <span class="vossy-required">*</span></label>
+                <select id="slot_preference" name="slot_preference" class="vossy-input vossy-select" required onchange="handleSlotChange(this.value)">
+                  <option value="Morning Slot (9:00 AM - 1:00 PM)" selected>Morning Slot (9:00 AM - 1:00 PM)</option>
+                  <option value="Afternoon Slot (1:00 PM - 5:00 PM)">Afternoon Slot (1:00 PM - 5:00 PM)</option>
+                  <option value="Evening Slot (5:00 PM - 8:00 PM)">Evening Slot (5:00 PM - 8:00 PM)</option>
+                  <option value="Emergency Rapid Dispatch (Within 90 Mins)">Emergency Rapid Dispatch (Within 90 Mins)</option>
+                </select>
+              </div>
+            </div>
 
-          <!-- Additional Notes -->
-          <div class="form-group">
-            <label class="form-label" for="message">Specific Requirements / Message</label>
-            <textarea id="message" name="message" class="form-control" rows="3" placeholder="Tell us if you need grease removal, stain treatment, or specific number of rooms..."><?= htmlspecialchars($autoMessage) ?></textarea>
-          </div>
+            <!-- Row 3: Service Date & Property Space Type -->
+            <div class="vossy-row-2col">
+              <div class="vossy-form-group">
+                <label for="preferred_date" class="vossy-label">Preferred Service Date <span class="vossy-required">*</span></label>
+                <input type="date" id="preferred_date" name="preferred_date" class="vossy-input" min="<?= date('Y-m-d') ?>" value="<?= $tomorrowDate ?>" required onchange="handleDateChange(this.value)">
+              </div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.05rem;">
-            Confirm Booking Request <span class="material-symbols-outlined icon-sm">arrow_forward</span>
-          </button>
+              <div class="vossy-form-group">
+                <label for="property_type" class="vossy-label">Space / Property Type</label>
+                <select id="property_type" name="property_type" class="vossy-input vossy-select">
+                  <option value="1 BHK / 2 BHK Apartment">1 BHK / 2 BHK Apartment</option>
+                  <option value="3 BHK / 4 BHK Flat" selected>3 BHK / 4 BHK Flat</option>
+                  <option value="Independent Villa / Kothi / Duplex">Independent Villa / Kothi / Duplex</option>
+                  <option value="Commercial Showroom / Office">Commercial Showroom / Office</option>
+                  <option value="Individual Washroom / Sofa / Specific Item">Individual Washroom / Sofa / Specific Item</option>
+                </select>
+              </div>
+            </div>
+
+          </div><!-- /.vossy-form-card (Customer Details) -->
+
+          <!-- =============================================================
+               CARD 2: SERVICE LOCATION & ADDRESS (Matching "Billing Details")
+               ============================================================= -->
+          <div class="vossy-form-card">
+            <div class="vossy-card-header">
+              <h2 class="vossy-card-title">Service Address Details</h2>
+              <span class="vossy-step-pill">Step 2 of 4</span>
+            </div>
+
+            <!-- Row 1: Flat/House No. & Locality -->
+            <div class="vossy-row-2col">
+              <div class="vossy-form-group">
+                <label for="address" class="vossy-label">House / Flat / Street Address <span class="vossy-required">*</span></label>
+                <input type="text" id="address" name="address" class="vossy-input" placeholder="e.g. Flat 302, Green Avenue, Ramnagar Rd" required autocomplete="street-address">
+              </div>
+
+              <div class="vossy-form-group">
+                <label for="locality" class="vossy-label">Locality / Landmark</label>
+                <input type="text" id="locality" name="locality" class="vossy-input" placeholder="e.g. Near Cheema Square, Awas Vikas">
+              </div>
+            </div>
+
+            <!-- Row 2: City Dropdown & Pincode -->
+            <div class="vossy-row-2col">
+              <div class="vossy-form-group">
+                <label for="city" class="vossy-label">Select City / Town <span class="vossy-required">*</span></label>
+                <select id="city" name="city" class="vossy-input vossy-select" required onchange="handleCityChange(this.value)">
+                  <option value="">-- Choose City / Hub --</option>
+                  <?php foreach ($citiesList as $cSlug => $cData): ?>
+                    <option value="<?= htmlspecialchars($cData['name']) ?>" <?= ($prefilledCity === $cSlug || $cSlug === 'kashipur') ? 'selected' : '' ?>>
+                      <?= htmlspecialchars($cData['name']) ?> (Uttarakhand)
+                    </option>
+                  <?php endforeach; ?>
+                  <option value="Bazpur">Bazpur (Uttarakhand)</option>
+                  <option value="Kundeshwari">Kundeshwari (Uttarakhand)</option>
+                  <option value="Jim Corbett Area">Jim Corbett Belt / Ramnagar</option>
+                  <option value="Other">Other nearby area (Within 60km)</option>
+                </select>
+              </div>
+
+              <div class="vossy-form-group">
+                <label for="pincode" class="vossy-label">Pincode</label>
+                <input type="text" id="pincode" name="pincode" class="vossy-input" placeholder="e.g. 244713" maxlength="6">
+              </div>
+            </div>
+
+            <!-- Row 3: State & Alternate Email -->
+            <div class="vossy-row-2col">
+              <div class="vossy-form-group">
+                <label for="state" class="vossy-label">State</label>
+                <input type="text" id="state" name="state" class="vossy-input" value="Uttarakhand" readonly>
+              </div>
+
+              <div class="vossy-form-group">
+                <label for="email" class="vossy-label">Email Address (Optional for GST Invoice)</label>
+                <input type="email" id="email" name="email" class="vossy-input" placeholder="e.g. rahul.sharma@example.com" autocomplete="email">
+              </div>
+            </div>
+
+          </div><!-- /.vossy-form-card (Service Address) -->
+
+          <!-- =============================================================
+               CARD 3: NEED TO KNOW INFORMATION (Matching Reference 1:1)
+               ============================================================= -->
+          <div class="vossy-form-card">
+            <h2 class="vossy-card-title mb-3">Need to Know Information</h2>
+            
+            <div class="vossy-policy-list">
+              <!-- Item 1: Cancellation Policy -->
+              <div class="vossy-policy-item" id="policy-cancellation">
+                <button type="button" class="vossy-policy-trigger" onclick="toggleVossyPolicy(this)" aria-expanded="false">
+                  <span class="vossy-policy-icon">+</span>
+                  <span class="vossy-policy-title">Cancellation &amp; Rescheduling Policy</span>
+                </button>
+                <div class="vossy-policy-body">
+                  <p>
+                    We offer 100% flexible zero-fee cancellation and rescheduling. If your schedule changes, simply notify our dispatch desk on WhatsApp or call at least 2 hours prior to your scheduled slot. We will update your appointment without any penalty.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Item 2: Service Day Instructions -->
+              <div class="vossy-policy-item" id="policy-instructions">
+                <button type="button" class="vossy-policy-trigger" onclick="toggleVossyPolicy(this)" aria-expanded="false">
+                  <span class="vossy-policy-icon">+</span>
+                  <span class="vossy-policy-title">Service Day Instructions &amp; Machine Setup</span>
+                </button>
+                <div class="vossy-policy-body">
+                  <p>
+                    Our technicians arrive equipped with heavy industrial Kärcher machinery, single-disc rotary floor scrubbers, and safe European divergence chemicals. We only require a standard 15A electrical socket and running tap water connection on-site.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Item 3: Satisfaction Guarantee -->
+              <div class="vossy-policy-item" id="policy-warranty">
+                <button type="button" class="vossy-policy-trigger" onclick="toggleVossyPolicy(this)" aria-expanded="false">
+                  <span class="vossy-policy-icon">+</span>
+                  <span class="vossy-policy-title">100% Satisfaction &amp; Inspection Policy</span>
+                </button>
+                <div class="vossy-policy-body">
+                  <p>
+                    We follow a strict "Pay After 100% Satisfaction" standard. Once the deep cleaning is completed, our team supervisor conducts a complete joint walkthrough inspection with you. If any spot is missed, we re-clean it immediately on the spot.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /.vossy-form-card (Need to Know) -->
+
+          <!-- =============================================================
+               CARD 4: SPECIAL REQUESTS (Matching Reference 1:1)
+               ============================================================= -->
+          <div class="vossy-form-card">
+            <h2 class="vossy-card-title mb-2">Special Requests*</h2>
+            <div class="vossy-form-group mb-1">
+              <textarea id="message" name="message" class="vossy-input vossy-textarea" rows="3" placeholder="Tell us about specific stains, pet hair concerns, fragile glass items, or society gate entry instructions..."><?= htmlspecialchars($autoMessage) ?></textarea>
+              <div class="vossy-hint-text">*Our supervisor notes all custom requests and briefs the cleaning crew before dispatch.</div>
+            </div>
+          </div><!-- /.vossy-form-card (Special Requests) -->
+
+          <!-- =============================================================
+               CARD 5: PAYMENT AND CONFIRMATION (Matching Reference 1:1)
+               ============================================================= -->
+          <div class="vossy-form-card vossy-payment-card">
+            <div class="vossy-payment-head">
+              <h2 class="vossy-card-title">Payment and Confirmation</h2>
+              <div class="vossy-ssl-seal">
+                <span class="material-symbols-outlined icon-xs text-fresh-green">verified_user</span>
+                <span>256-Bit SSL Encrypted</span>
+              </div>
+            </div>
+
+            <!-- Payment Mode Visual Options -->
+            <div class="vossy-payment-modes">
+              <label class="vossy-radio-box active">
+                <input type="radio" name="payment_mode" value="pay_after_service" checked>
+                <div class="vossy-radio-content">
+                  <div class="vossy-radio-title">
+                    <span class="vossy-radio-badge">Recommended</span>
+                    <strong>Pay After 100% Inspection</strong>
+                  </div>
+                  <div class="vossy-radio-sub">Zero advance required. Pay comfortably via UPI, Cash, or Card only after job completion.</div>
+                </div>
+              </label>
+
+              <label class="vossy-radio-box">
+                <input type="radio" name="payment_mode" value="upi_online">
+                <div class="vossy-radio-content">
+                  <div class="vossy-radio-title">
+                    <strong>Instant UPI / QR Code Confirmation</strong>
+                  </div>
+                  <div class="vossy-radio-sub">Receive instant payment link &amp; GST tax invoice on WhatsApp.</div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Terms & Cancellation Checkbox -->
+            <div class="vossy-terms-wrap">
+              <label class="vossy-checkbox-label">
+                <input type="checkbox" id="agree_terms" name="agree_terms" required checked>
+                <span>I agree to the <a href="<?= SITE_URL ?>/terms/" target="_blank">Terms of Service</a> and understand the flexible cancellation &amp; satisfaction policy.</span>
+              </label>
+            </div>
+
+            <!-- Total Amount Callout Box (Matching Reference) -->
+            <div class="vossy-total-callout-box">
+              <div class="vossy-total-row">
+                <span class="vossy-total-lbl">Total Payable:</span>
+                <span class="vossy-total-val" id="formTotalVal">₹<?= htmlspecialchars(number_format($defaultBasePrice)) ?></span>
+              </div>
+              <p class="vossy-total-subtext">
+                Total includes industrial equipment, certified divergence chemicals, doorstep travel &amp; labor. Zero advance payment will be charged today; full payment is made after your final inspection.
+              </p>
+            </div>
+
+            <!-- Main Submit CTA Button -->
+            <div class="vossy-submit-wrap">
+              <button type="submit" class="vossy-btn-confirm" id="vossy-submit-btn">
+                <span>Confirm Doorstep Booking</span>
+                <span class="material-symbols-outlined icon-sm">arrow_forward</span>
+              </button>
+              <div class="vossy-submit-subtext">
+                You will receive an instant confirmation call and WhatsApp itinerary summary.
+              </div>
+            </div>
+
+          </div><!-- /.vossy-form-card (Payment & Confirmation) -->
+
         </form>
-      </div>
+      </div><!-- /.vossy-form-column -->
 
-      <div style="margin-top: 2rem; text-align: center;">
-        <p style="font-size: 0.95rem; color: var(--color-text-muted);">
-          Prefer immediate response? Call our direct line:
-        </p>
-        <a href="tel:<?= BUSINESS_PHONE_RAW ?>" class="btn btn-dark" style="margin-top: 0.5rem;">
-          <span class="material-symbols-outlined icon-sm">call</span> Call <?= BUSINESS_PHONE ?>
-        </a>
-      </div>
-    </div>
+
+      <!-- =================================================================
+           RIGHT COLUMN: STICKY BOOKING SUMMARY SIDEBAR (Matching Reference 1:1)
+           ================================================================= -->
+      <div class="vossy-sidebar-column">
+        <aside class="vossy-summary-card">
+          
+          <!-- Top Guarantee Ribbon (Dark Strip from reference) -->
+          <div class="vossy-summary-top-banner">
+            <span class="material-symbols-outlined icon-xs">verified</span>
+            <span>Best Rates &amp; 100% Quality Guaranteed</span>
+          </div>
+
+          <!-- Featured Service Photo Container -->
+          <div class="vossy-summary-media">
+            <?php 
+              $thumbImg = !empty($activeServiceData['thumb']) ? $activeServiceData['thumb'] : SITE_URL . '/assets/images/pricing/home-cleaning.jpg';
+            ?>
+            <img src="<?= htmlspecialchars($thumbImg) ?>" alt="<?= htmlspecialchars($activeServiceData['name']) ?>" id="summaryImg" class="vossy-summary-img" loading="eager">
+            <div class="vossy-summary-media-badge">
+              <span class="material-symbols-outlined icon-xs text-fresh-green">bolt</span>
+              <span>Mechanized Care</span>
+            </div>
+          </div>
+
+          <!-- Service Title & Hub Location -->
+          <div class="vossy-summary-body">
+            <h3 class="vossy-summary-title" id="summaryServiceTitle"><?= htmlspecialchars($activeServiceData['name']) ?></h3>
+            <div class="vossy-summary-location" id="summaryLocation">
+              <span class="material-symbols-outlined icon-xs text-fresh-green">location_on</span>
+              <span>Kashipur Hub • Doorstep Mechanized Service</span>
+            </div>
+
+            <!-- Service Details Table (Matching Reference) -->
+            <div class="vossy-specs-table">
+              <div class="vossy-spec-row">
+                <span class="vossy-spec-key">Service Date:</span>
+                <span class="vossy-spec-val" id="summaryDate"><?= $tomorrowDisplay ?></span>
+              </div>
+              <div class="vossy-spec-row">
+                <span class="vossy-spec-key">Arrival Slot:</span>
+                <span class="vossy-spec-val" id="summarySlot">Morning (9 AM - 1 PM)</span>
+              </div>
+              <div class="vossy-spec-row">
+                <span class="vossy-spec-key">Service Tier:</span>
+                <span class="vossy-spec-val" id="summaryPackage"><?= htmlspecialchars($prefilledPackage ?: 'Deep Clean Standard') ?></span>
+              </div>
+              <div class="vossy-spec-row">
+                <span class="vossy-spec-key">Staff:</span>
+                <span class="vossy-spec-val">2-3 Verified Techs</span>
+              </div>
+              <div class="vossy-spec-row">
+                <span class="vossy-spec-key">Equipment:</span>
+                <span class="vossy-spec-val">Kärcher &amp; Single-Disc</span>
+              </div>
+              <div class="vossy-spec-row">
+                <span class="vossy-spec-key">Satisfaction:</span>
+                <span class="vossy-spec-val text-fresh-green font-bold">100% Guaranteed</span>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="vossy-summary-divider"></div>
+
+            <!-- Transparent Price Calculation -->
+            <div class="vossy-price-breakdown">
+              <div class="vossy-breakdown-row">
+                <span class="vossy-b-lbl">Service Base Price:</span>
+                <span class="vossy-b-val" id="summaryBasePrice">₹<?= htmlspecialchars(number_format($defaultBasePrice)) ?></span>
+              </div>
+              
+              <div class="vossy-breakdown-row" id="summaryAddonsRow" style="<?= $prefilledAddons ? '' : 'display: none;' ?>">
+                <span class="vossy-b-lbl">Configured Add-ons:</span>
+                <span class="vossy-b-val text-fresh-green" id="summaryAddonsPrice">+ Included</span>
+              </div>
+
+              <div class="vossy-breakdown-row">
+                <span class="vossy-b-lbl">Industrial Machines &amp; Chemicals:</span>
+                <span class="vossy-b-val text-fresh-green">Included (₹0)</span>
+              </div>
+
+              <div class="vossy-breakdown-row">
+                <span class="vossy-b-lbl">Doorstep Transit (Local Hub):</span>
+                <span class="vossy-b-val text-fresh-green">FREE (₹0)</span>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="vossy-summary-divider"></div>
+
+            <!-- Grand Total -->
+            <div class="vossy-grand-total-row">
+              <div>
+                <span class="vossy-gt-label">Total Amount:</span>
+                <div class="vossy-gt-badge">Zero Advance • Pay After Inspection</div>
+              </div>
+              <div class="vossy-gt-amount" id="summaryTotal">₹<?= htmlspecialchars(number_format($defaultBasePrice)) ?></div>
+            </div>
+
+            <!-- Direct Support Help Box -->
+            <div class="vossy-support-box">
+              <span class="material-symbols-outlined icon-sm text-fresh-green">support_agent</span>
+              <div>
+                <div class="vossy-support-title">Need immediate help?</div>
+                <div class="vossy-support-call">
+                  Call: <a href="tel:<?= BUSINESS_PHONE_RAW ?>" class="font-bold"><?= BUSINESS_PHONE ?></a>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /.vossy-summary-body -->
+        </aside>
+      </div><!-- /.vossy-sidebar-column -->
+
+    </div><!-- /.vossy-checkout-grid -->
+
   </div>
-</section>
+</div><!-- /.vossy-checkout-page -->
+
+<!-- =======================================================================
+     SCOPED STYLES: VOSSY LUXURY BOOKING CHECKOUT EXPERIENCE
+     Strict 4-Color Theme: Deep Green (#0B2922), Fresh Green (#22A06B), Soft Mint (#EAF3EE), White (#FFFFFF)
+     ======================================================================= -->
+<style>
+/* Page & Canvas */
+.vossy-top-security-bar {
+  background: #22A06B;
+  color: #FFFFFF;
+  padding: 0.55rem 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.vossy-security-bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  text-align: center;
+  flex-wrap: wrap;
+}
+.vossy-checkout-page {
+  background: #F8FAF9;
+  min-height: 80vh;
+  padding: 2.25rem 0 3.5rem;
+  color: #0B2922;
+}
+
+/* Page Headline */
+.vossy-page-header {
+  max-width: 680px;
+  margin: 0 auto 2rem;
+}
+.vossy-main-title {
+  font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  font-weight: 800;
+  color: #0B2922;
+  margin-bottom: 0.45rem;
+  letter-spacing: -0.02em;
+}
+.vossy-main-sub {
+  color: #556B63;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Alert */
+.vossy-alert-danger {
+  background: #FEE2E2;
+  border: 1.5px solid #FECACA;
+  color: #DC2626;
+  padding: 0.85rem 1.15rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+/* 2-Column Responsive Layout */
+.vossy-checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 370px;
+  gap: 2rem;
+  align-items: start;
+}
+@media (max-width: 992px) {
+  .vossy-checkout-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Studio Highlight Banner */
+.vossy-studio-highlight {
+  background: linear-gradient(135deg, #EFF8F3 0%, #FFFFFF 100%);
+  border: 1.5px solid #22A06B;
+  border-radius: 14px;
+  padding: 1.15rem 1.35rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 14px rgba(34, 160, 107, 0.08);
+}
+.vossy-studio-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.vossy-studio-badge {
+  display: inline-block;
+  background: #22A06B;
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+.vossy-studio-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0B2922;
+  margin: 0 0 2px;
+}
+.vossy-studio-svc {
+  font-size: 0.84rem;
+  color: #4B5E55;
+  font-weight: 600;
+}
+.vossy-studio-price-box {
+  text-align: right;
+  flex-shrink: 0;
+}
+.vossy-studio-price-lbl {
+  display: block;
+  font-size: 0.68rem;
+  color: #6C8276;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.vossy-studio-price-val {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #0B2922;
+}
+.vossy-studio-addons {
+  font-size: 0.8rem;
+  color: #2D3748;
+  background: rgba(34, 160, 107, 0.08);
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-top: 0.65rem;
+}
+
+/* Vossy Form Cards */
+.vossy-form-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E2ECE5;
+  border-radius: 14px;
+  padding: 1.5rem 1.65rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 10px rgba(11, 41, 34, 0.03);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.vossy-form-card:hover {
+  border-color: #D2E4DC;
+  box-shadow: 0 4px 16px rgba(11, 41, 34, 0.05);
+}
+.vossy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid #EEF4F0;
+}
+.vossy-card-title {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #0B2922;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.vossy-step-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #198754;
+  background: #EAF3EE;
+  padding: 0.2rem 0.65rem;
+  border-radius: 12px;
+}
+
+/* Form Grid & Input Styling */
+.vossy-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 600px) {
+  .vossy-row-2col {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+.vossy-form-group {
+  margin-bottom: 0.95rem;
+}
+.vossy-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0B2922;
+  margin-bottom: 0.35rem;
+}
+.vossy-required {
+  color: #DC2626;
+}
+.vossy-input-wrap {
+  position: relative;
+  width: 100%;
+}
+.vossy-input {
+  width: 100%;
+  background: #FDFEFE;
+  border: 1.5px solid #D2E4DC;
+  border-radius: 8px;
+  color: #0B2922;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.86rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  box-sizing: border-box;
+}
+.vossy-input:focus {
+  border-color: #22A06B;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(34, 160, 107, 0.14);
+}
+.vossy-input::placeholder {
+  color: #8CA297;
+}
+
+/* Dynamic Input Checkmark (Reference "Barry ✓") */
+.vossy-valid-check {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%) scale(0.6);
+  color: #22A06B;
+  font-size: 18px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.vossy-input.is-valid + .vossy-valid-check {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+.vossy-input.is-valid {
+  border-color: #22A06B;
+  padding-right: 2.2rem;
+}
+
+/* Select Dropdown styling */
+.vossy-select {
+  appearance: none;
+  background-color: #FDFEFE;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2322A06B' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 12px;
+  padding-right: 2rem;
+  cursor: pointer;
+}
+.vossy-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.45;
+}
+.vossy-input-subtext {
+  display: block;
+  font-size: 0.72rem;
+  color: #6C8276;
+  margin-top: 3px;
+}
+.vossy-hint-text {
+  font-size: 0.72rem;
+  color: #6C8276;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* Need to Know Accordions */
+.vossy-policy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.vossy-policy-item {
+  border: 1px solid #E5EFE9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #FDFEFE;
+  transition: all 0.2s ease;
+}
+.vossy-policy-item:hover {
+  border-color: #C8E0D2;
+}
+.vossy-policy-item.is-open {
+  border-color: #22A06B;
+  background: #FFFFFF;
+}
+.vossy-policy-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+.vossy-policy-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #EAF3EE;
+  color: #22A06B;
+  font-weight: 800;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+  line-height: 1;
+}
+.vossy-policy-item.is-open .vossy-policy-icon {
+  background: #22A06B;
+  color: #FFFFFF;
+  transform: rotate(45deg);
+}
+.vossy-policy-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #0B2922;
+  transition: color 0.2s;
+}
+.vossy-policy-item.is-open .vossy-policy-title {
+  color: #22A06B;
+}
+.vossy-policy-body {
+  display: none;
+  padding: 0 1rem 0.85rem 2.65rem;
+  font-size: 0.78rem;
+  color: #4B5E55;
+  line-height: 1.5;
+}
+.vossy-policy-body p {
+  margin: 0;
+}
+
+/* Payment & Confirmation Card */
+.vossy-payment-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid #EEF4F0;
+}
+.vossy-ssl-seal {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #198754;
+  background: #EAF3EE;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  border: 1px solid #D2E4DC;
+}
+.vossy-payment-modes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.15rem;
+}
+.vossy-radio-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border: 1.5px solid #D2E4DC;
+  border-radius: 10px;
+  background: #FDFEFE;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.vossy-radio-box:hover {
+  border-color: #22A06B;
+  background: #F8FBF9;
+}
+.vossy-radio-box.active {
+  border-color: #22A06B;
+  background: #F4F9F6;
+  box-shadow: 0 2px 8px rgba(34, 160, 107, 0.08);
+}
+.vossy-radio-box input[type="radio"] {
+  accent-color: #22A06B;
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.vossy-radio-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  color: #0B2922;
+  margin-bottom: 2px;
+}
+.vossy-radio-badge {
+  background: #22A06B;
+  color: #FFFFFF;
+  font-size: 0.64rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.vossy-radio-sub {
+  font-size: 0.76rem;
+  color: #556B63;
+  line-height: 1.35;
+}
+.vossy-terms-wrap {
+  margin: 1.15rem 0;
+}
+.vossy-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.78rem;
+  color: #3F554B;
+  cursor: pointer;
+  line-height: 1.4;
+}
+.vossy-checkbox-label input[type="checkbox"] {
+  accent-color: #22A06B;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  cursor: pointer;
+}
+.vossy-checkbox-label a {
+  color: #22A06B;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Total Callout Box */
+.vossy-total-callout-box {
+  background: #F4F8F6;
+  border: 1.5px solid #D6E8DC;
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+  margin-bottom: 1.25rem;
+}
+.vossy-total-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+.vossy-total-lbl {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0B2922;
+}
+.vossy-total-val {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #198754;
+  letter-spacing: -0.01em;
+}
+.vossy-total-subtext {
+  font-size: 0.74rem;
+  color: #556B63;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Submit Button */
+.vossy-btn-confirm {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #22A06B;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(34, 160, 107, 0.28);
+  transition: all 0.22s ease;
+}
+.vossy-btn-confirm:hover {
+  background: #198754;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 160, 107, 0.38);
+}
+.vossy-btn-confirm:active {
+  transform: scale(0.98);
+}
+.vossy-submit-subtext {
+  text-align: center;
+  font-size: 0.74rem;
+  color: #6C8276;
+  margin-top: 0.55rem;
+}
+
+/* ==========================================================================
+   RIGHT COLUMN: STICKY BOOKING SUMMARY CARD (Matching Reference 1:1)
+   ========================================================================== */
+.vossy-summary-card {
+  position: sticky;
+  top: 90px;
+  background: #FFFFFF;
+  border: 1.5px solid #D6E8DC;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(11, 41, 34, 0.06);
+}
+.vossy-summary-top-banner {
+  background: #0B2922;
+  color: #FFFFFF;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.55rem 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  letter-spacing: 0.02em;
+}
+.vossy-summary-media {
+  position: relative;
+  width: 100%;
+  height: 185px;
+  overflow: hidden;
+  background: #EAF3EE;
+}
+.vossy-summary-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.vossy-summary-card:hover .vossy-summary-img {
+  transform: scale(1.03);
+}
+.vossy-summary-media-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(11, 41, 34, 0.85);
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  backdrop-filter: blur(4px);
+}
+.vossy-summary-body {
+  padding: 1.15rem 1.25rem 1.35rem;
+}
+.vossy-summary-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0B2922;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
+}
+.vossy-summary-location {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.74rem;
+  color: #4B5E55;
+  margin-bottom: 0.95rem;
+}
+
+/* Specs Table */
+.vossy-specs-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+}
+.vossy-spec-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.vossy-spec-key {
+  color: #6C8276;
+}
+.vossy-spec-val {
+  color: #0B2922;
+  font-weight: 700;
+  text-align: right;
+}
+
+.vossy-summary-divider {
+  height: 1px;
+  background: #EAF3EE;
+  margin: 0.95rem 0;
+}
+
+/* Price Breakdown */
+.vossy-price-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+}
+.vossy-breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.vossy-b-lbl {
+  color: #556B63;
+}
+.vossy-b-val {
+  font-weight: 700;
+  color: #0B2922;
+}
+
+/* Grand Total */
+.vossy-grand-total-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+.vossy-gt-label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #0B2922;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.vossy-gt-badge {
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #198754;
+  margin-top: 2px;
+}
+.vossy-gt-amount {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #0B2922;
+  letter-spacing: -0.01em;
+}
+
+/* Direct Support Help Box */
+.vossy-support-box {
+  margin-top: 1.15rem;
+  background: #F4F8F6;
+  border: 1px solid #D6E8DC;
+  border-radius: 10px;
+  padding: 0.75rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.vossy-support-title {
+  font-size: 0.72rem;
+  color: #556B63;
+}
+.vossy-support-call {
+  font-size: 0.82rem;
+  color: #0B2922;
+}
+.vossy-support-call a {
+  color: #22A06B;
+  text-decoration: none;
+}
+.vossy-support-call a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .vossy-top-security-bar {
+    font-size: 0.7rem;
+    padding: 0.45rem 0.5rem;
+  }
+  .vossy-checkout-page {
+    padding: 1.25rem 0 2.5rem;
+  }
+  .vossy-page-header {
+    margin-bottom: 1.25rem;
+  }
+  .vossy-main-title {
+    font-size: 1.45rem;
+    margin-bottom: 0.25rem;
+  }
+  .vossy-main-sub {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    padding: 0 0.5rem;
+  }
+  .vossy-form-card {
+    padding: 1.15rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.85rem;
+  }
+  .vossy-card-header {
+    margin-bottom: 0.85rem;
+  }
+  .vossy-card-title {
+    font-size: 1.05rem;
+  }
+  .vossy-input {
+    font-size: 16px !important; /* iOS Safari auto-zoom guard */
+    padding: 0.55rem 0.75rem;
+  }
+  .vossy-summary-card {
+    position: static;
+    margin-top: 0.5rem;
+  }
+  .vossy-summary-media {
+    height: 160px;
+  }
+}
+</style>
+
+<!-- =======================================================================
+     DYNAMIC SYNCHRONIZATION JAVASCRIPT
+     ======================================================================= -->
+<script>
+// Policy Accordion Toggle
+function toggleVossyPolicy(btn) {
+  const item = btn.closest('.vossy-policy-item');
+  const body = item.querySelector('.vossy-policy-body');
+  const isOpen = item.classList.contains('is-open');
+
+  if (isOpen) {
+    item.classList.remove('is-open');
+    btn.setAttribute('aria-expanded', 'false');
+    if (body) body.style.display = 'none';
+  } else {
+    item.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
+    if (body) body.style.display = 'block';
+  }
+}
+
+// Payment Mode Radio Highlight
+document.querySelectorAll('.vossy-radio-box input[type="radio"]').forEach(r => {
+  r.addEventListener('change', function() {
+    document.querySelectorAll('.vossy-radio-box').forEach(b => b.classList.remove('active'));
+    if (this.checked) {
+      this.closest('.vossy-radio-box').classList.add('active');
+    }
+  });
+});
+
+// Dynamic Service Selector Handler
+function handleServiceChange(serviceSlug) {
+  const map = window.A1_SERVICES_MAP || {};
+  const svc = map[serviceSlug];
+  if (!svc) return;
+
+  // Update Summary Image
+  const img = document.getElementById('summaryImg');
+  if (img && svc.thumb) {
+    img.src = svc.thumb;
+    img.alt = svc.name;
+  }
+
+  // Update Summary Title
+  const title = document.getElementById('summaryServiceTitle');
+  if (title) title.innerText = svc.name;
+
+  // If user didn't arrive with explicit studio amount, update base price
+  if (!window.A1_PREFILLED_AMOUNT) {
+    const formatted = '₹' + svc.price.toLocaleString('en-IN');
+    
+    const summaryBasePrice = document.getElementById('summaryBasePrice');
+    if (summaryBasePrice) summaryBasePrice.innerText = formatted;
+
+    const summaryTotal = document.getElementById('summaryTotal');
+    if (summaryTotal) summaryTotal.innerText = formatted;
+
+    const formTotalVal = document.getElementById('formTotalVal');
+    if (formTotalVal) formTotalVal.innerText = formatted;
+
+    const hiddenEst = document.getElementById('hidden_estimated_amount');
+    if (hiddenEst) hiddenEst.value = svc.price;
+  }
+}
+
+// Dynamic Date Handler
+function handleDateChange(dateVal) {
+  if (!dateVal) return;
+  try {
+    const d = new Date(dateVal);
+    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    const formatted = d.toLocaleDateString('en-US', options);
+    const summaryDate = document.getElementById('summaryDate');
+    if (summaryDate) summaryDate.innerText = formatted;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// Dynamic Slot Handler
+function handleSlotChange(slotVal) {
+  const summarySlot = document.getElementById('summarySlot');
+  if (summarySlot) summarySlot.innerText = slotVal;
+}
+
+// Dynamic City Handler
+function handleCityChange(cityVal) {
+  const summaryLoc = document.getElementById('summaryLocation');
+  if (summaryLoc) {
+    summaryLoc.innerHTML = `
+      <span class="material-symbols-outlined icon-xs text-fresh-green">location_on</span>
+      <span>${cityVal ? cityVal : 'Kashipur'} Hub • Doorstep Mechanized Service</span>
+    `;
+  }
+}
+
+// Name & Phone Input Checkmark Indicators (Matches reference "Barry ✓")
+document.addEventListener('DOMContentLoaded', function() {
+  const nameInput = document.getElementById('name');
+  if (nameInput) {
+    nameInput.addEventListener('input', function() {
+      if (this.value.trim().length >= 2) {
+        this.classList.add('is-valid');
+      } else {
+        this.classList.remove('is-valid');
+      }
+    });
+  }
+
+  const phoneInput = document.getElementById('phone');
+  if (phoneInput) {
+    phoneInput.addEventListener('input', function() {
+      const val = this.value.replace(/[^0-9]/g, '');
+      if (val.length === 10 && /^[6-9]\d{9}$/.test(val)) {
+        this.classList.add('is-valid');
+      } else {
+        this.classList.remove('is-valid');
+      }
+    });
+  }
+
+  // Pre-validate if already filled
+  if (nameInput && nameInput.value.trim().length >= 2) nameInput.classList.add('is-valid');
+  if (phoneInput) {
+    const val = phoneInput.value.replace(/[^0-9]/g, '');
+    if (val.length === 10 && /^[6-9]\d{9}$/.test(val)) phoneInput.classList.add('is-valid');
+  }
+});
+</script>
 
 <?php require __DIR__ . '/../components/footer.php'; ?>
-

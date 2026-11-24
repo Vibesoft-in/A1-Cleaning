@@ -36,9 +36,41 @@ $phoneInput = Security::cleanInput($_POST['phone'] ?? '');
 $city = Security::cleanInput($_POST['city'] ?? '');
 $service = Security::cleanInput($_POST['service'] ?? '');
 $preferredDate = Security::cleanInput($_POST['preferred_date'] ?? '');
-$address = Security::cleanInput($_POST['address'] ?? '');
-$message = Security::cleanInput($_POST['message'] ?? '');
+$addressInput = Security::cleanInput($_POST['address'] ?? '');
+$locality = Security::cleanInput($_POST['locality'] ?? '');
+$pincode = Security::cleanInput($_POST['pincode'] ?? '');
+$slotPreference = Security::cleanInput($_POST['slot_preference'] ?? '');
+$propertyType = Security::cleanInput($_POST['property_type'] ?? '');
+$paymentMode = Security::cleanInput($_POST['payment_mode'] ?? 'pay_after_service');
+$estimatedAmount = Security::cleanInput($_POST['estimated_amount'] ?? '');
+$selectedPackage = Security::cleanInput($_POST['selected_package'] ?? '');
+$selectedAddons = Security::cleanInput($_POST['selected_addons'] ?? '');
+$email = Security::cleanInput($_POST['email'] ?? '');
+$messageInput = Security::cleanInput($_POST['message'] ?? '');
 $sourcePage = Security::cleanInput($_POST['source_page'] ?? 'Direct /book-now/');
+
+// Combine Address with Locality & Pincode
+$addressParts = array_filter([$addressInput, $locality, $pincode ? "PIN: {$pincode}" : null]);
+$address = implode(', ', $addressParts);
+if (empty($address)) {
+    $address = $addressInput;
+}
+
+// Assemble Structured Booking Metadata into Message
+$metaDetails = [];
+if ($selectedPackage) $metaDetails[] = "Tier: {$selectedPackage}";
+if ($slotPreference) $metaDetails[] = "Slot: {$slotPreference}";
+if ($propertyType) $metaDetails[] = "Property: {$propertyType}";
+if ($estimatedAmount) $metaDetails[] = "Estimate: ₹{$estimatedAmount}";
+if ($selectedAddons) $metaDetails[] = "Add-ons: {$selectedAddons}";
+if ($paymentMode) $metaDetails[] = "Payment: " . ($paymentMode === 'upi_online' ? 'Instant UPI' : 'Pay After Inspection');
+if ($email) $metaDetails[] = "Email: {$email}";
+
+$message = $messageInput;
+if (!empty($metaDetails)) {
+    $metaHeader = "[" . implode(' | ', $metaDetails) . "]";
+    $message = $metaHeader . ($messageInput ? "\n\nClient Note: " . $messageInput : "");
+}
 
 // 4. Validate Phone Number (10 digits India)
 $phone = Security::validateIndianPhone($phoneInput);
