@@ -210,8 +210,8 @@ require __DIR__ . '/../components/header.php';
                     <span><?= htmlspecialchars($v['badge']) ?></span>
                   </span>
                   <button type="button" class="rev-cf-mute-btn" onclick="toggleCfAudio(<?= $idx ?>, event)" aria-label="Toggle audio">
-                    <svg class="rev-cf-icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
-                    <svg class="rev-cf-icon-unmuted" style="display:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                    <svg class="rev-cf-icon-muted" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+                    <svg class="rev-cf-icon-unmuted" style="display:none;" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
                   </button>
                 </div>
 
@@ -220,24 +220,13 @@ require __DIR__ . '/../components/header.php';
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                 </div>
 
-                <!-- Bottom Metadata & Progress Bar -->
+                <!-- Bottom Metadata & Progress Bar (Matching Clean Reel Look) -->
                 <div class="rev-cf-bottombar">
-                  <div class="rev-cf-stars-row">
-                    <span class="rev-cf-star">★</span>
-                    <span class="rev-cf-star">★</span>
-                    <span class="rev-cf-star">★</span>
-                    <span class="rev-cf-star">★</span>
-                    <span class="rev-cf-star">★</span>
-                    <span class="rev-cf-rating-val"><?= $v['rating'] ?></span>
+                  <div class="rev-cf-title-line">
+                    <span class="rev-cf-cust-name"><?= htmlspecialchars($v['customer']) ?></span>
+                    <span class="rev-cf-star-tag">★ <?= $v['rating'] ?></span>
                   </div>
-                  <h4 class="rev-cf-cust-name"><?= htmlspecialchars($v['customer']) ?></h4>
-                  <div class="rev-cf-cust-sub">
-                    <span class="rev-cf-loc"><?= htmlspecialchars($v['location']) ?></span>
-                    <span class="rev-cf-sep">•</span>
-                    <span class="rev-cf-serv"><?= htmlspecialchars($v['service']) ?></span>
-                  </div>
-                  <p class="rev-cf-quote">"<?= htmlspecialchars($v['review']) ?>"</p>
-
+                  <div class="rev-cf-serv"><?= htmlspecialchars($v['service']) ?></div>
                   <!-- Playback Duration Progress Bar -->
                   <div class="rev-cf-progress-track">
                     <div class="rev-cf-progress-fill" id="cfProgressFill-<?= $idx ?>"></div>
@@ -704,13 +693,13 @@ require __DIR__ . '/../components/header.php';
 .rev-cf-stage {
   position: relative;
   width: 100%;
-  height: 530px;
-  perspective: 1200px;
-  perspective-origin: 50% 50%;
+  height: 480px;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
 }
 
 /* Floating Nav Buttons */
@@ -718,8 +707,8 @@ require __DIR__ . '/../components/header.php';
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: rgba(11, 41, 34, 0.88);
   border: 1px solid rgba(52, 211, 153, 0.45);
@@ -739,38 +728,37 @@ require __DIR__ . '/../components/header.php';
   transform: translateY(-50%) scale(1.12);
   box-shadow: 0 0 24px rgba(52, 211, 153, 0.65);
 }
-.rev-cf-prev { left: 14px; }
-.rev-cf-next { right: 14px; }
+.rev-cf-prev { left: 16px; }
+.rev-cf-next { right: 16px; }
 
-/* 3D Coverflow Cards */
+/* 3D Arched Ribbon Cards */
 .rev-cf-card {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 250px;
-  height: 430px;
-  margin-left: -125px;
-  margin-top: -215px;
+  width: 210px;
+  height: 370px;
+  margin-top: -185px;
   border-radius: 20px;
   overflow: hidden;
-  background: #0B2922;
+  background: #000000;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.6);
   cursor: pointer;
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), 
-              opacity 0.55s ease, 
-              filter 0.55s ease, 
-              box-shadow 0.5s ease, 
+  transform-origin: center bottom;
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1), 
+              opacity 0.6s ease, 
+              box-shadow 0.6s ease, 
               border-color 0.4s ease;
-  transform-style: preserve-3d;
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
+  user-select: none;
 }
 
 /* Active Center Card styling */
 .rev-cf-card.is-active {
   border: 2px solid #34D399;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 45px rgba(52, 211, 153, 0.5);
-  cursor: pointer;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.8), 0 0 40px rgba(52, 211, 153, 0.5);
+  cursor: default;
 }
 .rev-cf-card.is-active .rev-cf-center-play {
   opacity: 0;
@@ -796,10 +784,10 @@ require __DIR__ . '/../components/header.php';
   inset: 0;
   background: linear-gradient(
     180deg, 
-    rgba(7, 25, 20, 0.72) 0%, 
-    rgba(7, 25, 20, 0.05) 30%, 
-    rgba(7, 25, 20, 0.25) 55%, 
-    rgba(7, 25, 20, 0.95) 100%
+    rgba(7, 25, 20, 0.65) 0%, 
+    transparent 28%, 
+    transparent 65%, 
+    rgba(7, 25, 20, 0.92) 100%
   );
   pointer-events: none;
   z-index: 2;
@@ -808,9 +796,9 @@ require __DIR__ . '/../components/header.php';
 /* Top bar inside card */
 .rev-cf-topbar {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
+  top: 10px;
+  left: 10px;
+  right: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -823,9 +811,9 @@ require __DIR__ . '/../components/header.php';
   background: rgba(7, 25, 20, 0.8);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(52, 211, 153, 0.45);
-  padding: 3px 9px;
+  padding: 3px 8px;
   border-radius: 9999px;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: #34D399;
   text-transform: uppercase;
@@ -837,8 +825,8 @@ require __DIR__ . '/../components/header.php';
   background-color: #34D399;
 }
 .rev-cf-mute-btn {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: rgba(7, 25, 20, 0.8);
   backdrop-filter: blur(8px);
@@ -855,9 +843,6 @@ require __DIR__ . '/../components/header.php';
   border-color: #34D399;
   transform: scale(1.08);
 }
-.rev-cf-mute-btn .material-symbols-outlined {
-  font-size: 16px;
-}
 
 /* Center Play Icon on inactive cards */
 .rev-cf-center-play {
@@ -865,8 +850,8 @@ require __DIR__ . '/../components/header.php';
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 50px;
-  height: 50px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: rgba(7, 25, 20, 0.85);
   border: 1px solid rgba(52, 211, 153, 0.55);
@@ -878,9 +863,6 @@ require __DIR__ . '/../components/header.php';
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
-.rev-cf-center-play .material-symbols-outlined {
-  font-size: 28px;
-}
 
 /* Bottom info inside card */
 .rev-cf-bottombar {
@@ -888,67 +870,50 @@ require __DIR__ . '/../components/header.php';
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 12px 14px 14px;
+  padding: 10px 12px 12px;
   z-index: 5;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
+  text-align: left;
 }
-.rev-cf-stars-row {
+.rev-cf-title-line {
   display: flex;
   align-items: center;
-  gap: 2px;
-  color: #FBBF24;
-  font-size: 0.85rem;
-}
-.rev-cf-rating-val {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  margin-left: 4px;
+  justify-content: space-between;
 }
 .rev-cf-cust-name {
-  font-size: 0.95rem;
+  font-size: 0.84rem;
   font-weight: 700;
   color: #FFFFFF;
   margin: 0;
-  line-height: 1.2;
 }
-.rev-cf-cust-sub {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.rev-cf-star-tag {
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.75);
+  font-weight: 700;
+  color: #FBBF24;
 }
-.rev-cf-quote {
-  font-size: 0.75rem;
-  color: #EAF3EE;
-  margin: 2px 0 6px;
-  line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  font-style: italic;
+.rev-cf-serv {
+  font-size: 0.7rem;
+  color: #A7F3D0;
 }
 
 /* Progress track */
 .rev-cf-progress-track {
   width: 100%;
-  height: 4px;
+  height: 3px;
   background: rgba(255, 255, 255, 0.22);
   border-radius: 9999px;
   overflow: hidden;
   position: relative;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 .rev-cf-progress-fill {
   width: 0%;
   height: 100%;
   background: linear-gradient(90deg, #22A06B, #34D399);
   border-radius: 9999px;
-  transition: width 0.12s linear;
+  transition: width 0.1s linear;
 }
 
 /* Pagination Dots */
@@ -960,8 +925,8 @@ require __DIR__ . '/../components/header.php';
   margin-top: 1.25rem;
 }
 .rev-cf-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.25);
   border: none;
@@ -971,20 +936,19 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-cf-dot.active {
   background: #34D399;
-  width: 28px;
+  width: 26px;
   box-shadow: 0 0 12px rgba(52, 211, 153, 0.75);
 }
 
 /* Responsive adjustments */
 @media (max-width: 991px) {
   .rev-cf-stage {
-    height: 470px;
+    height: 440px;
   }
   .rev-cf-card {
-    width: 220px;
-    height: 380px;
-    margin-left: -110px;
-    margin-top: -190px;
+    width: 190px;
+    height: 340px;
+    margin-top: -170px;
   }
   .rev-cf-prev { left: 8px; }
   .rev-cf-next { right: 8px; }
@@ -998,27 +962,20 @@ require __DIR__ . '/../components/header.php';
     font-size: 0.85rem;
   }
   .rev-cf-stage {
-    height: 410px;
+    height: 390px;
   }
   .rev-cf-card {
-    width: 180px;
-    height: 320px;
-    margin-left: -90px;
-    margin-top: -160px;
+    width: 175px;
+    height: 310px;
+    margin-top: -155px;
     border-radius: 16px;
   }
   .rev-cf-nav-btn {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
   }
   .rev-cf-bottombar {
     padding: 8px 10px 10px;
-  }
-  .rev-cf-quote {
-    display: none; /* keep clean on compact screens */
-  }
-  .rev-cf-cust-name {
-    font-size: 0.85rem;
   }
 }
 
@@ -2352,12 +2309,11 @@ let cfFallbackTimer = null;
 
 function updateCoverflowLayout() {
   if (!totalCfCards) return;
-  const isMobile = window.innerWidth <= 576;
-  const isTablet = window.innerWidth > 576 && window.innerWidth <= 991;
+  const isMobile = window.innerWidth <= 600;
+  const isTablet = window.innerWidth > 600 && window.innerWidth <= 1024;
 
-  // Horizontal spacing per viewport
-  const stepX = isMobile ? 125 : (isTablet ? 175 : 230);
-  const zStep = isMobile ? 45 : 80;
+  // Spacing between cards along the curved ribbon
+  const cardSpacing = isMobile ? 115 : (isTablet ? 165 : 210);
 
   if (cfFallbackTimer) {
     clearTimeout(cfFallbackTimer);
@@ -2376,16 +2332,22 @@ function updateCoverflowLayout() {
     const playIcon = card.querySelector('.rev-cf-center-play');
     const progressFill = document.getElementById(`cfProgressFill-${idx}`);
 
-    if (diff === 0) {
-      // CENTER ACTIVE CARD (Prominently Enlarged, Bright & Elevated)
-      const scale = isMobile ? 1.12 : 1.18;
-      card.style.transform = `translate3d(0, 0, ${zStep}px) scale(${scale}) rotateY(0deg)`;
-      card.style.zIndex = '30';
-      card.style.opacity = '1';
-      card.style.filter = 'none';
-      card.style.pointerEvents = 'auto';
-      card.classList.add('is-active');
+    // Arched Ribbon Geometry (matches reference video)
+    const x = diff * cardSpacing;
+    const y = absDiff * absDiff * (isMobile ? 5 : 7.5);
+    const rot = diff * (isMobile ? 3.5 : 4.5);
+    const scale = absDiff === 0 ? (isMobile ? 1.08 : 1.18) : Math.max(0.65, 0.93 - absDiff * 0.1);
+    const opacity = absDiff > 3 ? 0 : Math.max(0.3, 1 - absDiff * 0.22);
+    const zIndex = 25 - absDiff * 3;
 
+    card.style.transform = `translateX(-50%) translate3d(${x}px, ${y}px, 0) rotate(${rot}deg) scale(${scale})`;
+    card.style.zIndex = zIndex;
+    card.style.opacity = opacity;
+    card.style.pointerEvents = absDiff > 3 ? 'none' : 'auto';
+
+    if (diff === 0) {
+      // CENTER ACTIVE CARD (Prominently Enlarged, Upright & Bright)
+      card.classList.add('is-active');
       if (playIcon) playIcon.style.opacity = '0';
 
       // Play center video
@@ -2407,68 +2369,19 @@ function updateCoverflowLayout() {
         const playPromise = video.play();
         if (playPromise !== undefined) {
           playPromise.catch(() => {
-            // If browser blocks autoplay until first user gesture
             if (playIcon) playIcon.style.opacity = '1';
-            // Set safe fallback timeout if user hasn't interacted yet
             cfFallbackTimer = setTimeout(() => {
               advanceCoverflow(1);
             }, 8000);
           });
         }
       }
-    } else if (absDiff === 1) {
-      // ADJACENT LEFT & RIGHT CARDS (Scaled down, Angled 3D)
-      const xOffset = diff * stepX;
-      const rotY = diff > 0 ? -12 : 12;
-      const scale = isMobile ? 0.82 : 0.86;
-      card.style.transform = `translate3d(${xOffset}px, 0, -35px) scale(${scale}) rotateY(${rotY}deg)`;
-      card.style.zIndex = '15';
-      card.style.opacity = '0.62';
-      card.style.filter = 'blur(0.5px)';
-      card.style.pointerEvents = 'auto';
+    } else {
+      // FLANKING & OUTLYING CARDS (Tilted in ribbon arch, dimmed)
       card.classList.remove('is-active');
-
-      if (playIcon) playIcon.style.opacity = '0.7';
-
-      // Pause non-active video and reset
-      if (video) {
-        video.pause();
-        video.currentTime = 0;
-        video.onended = null;
-        video.ontimeupdate = null;
-      }
-      if (progressFill) progressFill.style.width = '0%';
-    } else if (absDiff === 2) {
-      // OUTER FLANK CARDS
-      const xOffset = diff * (stepX * 1.75);
-      const rotY = diff > 0 ? -22 : 22;
-      const scale = isMobile ? 0.65 : 0.72;
-      card.style.transform = `translate3d(${xOffset}px, 0, -85px) scale(${scale}) rotateY(${rotY}deg)`;
-      card.style.zIndex = '8';
-      card.style.opacity = '0.35';
-      card.style.filter = 'blur(1.5px)';
-      card.style.pointerEvents = 'auto';
-      card.classList.remove('is-active');
-
       if (playIcon) playIcon.style.opacity = '0';
 
-      if (video) {
-        video.pause();
-        video.currentTime = 0;
-        video.onended = null;
-        video.ontimeupdate = null;
-      }
-      if (progressFill) progressFill.style.width = '0%';
-    } else {
-      // OFF-STAGE CARDS (Hidden from view)
-      const xOffset = diff > 0 ? stepX * 2.6 : -stepX * 2.6;
-      card.style.transform = `translate3d(${xOffset}px, 0, -150px) scale(0.5)`;
-      card.style.zIndex = '1';
-      card.style.opacity = '0';
-      card.style.filter = 'blur(3px)';
-      card.style.pointerEvents = 'none';
-      card.classList.remove('is-active');
-
+      // Pause non-active video and reset
       if (video) {
         video.pause();
         video.currentTime = 0;
