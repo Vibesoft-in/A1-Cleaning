@@ -636,15 +636,20 @@ require __DIR__ . '/../components/header.php';
   line-height: 1.55;
 }
 
-/* Arched Ribbon Viewport: Interactive Grab / Swipeable Track (Matching Reference Image 2) */
+/* 3D Concave Cylinder Viewport: IMAX Depth, Interactive Grab / Swipe */
 .rev-cylinder-viewport {
   width: 100%;
+  height: 440px;
   position: relative;
   overflow: hidden;
-  padding: 3rem 0 2rem;
+  perspective: 1300px;
+  perspective-origin: 50% 50%;
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .rev-cylinder-viewport.is-dragging {
   cursor: grabbing;
@@ -653,30 +658,34 @@ require __DIR__ . '/../components/header.php';
   pointer-events: none;
 }
 
-/* Ribbon Track: 100% Uniform Spacing & Gaps, Zero Overlap */
+/* 3D Stage Center */
 .rev-cylinder-track {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: max-content;
-  will-change: transform;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
 }
 
-/* Uniform Vertical 9:16 Cards (~185px x 320px) - Matching Reference 1:1, Full Opacity, No Collisions */
+/* 3D Concave Cards: 100% Uniform Polar Spacing, Zero Overlap */
 .rev-cylinder-card {
+  position: absolute;
   width: 185px;
   height: 320px;
+  top: -160px;
+  left: -92.5px;
   border-radius: 20px;
   overflow: hidden;
-  position: relative;
   background: #0B2922;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
-  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.65);
   cursor: pointer;
+  transform-style: preserve-3d;
   will-change: transform;
-  opacity: 1; /* Solid 100% opacity - No fade */
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  backface-visibility: hidden;
+  opacity: 1; /* Solid 100% opacity */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .rev-cylinder-card:hover {
@@ -744,22 +753,21 @@ require __DIR__ . '/../components/header.php';
 
 /* Mobile Responsive: Proportional Card Sizing */
 @media (max-width: 600px) {
+  .rev-cylinder-viewport {
+    height: 340px;
+  }
   .rev-cylinder-card {
     width: 145px;
     height: 250px;
+    top: -125px;
+    left: -72.5px;
     border-radius: 16px;
-  }
-  .rev-cylinder-track {
-    gap: 10px;
   }
   .rev-cylinder-pill {
     top: 8px;
     left: 8px;
     font-size: 0.6rem;
     padding: 2px 7px;
-  }
-  .rev-cylinder-viewport {
-    padding: 2rem 0 1rem;
   }
 }
 
@@ -2171,10 +2179,14 @@ function cycleReviews(delta) {
 
   function renderLoop() {
     const isMobile = window.innerWidth <= 600;
-    // Exact dimensions matching Reference Image 2
     const cardWidth = isMobile ? 145 : 185;
-    const gap = isMobile ? 10 : 16;
-    const singleSetWidth = 8 * (cardWidth + gap);
+    const gap = isMobile ? 12 : 18;
+    const cardSpacing = cardWidth + gap;
+    const totalCards = cards.length;
+    const totalTrackLen = totalCards * cardSpacing;
+
+    // True 3D Concave Cylinder Radius (Curving into depth -Z)
+    const R = isMobile ? 650 : 1050;
 
     // Inertia & momentum decay when user releases drag
     if (!isDragging) {
@@ -2186,49 +2198,47 @@ function cycleReviews(delta) {
       }
     }
 
-    // Circular infinite wrap in BOTH directions (swipe left or right continuously)
-    if (scrollX < 0) {
-      scrollX += singleSetWidth;
-    } else if (scrollX >= singleSetWidth) {
-      scrollX -= singleSetWidth;
-    }
-
-    // Move track smoothly
-    track.style.transform = `translateX(${-scrollX}px)`;
-
-    // Calculate dynamic 3D arched ribbon per card
-    const halfW = viewport.clientWidth / 2;
-    const archFactor = isMobile ? 12 : 24;
+    // Infinite wrap for scrollX
+    scrollX = ((scrollX % totalTrackLen) + totalTrackLen) % totalTrackLen;
 
     cards.forEach((card, idx) => {
-      // Direct mathematical track position relative to viewport center:
-      // Guarantees 100% constant, uniform gap across every single card!
-      const cardTrackCenter = idx * (cardWidth + gap) + cardWidth / 2;
-      const currentScreenX = cardTrackCenter - scrollX;
-      const dist = currentScreenX - halfW;
-      const d = dist / halfW;
+      // Base linear position along the cylinder perimeter
+      let basePos = idx * cardSpacing - scrollX;
 
-      // Parabolic vertical ribbon arch: Center sits lower, sides curve gently upward
-      const archY = -(d * d) * archFactor;
+      // Wrap basePos to [-totalTrackLen / 2, totalTrackLen / 2]
+      while (basePos < -totalTrackLen / 2) basePos += totalTrackLen;
+      while (basePos > totalTrackLen / 2) basePos -= totalTrackLen;
 
-      // Card scale: uniform 1.0 everywhere, slight 1.05 on hover
+      // Polar angle theta along cylinder in radians
+      const theta = basePos / R;
+      const deg = theta * (180 / Math.PI);
+
+      // Culling: if card rotated too far away (|deg| > 72 deg)
+      if (Math.abs(deg) > 72) {
+        card.style.display = 'none';
+        const video = card.querySelector('video');
+        if (video && !video.paused) video.pause();
+        return;
+      }
+
+      card.style.display = 'block';
+
+      // 3D Cylinder Coordinates:
+      // X = R * sin(theta)
+      // Z = -(R * (1 - cos(theta)))  --> Negative Z curves INTO screen (TRUE CONCAVE!)
+      const x = R * Math.sin(theta);
+      const z = -(R * (1 - Math.cos(theta)));
+      const rotY = deg;
+
       const isHov = (card === hoveredCard && !isDragging);
-      const scale = isHov ? 1.05 : 1.0;
+      const scale = isHov ? 1.06 : 1.0;
 
-      // Pure arched ribbon: ZERO rotateY -> ZERO overlap -> 100% uniform gap everywhere!
-      card.style.transform = `translateY(${archY.toFixed(2)}px) scale(${scale})`;
-      card.style.opacity = '1';
-      card.style.zIndex = isHov ? 50 : 10;
+      card.style.transform = `translate3d(${x.toFixed(1)}px, 0px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(1)}deg) scale(${scale})`;
+      card.style.zIndex = Math.round(100 - Math.abs(deg));
 
-      // Performance: pause far-offscreen videos only
       const video = card.querySelector('video');
-      if (video) {
-        const isFarOffscreen = (currentScreenX < -400 || currentScreenX > window.innerWidth + 400);
-        if (isFarOffscreen && !video.paused) {
-          video.pause();
-        } else if (!isFarOffscreen && video.paused) {
-          video.play().catch(() => {});
-        }
+      if (video && video.paused) {
+        video.play().catch(() => {});
       }
     });
 
