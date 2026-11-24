@@ -56,8 +56,12 @@ if (empty($address)) {
     $address = $addressInput;
 }
 
+$serviceQuantity = (int)($_POST['service_quantity'] ?? 1);
+if ($serviceQuantity < 1) $serviceQuantity = 1;
+
 // Assemble Structured Booking Metadata into Message
 $metaDetails = [];
+if ($serviceQuantity > 1) $metaDetails[] = "Quantity: {$serviceQuantity}";
 if ($selectedPackage) $metaDetails[] = "Tier: {$selectedPackage}";
 if ($slotPreference) $metaDetails[] = "Slot: {$slotPreference}";
 if ($propertyType) $metaDetails[] = "Property: {$propertyType}";

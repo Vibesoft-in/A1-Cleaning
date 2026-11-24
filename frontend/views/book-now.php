@@ -47,6 +47,98 @@ if ($hasCartItem) {
             ($prefilledAmount ? " | Estimated Total: ₹" . $prefilledAmount : "");
     }
 
+    // Prepare curated frequently added add-ons for the current service
+    $serviceAddons = $activeServiceData['addons'] ?? [];
+    $frequentlyAddedAddons = [];
+
+    $addonImagesPool = [
+        'tap-polish' => SITE_URL . '/assets/images/pricing/bathroom-cleaning.jpg',
+        'tile-grout' => SITE_URL . '/assets/images/pricing/bathroom-cleaning.jpg',
+        'exhaust-fan' => SITE_URL . '/assets/images/pricing/kitchen-cleaning.jpg',
+        'glass-glaze' => SITE_URL . '/assets/images/pricing/before-after/glass-after.jpg',
+        'chimney-baffle' => SITE_URL . '/assets/images/pricing/kitchen-cleaning.jpg',
+        'fridge-sanitize' => SITE_URL . '/assets/images/pricing/kitchen-cleaning.jpg',
+        'sofa-perfume' => SITE_URL . '/assets/images/pricing/sofa-cleaning.jpg',
+        'cushion-wash' => SITE_URL . '/assets/images/pricing/sofa-cleaning.jpg',
+        'balcony-railing' => SITE_URL . '/assets/images/pricing/balcony-cleaning.jpg',
+        'window-glass' => SITE_URL . '/assets/images/pricing/before-after/glass-after.jpg',
+        'sofa-extract' => SITE_URL . '/assets/images/pricing/sofa-cleaning.jpg',
+        'tile-descale' => SITE_URL . '/assets/images/pricing/bathroom-cleaning.jpg',
+    ];
+
+    $addonTagsPool = [
+        'tap-polish' => '🌱 Chrome & Tap',
+        'tile-grout' => '⭐ Frequently Added',
+        'exhaust-fan' => '⚡ Quick Addon',
+        'glass-glaze' => '🪟 Glass Door Wipe',
+        'balcony-railing' => '🌱 Railing & Grill',
+        'window-glass' => '🪟 Glass Door Wipe',
+        'sofa-extract' => '⚡ Quick Addon',
+        'tile-descale' => '⭐ Frequently Added',
+    ];
+
+    if (!empty($serviceAddons)) {
+        foreach ($serviceAddons as $sa) {
+            $key = $sa['key'] ?? 'addon-' . count($frequentlyAddedAddons);
+            $frequentlyAddedAddons[] = [
+                'key' => $key,
+                'name' => $sa['name'],
+                'price' => (int)($sa['price'] ?? 199),
+                'tag' => $addonTagsPool[$key] ?? '⚡ Quick Addon',
+                'time' => '~20-30m',
+                'img' => $addonImagesPool[$key] ?? (!empty($activeServiceData['thumb']) ? $activeServiceData['thumb'] : SITE_URL . '/assets/images/pricing/home-cleaning.jpg')
+            ];
+            if (count($frequentlyAddedAddons) >= 4) break;
+        }
+    }
+
+    if (count($frequentlyAddedAddons) < 4) {
+        $fallbackCatalog = [
+            [
+                'key' => 'balcony-railing',
+                'name' => 'Balcony Railing & Window Frame Deep Wipe',
+                'price' => 49,
+                'tag' => '🌱 Railing & Grill',
+                'time' => '~20m',
+                'img' => SITE_URL . '/assets/images/pricing/balcony-cleaning.jpg'
+            ],
+            [
+                'key' => 'window-glass',
+                'name' => 'Window & Mirror Glass Anti-Fog Glaze',
+                'price' => 39,
+                'tag' => '🪟 Glass Door Wipe',
+                'time' => '~20m',
+                'img' => SITE_URL . '/assets/images/pricing/before-after/glass-after.jpg'
+            ],
+            [
+                'key' => 'sofa-extract',
+                'name' => 'Sofa & Upholstery Deep Enzyme Extraction',
+                'price' => 399,
+                'tag' => '⚡ Quick Addon',
+                'time' => '~90m',
+                'img' => SITE_URL . '/assets/images/pricing/sofa-cleaning.jpg'
+            ],
+            [
+                'key' => 'tile-descale',
+                'name' => 'Bathroom Tiles Hard Water Descaling',
+                'price' => 249,
+                'tag' => '⭐ Frequently Added',
+                'time' => '~30m',
+                'img' => SITE_URL . '/assets/images/pricing/bathroom-cleaning.jpg'
+            ]
+        ];
+        foreach ($fallbackCatalog as $fc) {
+            if (count($frequentlyAddedAddons) >= 4) break;
+            $exists = false;
+            foreach ($frequentlyAddedAddons as $existing) {
+                if ($existing['key'] === $fc['key']) { $exists = true; break; }
+            }
+            if (!$exists) {
+                $frequentlyAddedAddons[] = $fc;
+            }
+        }
+    }
+
     $pageTitle = "Complete Your Booking | A1 Cleaning Doorstep Mechanized Services";
     $pageDescription = "Book your doorstep mechanized cleaning in Kashipur, Jaspur, Ramnagar or nearby towns. Zero advance payment, verified Kärcher equipment, pay after 100% satisfaction.";
 } else {
@@ -135,6 +227,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
           <!-- Hidden Fields & CSRF -->
           <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
           <input type="hidden" name="source_page" value="<?= htmlspecialchars($_SERVER['HTTP_REFERER'] ?? 'Direct Visit /book-now/') ?>">
+          <input type="hidden" name="service_quantity" id="hidden_service_quantity" value="1">
           <input type="hidden" name="estimated_amount" id="hidden_estimated_amount" value="<?= htmlspecialchars($defaultBasePrice) ?>">
           <input type="hidden" name="selected_package" id="hidden_selected_package" value="<?= htmlspecialchars($prefilledPackage ?: 'Deep Clean Standard') ?>">
           <input type="hidden" name="selected_addons" id="hidden_selected_addons" value="<?= htmlspecialchars($prefilledAddons) ?>">
@@ -166,6 +259,92 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
               <?php endif; ?>
             </div>
           <?php endif; ?>
+
+          <!-- =============================================================
+               CARD A: SELECTED SERVICES (Matching User Reference)
+               With Quantity Stepper (+ / -) and Clear All action
+               ============================================================= -->
+          <div class="cart-selected-services-card" id="cartSelectedServicesCard">
+            <div class="cart-services-header">
+              <h2 class="cart-services-heading">
+                Selected Services (<span id="cartServiceCount">1</span>)
+              </h2>
+              <button type="button" class="btn-clear-cart" onclick="clearCartService()" aria-label="Clear all services">
+                Clear All
+              </button>
+            </div>
+
+            <div class="cart-service-row">
+              <div class="cart-service-info">
+                <?php 
+                  $svcThumb = !empty($activeServiceData['thumb']) ? $activeServiceData['thumb'] : SITE_URL . '/assets/images/pricing/' . $prefilledService . '.jpg';
+                ?>
+                <img src="<?= htmlspecialchars($svcThumb) ?>" alt="<?= htmlspecialchars($activeServiceData['name'] ?? 'Service') ?>" class="cart-service-thumb" id="cartServiceThumb">
+                <div class="cart-service-text-wrap">
+                  <h3 class="cart-service-title" id="cartServiceTitle">
+                    <?= htmlspecialchars($activeServiceData['name'] ?? 'Doorstep Cleaning Service') ?>
+                  </h3>
+                  <div class="cart-service-duration" id="cartServiceDuration">
+                    Est. duration: <?= htmlspecialchars($activeServiceData['time_estimate'] ?? '~60-90 mins') ?>
+                  </div>
+                  <div class="cart-service-unit-price">
+                    ₹<span id="serviceUnitPrice"><?= htmlspecialchars($defaultBasePrice) ?></span> each
+                  </div>
+                </div>
+              </div>
+
+              <div class="cart-service-controls">
+                <div class="cart-qty-stepper">
+                  <button type="button" class="cart-stepper-btn" onclick="updateServiceQty(-1)" aria-label="Decrease quantity">−</button>
+                  <span class="cart-stepper-val" id="serviceQtyVal">1</span>
+                  <button type="button" class="cart-stepper-btn" onclick="updateServiceQty(1)" aria-label="Increase quantity">+</button>
+                </div>
+                <div class="cart-service-row-total" id="serviceRowTotal">
+                  ₹<?= htmlspecialchars(number_format($defaultBasePrice)) ?>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- =============================================================
+               CARD B: FREQUENTLY ADDED ADD-ONS (Matching User Reference)
+               2x2 Grid of Pairable Add-ons with + Add / Added Toggles
+               ============================================================= -->
+          <div class="cart-addons-section-card" id="cartAddonsCard">
+            <div class="cart-addons-head">
+              <div class="cart-addons-title-wrap">
+                <span class="material-symbols-outlined icon-amber" style="color: #F59E0B; font-size: 1.25rem;">bolt</span>
+                <h3 class="cart-addons-title">Frequently Added Add-ons</h3>
+              </div>
+              <span class="cart-addons-badge">Pairs with your service</span>
+            </div>
+            <p class="cart-addons-sub">
+              Customers frequently bundle these verified doorstep services for 100% complete home care.
+            </p>
+
+            <div class="cart-addons-grid">
+              <?php foreach ($frequentlyAddedAddons as $fa): ?>
+                <div class="cart-addon-item" id="addon-card-<?= htmlspecialchars($fa['key']) ?>">
+                  <div class="cart-addon-left">
+                    <img src="<?= htmlspecialchars($fa['img']) ?>" alt="<?= htmlspecialchars($fa['name']) ?>" class="cart-addon-thumb">
+                    <div class="cart-addon-details">
+                      <span class="cart-addon-tag"><?= htmlspecialchars($fa['tag']) ?></span>
+                      <h4 class="cart-addon-title" title="<?= htmlspecialchars($fa['name']) ?>">
+                        <?= htmlspecialchars($fa['name']) ?>
+                      </h4>
+                      <div class="cart-addon-pricing">
+                        ₹<?= htmlspecialchars($fa['price']) ?> • <?= htmlspecialchars($fa['time']) ?>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="button" class="btn-addon-add" id="addon-btn-<?= htmlspecialchars($fa['key']) ?>" onclick="toggleCartAddon('<?= htmlspecialchars($fa['key']) ?>', '<?= htmlspecialchars(addslashes($fa['name'])) ?>', <?= (int)$fa['price'] ?>, this)">
+                    + Add
+                  </button>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          </div>
 
           <!-- =============================================================
                CARD 1: CUSTOMER DETAILS (Matching Reference "Guest Details")
@@ -1329,6 +1508,287 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 
 /* =======================================================================
+   CARD A: SELECTED SERVICES & QUANTITY STEPPER (Matching User Reference)
+   ======================================================================= */
+.cart-selected-services-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 18px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+.cart-services-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid #F1F5F9;
+}
+.cart-services-heading {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1E293B;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.btn-clear-cart {
+  background: none;
+  border: none;
+  color: #DC2626;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+.btn-clear-cart:hover {
+  background: #FEF2F2;
+  color: #B91C1C;
+}
+.cart-service-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+.cart-service-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+.cart-service-thumb {
+  width: 68px;
+  height: 68px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid #E2E8F0;
+}
+.cart-service-text-wrap {
+  min-width: 0;
+}
+.cart-service-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0 0 0.2rem;
+  line-height: 1.3;
+}
+.cart-service-duration {
+  font-size: 0.82rem;
+  color: #64748B;
+  margin-bottom: 0.25rem;
+}
+.cart-service-unit-price {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #E04815;
+}
+.cart-service-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+.cart-qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  padding: 2px 4px;
+  background: #FFFFFF;
+}
+.cart-stepper-btn {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  background: #F8FAFC;
+  color: #334155;
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+.cart-stepper-btn:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+.cart-stepper-val {
+  min-width: 22px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+.cart-service-row-total {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1E293B;
+}
+
+/* =======================================================================
+   CARD B: FREQUENTLY ADDED ADD-ONS GRID (Matching User Reference)
+   ======================================================================= */
+.cart-addons-section-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 18px;
+  padding: 1.35rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+.cart-addons-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+.cart-addons-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.cart-addons-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1E293B;
+  margin: 0;
+}
+.cart-addons-badge {
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+.cart-addons-sub {
+  font-size: 0.82rem;
+  color: #64748B;
+  margin: 0 0 1rem 0;
+}
+.cart-addons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.cart-addon-item {
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+.cart-addon-item:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+.cart-addon-item.is-selected {
+  border-color: #22A06B;
+  background: #F0FDF4;
+}
+.cart-addon-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.cart-addon-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid #E2E8F0;
+}
+.cart-addon-details {
+  min-width: 0;
+}
+.cart-addon-tag {
+  display: inline-block;
+  background: #FEF9C3;
+  color: #854D0E;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+.cart-addon-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #1E293B;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  margin-bottom: 2px;
+}
+.cart-addon-pricing {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #E04815;
+}
+.btn-addon-add {
+  border: none;
+  border-radius: 9999px;
+  background: #0F172A;
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.btn-addon-add:hover {
+  background: #1E293B;
+  transform: translateY(-1px);
+}
+.btn-addon-add.is-added {
+  background: #22A06B !important;
+  color: #FFFFFF !important;
+}
+@media (max-width: 640px) {
+  .cart-addons-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .cart-service-row {
+    flex-wrap: wrap;
+  }
+  .cart-service-controls {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+    border-top: 1px dashed #E2E8F0;
+  }
+}
+
+/* =======================================================================
    AUTHENTIC EMPTY CART STYLES (Strict A1 Brand Theme)
    Deep Green (#0B2922), Fresh Green (#22A06B), Soft Mint (#EAF3EE), White (#FFFFFF)
    ======================================================================= */
@@ -1465,32 +1925,133 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
      DYNAMIC SYNCHRONIZATION JAVASCRIPT
      ======================================================================= -->
 <script>
-// Policy Accordion Toggle
-function toggleVossyPolicy(btn) {
-  const item = btn.closest('.vossy-policy-item');
-  const body = item.querySelector('.vossy-policy-body');
-  const isOpen = item.classList.contains('is-open');
+// =======================================================================
+// CART REVIEW & ADD-ONS SYNCHRONIZATION STATE
+// =======================================================================
+let currentServiceQty = 1;
+let currentBaseUnitPrice = <?= (int)$defaultBasePrice ?>;
+let selectedCartAddons = {}; // { [key]: { name, price } }
 
-  if (isOpen) {
-    item.classList.remove('is-open');
-    btn.setAttribute('aria-expanded', 'false');
-    if (body) body.style.display = 'none';
-  } else {
-    item.classList.add('is-open');
-    btn.setAttribute('aria-expanded', 'true');
-    if (body) body.style.display = 'block';
+// Check if user came with prefilled addons
+<?php if (!empty($prefilledAddons)): ?>
+(function() {
+  const preAddons = <?= json_encode($prefilledAddons) ?>.split(',');
+  preAddons.forEach(a => {
+    const trimmed = a.trim();
+    if (trimmed) {
+      <?php foreach ($frequentlyAddedAddons as $fa): ?>
+        if (trimmed.toLowerCase().includes(<?= json_encode(strtolower($fa['name'])) ?>) || trimmed.toLowerCase().includes(<?= json_encode($fa['key']) ?>)) {
+          selectedCartAddons[<?= json_encode($fa['key']) ?>] = { name: <?= json_encode($fa['name']) ?>, price: <?= (int)$fa['price'] ?> };
+          const btn = document.getElementById('addon-btn-' + <?= json_encode($fa['key']) ?>);
+          if (btn) {
+            btn.classList.add('is-added');
+            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">check</span> Added';
+          }
+          const card = document.getElementById('addon-card-' + <?= json_encode($fa['key']) ?>);
+          if (card) card.classList.add('is-selected');
+        }
+      <?php endforeach; ?>
+    }
+  });
+})();
+<?php endif; ?>
+
+function updateServiceQty(delta) {
+  const newQty = currentServiceQty + delta;
+  if (newQty < 1) {
+    if (confirm('Do you want to remove this service from your cart?')) {
+      clearCartService();
+    }
+    return;
+  }
+  currentServiceQty = newQty;
+  const qtyEl = document.getElementById('serviceQtyVal');
+  if (qtyEl) qtyEl.innerText = currentServiceQty;
+
+  const rowTotal = currentBaseUnitPrice * currentServiceQty;
+  const rowTotalEl = document.getElementById('serviceRowTotal');
+  if (rowTotalEl) rowTotalEl.innerText = '₹' + rowTotal.toLocaleString('en-IN');
+
+  recalculateCartTotals();
+}
+
+function clearCartService() {
+  if (confirm('Clear all services and empty your cart?')) {
+    window.location.href = '<?= SITE_URL ?>/cart/';
   }
 }
 
-// Payment Mode Radio Highlight
-document.querySelectorAll('.vossy-radio-box input[type="radio"]').forEach(r => {
-  r.addEventListener('change', function() {
-    document.querySelectorAll('.vossy-radio-box').forEach(b => b.classList.remove('active'));
-    if (this.checked) {
-      this.closest('.vossy-radio-box').classList.add('active');
+function toggleCartAddon(key, name, price, btnEl) {
+  const card = document.getElementById('addon-card-' + key);
+  if (selectedCartAddons[key]) {
+    delete selectedCartAddons[key];
+    if (btnEl) {
+      btnEl.classList.remove('is-added');
+      btnEl.innerHTML = '+ Add';
     }
-  });
-});
+    if (card) card.classList.remove('is-selected');
+  } else {
+    selectedCartAddons[key] = { name: name, price: price };
+    if (btnEl) {
+      btnEl.classList.add('is-added');
+      btnEl.innerHTML = '<span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">check</span> Added';
+    }
+    if (card) card.classList.add('is-selected');
+  }
+  recalculateCartTotals();
+}
+
+function recalculateCartTotals() {
+  const baseTotal = currentBaseUnitPrice * currentServiceQty;
+  let addonsSum = 0;
+  const addonNames = [];
+  for (const k in selectedCartAddons) {
+    addonsSum += selectedCartAddons[k].price;
+    addonNames.push(selectedCartAddons[k].name + ' (₹' + selectedCartAddons[k].price + ')');
+  }
+  const grandTotal = baseTotal + addonsSum;
+
+  // Update hidden inputs
+  const hiddenEst = document.getElementById('hidden_estimated_amount');
+  if (hiddenEst) hiddenEst.value = grandTotal;
+  const hiddenAddons = document.getElementById('hidden_selected_addons');
+  if (hiddenAddons) hiddenAddons.value = addonNames.join(', ');
+  const hiddenQty = document.getElementById('hidden_service_quantity');
+  if (hiddenQty) hiddenQty.value = currentServiceQty;
+
+  // Update Sticky Summary
+  const summaryBasePrice = document.getElementById('summaryBasePrice');
+  if (summaryBasePrice) {
+    summaryBasePrice.innerText = '₹' + baseTotal.toLocaleString('en-IN') + (currentServiceQty > 1 ? ` (${currentServiceQty}x)` : '');
+  }
+
+  const summaryAddonsRow = document.getElementById('summaryAddonsRow');
+  const summaryAddonsPrice = document.getElementById('summaryAddonsPrice');
+  if (summaryAddonsRow && summaryAddonsPrice) {
+    if (addonsSum > 0) {
+      summaryAddonsRow.style.display = 'flex';
+      summaryAddonsPrice.innerText = '+ ₹' + addonsSum.toLocaleString('en-IN') + ' (' + Object.keys(selectedCartAddons).length + ')';
+    } else {
+      summaryAddonsRow.style.display = 'none';
+    }
+  }
+
+  const summaryTotal = document.getElementById('summaryTotal');
+  if (summaryTotal) {
+    summaryTotal.innerText = '₹' + grandTotal.toLocaleString('en-IN');
+  }
+
+  const formTotalVal = document.getElementById('formTotalVal');
+  if (formTotalVal) {
+    formTotalVal.innerText = '₹' + grandTotal.toLocaleString('en-IN');
+  }
+
+  // Update header cart badge count
+  const badge = document.getElementById('header-cart-badge');
+  if (badge) {
+    badge.innerText = 1 + Object.keys(selectedCartAddons).length;
+  }
+}
 
 // Dynamic Service Selector Handler
 function handleServiceChange(serviceSlug) {
@@ -1509,22 +2070,25 @@ function handleServiceChange(serviceSlug) {
   const title = document.getElementById('summaryServiceTitle');
   if (title) title.innerText = svc.name;
 
-  // If user didn't arrive with explicit studio amount, update base price
-  if (!window.A1_PREFILLED_AMOUNT) {
-    const formatted = '₹' + svc.price.toLocaleString('en-IN');
-    
-    const summaryBasePrice = document.getElementById('summaryBasePrice');
-    if (summaryBasePrice) summaryBasePrice.innerText = formatted;
+  // Sync Cart Selected Services Card
+  currentBaseUnitPrice = svc.price;
+  const unitPriceEl = document.getElementById('serviceUnitPrice');
+  if (unitPriceEl) unitPriceEl.innerText = svc.price;
 
-    const summaryTotal = document.getElementById('summaryTotal');
-    if (summaryTotal) summaryTotal.innerText = formatted;
+  const titleEl = document.getElementById('cartServiceTitle');
+  if (titleEl) titleEl.innerText = svc.name;
 
-    const formTotalVal = document.getElementById('formTotalVal');
-    if (formTotalVal) formTotalVal.innerText = formatted;
+  const thumbEl = document.getElementById('cartServiceThumb');
+  if (thumbEl && svc.thumb) thumbEl.src = svc.thumb;
 
-    const hiddenEst = document.getElementById('hidden_estimated_amount');
-    if (hiddenEst) hiddenEst.value = svc.price;
-  }
+  const durationEl = document.getElementById('cartServiceDuration');
+  if (durationEl && svc.time) durationEl.innerText = 'Est. duration: ' + svc.time;
+
+  const rowTotal = currentBaseUnitPrice * currentServiceQty;
+  const rowTotalEl = document.getElementById('serviceRowTotal');
+  if (rowTotalEl) rowTotalEl.innerText = '₹' + rowTotal.toLocaleString('en-IN');
+
+  recalculateCartTotals();
 }
 
 // Dynamic Date Handler
