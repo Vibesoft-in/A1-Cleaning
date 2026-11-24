@@ -155,56 +155,136 @@ require __DIR__ . '/../components/header.php';
   }
 
   /* --------------------------------------------------------------------------
-     1. HERO SECTION
+     1. HERO SECTION (MATCHING REFERENCE 1:1 PIXEL BY PIXEL)
      -------------------------------------------------------------------------- */
   .about-hero-section {
-    padding: 4rem 0 4.5rem;
-    background: linear-gradient(180deg, #F4F9F6 0%, #FFFFFF 100%);
-    border-bottom: 1px solid #E2E8F0;
+    padding: 4.5rem 0 0;
+    background: #F8FAF9;
+    position: relative;
+    overflow: hidden;
   }
   .about-hero-grid {
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 3.5rem;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 4rem;
     align-items: center;
-  }
-  .about-hero-image-wrap {
     position: relative;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 45px rgba(11, 41, 34, 0.12);
-    border: 1px solid rgba(11, 41, 34, 0.08);
+    z-index: 2;
   }
-  .about-hero-image-wrap img {
+  .about-hero-tag {
+    color: #22A06B;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.85rem;
+    display: inline-block;
+  }
+  .about-hero-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(2.3rem, 4.2vw, 3.3rem);
+    font-weight: 900;
+    color: #0F172A;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.35rem;
+  }
+  .about-hero-desc {
+    font-size: 1rem;
+    color: #475569;
+    line-height: 1.65;
+    max-width: 520px;
+    margin-bottom: 2rem;
+  }
+  .about-hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    background: #22A06B;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.85rem 1.85rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(34, 160, 107, 0.35);
+    transition: all 0.25s ease;
+  }
+  .about-hero-btn:hover {
+    background: #1B8355;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(34, 160, 107, 0.45);
+    color: #FFFFFF;
+  }
+
+  /* Right Image Card & Top-Right Floating Card */
+  .about-hero-visual-wrap {
+    position: relative;
+  }
+  .about-hero-image-box {
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    aspect-ratio: 4 / 3;
+  }
+  .about-hero-image-box img {
     width: 100%;
     height: 100%;
-    max-height: 440px;
     object-fit: cover;
     display: block;
   }
-  .about-hero-floating-badge {
+
+  /* Floating Card at Top-Right (Matches reference "Ideas Design Code Impact") */
+  .about-hero-corner-card {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    background: rgba(11, 41, 34, 0.92);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 16px;
-    padding: 1rem 1.25rem;
-    color: #FFFFFF;
+    top: -14px;
+    right: -14px;
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 0.85rem 1.15rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .corner-card-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-  }
-  .about-hero-floating-stat {
-    font-size: 1.25rem;
+    gap: 0.5rem;
+    font-size: 0.82rem;
     font-weight: 800;
-    color: #34D399;
+    letter-spacing: 0.02em;
   }
-  .about-hero-floating-text {
-    font-size: 0.78rem;
-    color: #E2E8F0;
+  .corner-card-item.item-blue { color: #0284C7; }
+  .corner-card-item.item-purple { color: #7C3AED; }
+  .corner-card-item.item-green { color: #22A06B; }
+  .corner-card-item.item-dark { color: #0B2922; }
+
+  .corner-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+  .dot-blue { background: #0284C7; }
+  .dot-purple { background: #7C3AED; }
+  .dot-green { background: #22A06B; }
+  .dot-dark { background: #0B2922; }
+
+  /* Bottom Smooth Wave Transition */
+  .about-hero-wave-wrap {
+    position: relative;
+    width: 100%;
+    line-height: 0;
+    margin-top: 3.5rem;
+  }
+  .about-hero-wave-wrap svg {
+    display: block;
+    width: 100%;
+    height: 60px;
   }
 
   /* --------------------------------------------------------------------------
@@ -658,55 +738,80 @@ require __DIR__ . '/../components/header.php';
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
+    .about-hero-corner-card {
+      top: -10px;
+      right: 8px;
+      padding: 0.65rem 0.85rem;
+      gap: 0.35rem;
+    }
+    .corner-card-item {
+      font-size: 0.72rem;
+    }
   }
 </style>
 
 <div class="about-page-wrapper">
 
   <!-- =======================================================================
-       1. CLEAR HERO SECTION (Matches Reference Top Element)
+       1. CLEAR HERO SECTION (Matches ByteCraft Reference Top Element 1:1)
        ======================================================================= -->
   <section class="about-hero-section">
     <div class="about-container">
       <div class="about-hero-grid">
         
         <!-- Left Content -->
-        <div>
-          <div class="about-badge">
-            <span class="material-symbols-outlined icon-xs">apartment</span> Founded in Kashipur, Uttarakhand
-          </div>
-          <h1 class="about-h1">
-            Every Space.<br><span style="color: #22A06B;">Expertly Cleaned.</span>
+        <div class="about-hero-content">
+          <div class="about-hero-tag">ABOUT US</div>
+          <h1 class="about-hero-title">
+            We deliver cleaning<br>
+            solutions that drive<br>
+            real hygiene
           </h1>
-          <p class="about-subtext">
-            A1 Cleaning is Uttarakhand’s dedicated mechanized cleaning service brand, established to replace inadequate manual dusting and mopping with heavy-duty commercial machines, hospital-grade sanitization, and dependable doorstep service.
+          <p class="about-hero-desc">
+            A1 Cleaning is a specialized mechanized cleaning brand that partners with ambitious homes, resorts, and businesses across Uttarakhand to create spotless, healthy spaces through industrial machinery, certified standards, and police-verified care.
           </p>
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <a href="<?= SITE_URL ?>/services/" class="btn-about-primary">
-              Explore Our Services <span class="material-symbols-outlined icon-xs">arrow_forward</span>
-            </a>
-            <a href="https://wa.me/917906366271?text=Hi%20A1%20Cleaning,%20I%20want%20to%20learn%20more%20about%20your%20services" target="_blank" rel="noopener" class="btn-about-secondary">
-              <span class="material-symbols-outlined icon-xs" style="color: #22A06B;">chat</span> Chat on WhatsApp
+          <div>
+            <a href="<?= SITE_URL ?>/services/" class="about-hero-btn">
+              Let's Clean Together <span class="material-symbols-outlined icon-xs">arrow_forward</span>
             </a>
           </div>
         </div>
 
         <!-- Right Hero Visual -->
-        <div class="about-hero-image-wrap">
-          <img src="<?= SITE_URL ?>/assets/images/about%20page/Professional%20Green%20Team%20Cleaning%20a%20Modern%20Living%20Room.png" alt="A1 Cleaning Professional Team in Action" />
-          <div class="about-hero-floating-badge">
-            <div>
-              <div class="about-hero-floating-stat">4.9 ★★★★★</div>
-              <div class="about-hero-floating-text">Verified Google Customer Rating</div>
+        <div class="about-hero-visual-wrap">
+          <div class="about-hero-image-box">
+            <img src="<?= SITE_URL ?>/assets/images/about%20page/Professional%20Green%20Team%20Cleaning%20a%20Modern%20Living%20Room.png" alt="A1 Cleaning Professional Team in Action" />
+          </div>
+          
+          <!-- Floating Top-Right Badge Card (Matches Ideas Design Code Impact) -->
+          <div class="about-hero-corner-card">
+            <div class="corner-card-item item-blue">
+              <span class="corner-dot dot-blue"></span>
+              <span>Precision</span>
             </div>
-            <div style="text-align: right;">
-              <div class="about-hero-floating-stat" style="color: #FFFFFF;">5,000+</div>
-              <div class="about-hero-floating-text">Spaces Restored Across Kumaun</div>
+            <div class="corner-card-item item-purple">
+              <span class="corner-dot dot-purple"></span>
+              <span>Machines</span>
+            </div>
+            <div class="corner-card-item item-green">
+              <span class="corner-dot dot-green"></span>
+              <span>Hygiene</span>
+            </div>
+            <div class="corner-card-item item-dark">
+              <span class="corner-dot dot-dark"></span>
+              <span>Trust</span>
             </div>
           </div>
         </div>
 
       </div>
+    </div>
+
+    <!-- Bottom Curved Wave Transition to Brand Story -->
+    <div class="about-hero-wave-wrap">
+      <svg viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none">
+        <path d="M0,0 C360,50 720,60 1080,25 C1240,10 1360,30 1440,45 L1440,60 L0,60 Z" fill="#FFFFFF"></path>
+      </svg>
     </div>
   </section>
 
