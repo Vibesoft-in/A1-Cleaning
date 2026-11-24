@@ -636,12 +636,12 @@ require __DIR__ . '/../components/header.php';
   line-height: 1.55;
 }
 
-/* 3D Viewport: Perspective 1300px + Room for Parabolic Arch (No edge fade) */
+/* 3D Viewport: Perspective 1300px + Room for Hourglass Arch (No edge fade) */
 .rev-cylinder-viewport {
   width: 100%;
   position: relative;
   overflow: hidden;
-  padding: 2.2rem 0 1.2rem;
+  padding: 2.8rem 0 1.8rem;
   perspective: 1300px;
   perspective-origin: 50% 50%;
   user-select: none;
@@ -651,7 +651,7 @@ require __DIR__ . '/../components/header.php';
 .rev-cylinder-track {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   width: max-content;
   transform-style: preserve-3d;
   will-change: transform;
@@ -2151,22 +2151,21 @@ function cycleReviews(delta) {
       const rotY = d * -24;
 
       // 2. Parabolic vertical ribbon arch:
-      // Subtle elegant lift towards sides
       const archFactor = isMobile ? 8 : 14;
       const archY = -(d * d) * archFactor;
 
-      // 3. Compact uniform card scale:
-      // Subtle center taper so middle card never overpowers
-      const centerTaper = 0.90 + Math.min(0.10, absD * 0.10);
+      // 3. Inverse / Hourglass Scale:
+      // Middle card scales down to ~0.76 so that Left & Right cards look significantly bigger (~1.08)
+      const curveScale = 0.76 + Math.min(0.32, absD * 0.32);
       const isHov = (card === hoveredCard);
-      const scale = isHov ? centerTaper * 1.08 : centerTaper;
+      const scale = isHov ? curveScale * 1.08 : curveScale;
 
-      // Combined 3D transform (Arch + rotateY + compact scale)
+      // Combined 3D transform (Arch + rotateY + hourglass scale)
       card.style.transform = `translateY(${archY.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
       
       // 4. Solid 100% opacity across entire track: No edge fading!
       card.style.opacity = '1';
-      card.style.zIndex = isHov ? 50 : Math.round(30 - absD * 10);
+      card.style.zIndex = isHov ? 50 : Math.round(15 + absD * 20);
 
       // Performance: pause offscreen videos
       const video = card.querySelector('video');
