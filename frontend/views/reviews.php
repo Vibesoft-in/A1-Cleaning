@@ -526,16 +526,24 @@ require __DIR__ . '/../components/header.php';
      ======================================================================= -->
 <style>
 /* ==========================================================================
-   3D COVERFLOW VIDEO REVIEWS SHOWCASE
-   Looping right-to-left carousel with enlarged active center video
+   3D CURVED CYLINDER MARQUEE SHOWCASE
+   Continuous 60fps auto-scroll marquee, all uniform size 220x390,
+   Cylinder 3D perspective with dynamic rotateY, smooth edge fade, hover preview
    ========================================================================== */
 .rev-video-carousel-section {
-  margin: 1.75rem 0 3.5rem;
+  width: 100vw;
   position: relative;
-  width: 100%;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 1.5rem;
+  margin-bottom: 3.5rem;
+  overflow: visible; /* No overflow clipping that cuts cards sharply */
 }
 .rev-video-section-header {
   margin-bottom: 1.5rem;
+  padding: 0 1rem;
 }
 .rev-video-badge {
   display: inline-flex;
@@ -579,22 +587,23 @@ require __DIR__ . '/../components/header.php';
   line-height: 1.55;
 }
 
-/* 3D Viewport: Perspective 1400px + Smooth edge fade gradient */
+/* 3D Viewport: Full Width, Perspective 1200px + Soft Edge Fade Gradient */
 .rev-cylinder-viewport {
   width: 100%;
   position: relative;
   overflow: hidden;
-  padding: 2rem 0 2.5rem;
-  perspective: 1400px;
+  padding: 2.5rem 0;
+  perspective: 1200px;
   perspective-origin: 50% 50%;
-  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
   user-select: none;
 }
 
 /* Continuous 3D Marquee Track */
 .rev-cylinder-track {
   display: flex;
+  align-items: center;
   gap: 16px;
   width: max-content;
   transform-style: preserve-3d;
@@ -2075,28 +2084,29 @@ function cycleReviews(delta) {
       const cardRect = card.getBoundingClientRect();
       const cardCenterX = cardRect.left + cardRect.width / 2;
       const dist = cardCenterX - centerX;
-      const norm = Math.max(-1.3, Math.min(1.3, dist / halfW));
+      
+      // Normalized distance d (-1 at far left, 0 at center, +1 at far right)
+      const d = Math.max(-1.25, Math.min(1.25, dist / halfW));
+      const absD = Math.min(1, Math.abs(d));
 
-      // Right-side bends away (negative rotateY), left-side bends away (positive rotateY)
-      // Center has rotateY(0deg)
-      const rotY = -norm * 32;
-      const absNorm = Math.min(1, Math.abs(norm));
-      const scale = 1 - absNorm * 0.15;
-      const opacity = Math.max(0.45, 1 - absNorm * 0.55);
-      const z = -Math.pow(absNorm, 2) * 60; // Push back along cylinder curvature
+      // User requirement: rotateY(d * -45deg) scale(1 - Math.abs(d) * 0.12)
+      // opacity: 1 - Math.abs(d) * 0.55
+      const rotY = d * -45;
+      const baseScale = 1 - absD * 0.12;
+      const opacity = Math.max(0.2, 1 - absD * 0.55);
 
       const isHov = (card === hoveredCard);
-      const finalScale = isHov ? scale * 1.06 : scale;
+      const finalScale = isHov ? baseScale * 1.06 : baseScale;
 
-      // Apply 3D transform without rotateZ, skew, or random tilt
-      card.style.transform = `translate3d(0, 0, ${z}px) rotateY(${rotY}deg) scale(${finalScale})`;
+      // Apply transform: ONLY rotateY and scale! Zero rotateZ, zero rotateX, zero skew, zero translateY/Z
+      card.style.transform = `rotateY(${rotY}deg) scale(${finalScale})`;
       card.style.opacity = isHov ? 1 : opacity;
-      card.style.zIndex = isHov ? 50 : Math.round(30 - absNorm * 20);
+      card.style.zIndex = isHov ? 50 : Math.round(30 - absD * 20);
 
       // Performance: pause offscreen videos
       const video = card.querySelector('video');
       if (video) {
-        const isOffscreen = (cardRect.right < vpRect.left - 100 || cardRect.left > vpRect.right + 100);
+        const isOffscreen = (cardRect.right < vpRect.left - 150 || cardRect.left > vpRect.right + 150);
         if (isOffscreen && !video.paused) {
           video.pause();
         } else if (!isOffscreen && video.paused) {
