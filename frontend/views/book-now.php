@@ -555,15 +555,15 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 <?php else: ?>
 
 <!-- =======================================================================
-     AUTHENTIC EMPTY CART STATE (Matches User Reference 1:1)
-     Clean white container, soft coral icon badge, bold title, descriptive text,
-     and vibrant coral-orange pill button to explore services.
+     AUTHENTIC EMPTY CART STATE (A1 Brand Theme: Fresh Green & Mint)
+     Clean white container, soft mint badge (#EAF3EE), deep green title (#0B2922),
+     and fresh green pill button (#22A06B) to explore services.
      ======================================================================= -->
 <main class="empty-cart-page" role="main">
   <div class="container">
     <div class="empty-cart-card">
       <div class="empty-cart-icon-circle" aria-hidden="true">
-        <!-- Vibrant Orange Shopping Cart Icon matching reference -->
+        <!-- A1 Brand Fresh Green Shopping Cart Icon -->
         <svg class="empty-cart-svg" viewBox="0 0 24 24" width="38" height="38" fill="currentColor">
           <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
         </svg>
@@ -1329,12 +1329,11 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 
 /* =======================================================================
-   AUTHENTIC EMPTY CART STYLES (Matching User Reference 1:1)
-   Clean white card, rounded 28px, soft peach badge, bold title, neutral text,
-   and coral-orange gradient pill CTA button.
+   AUTHENTIC EMPTY CART STYLES (Strict A1 Brand Theme)
+   Deep Green (#0B2922), Fresh Green (#22A06B), Soft Mint (#EAF3EE), White (#FFFFFF)
    ======================================================================= */
 .empty-cart-page {
-  background: #FFFFFF;
+  background: #F8FBF9;
   min-height: calc(100vh - 280px);
   display: flex;
   align-items: center;
@@ -1344,9 +1343,9 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 .empty-cart-card {
   background: #FFFFFF;
-  border: 1px solid #EEF2F6;
+  border: 1px solid #D6E8DC;
   border-radius: 28px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 16px 40px rgba(11, 41, 34, 0.05);
   max-width: 540px;
   width: 100%;
   margin: 0 auto;
@@ -1361,31 +1360,32 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   width: 82px;
   height: 82px;
   border-radius: 50%;
-  background: #FFF1EC;
+  background: #EAF3EE;
+  border: 1.5px solid rgba(34, 160, 107, 0.22);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #EE592B;
+  color: #22A06B;
   margin-bottom: 1.5rem;
   flex-shrink: 0;
 }
 .empty-cart-icon-circle svg {
   width: 38px;
   height: 38px;
-  fill: #EE592B;
+  fill: #22A06B;
 }
 .empty-cart-title {
   font-family: inherit;
-  font-size: 1.6rem;
+  font-size: 1.65rem;
   font-weight: 800;
-  color: #1E293B;
+  color: #0B2922;
   margin: 0 0 0.85rem 0;
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
 .empty-cart-subtitle {
   font-size: 0.92rem;
-  color: #64748B;
+  color: #526E65;
   line-height: 1.55;
   max-width: 430px;
   margin: 0 0 2rem 0;
@@ -1396,27 +1396,27 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #EE592B 0%, #E04815 100%);
+  background: linear-gradient(135deg, #22A06B 0%, #168052 100%);
   color: #FFFFFF !important;
   font-size: 0.95rem;
   font-weight: 700;
   text-decoration: none !important;
   padding: 0.92rem 2.4rem;
   border-radius: 9999px;
-  box-shadow: 0 8px 22px rgba(238, 89, 43, 0.32);
+  box-shadow: 0 8px 24px rgba(34, 160, 107, 0.32);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   border: none;
   cursor: pointer;
 }
 .btn-empty-cart-explore:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(238, 89, 43, 0.42);
-  background: linear-gradient(135deg, #F06336 0%, #E54E1B 100%);
+  box-shadow: 0 12px 28px rgba(34, 160, 107, 0.42);
+  background: linear-gradient(135deg, #1A8858 0%, #0F5E3B 100%);
   color: #FFFFFF !important;
 }
 .btn-empty-cart-explore:active {
   transform: translateY(0);
-  box-shadow: 0 6px 16px rgba(238, 89, 43, 0.28);
+  box-shadow: 0 6px 16px rgba(34, 160, 107, 0.28);
 }
 .empty-cart-arrow {
   font-size: 1.15rem;
