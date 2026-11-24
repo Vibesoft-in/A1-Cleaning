@@ -636,16 +636,14 @@ require __DIR__ . '/../components/header.php';
   line-height: 1.55;
 }
 
-/* 3D Viewport: Perspective 1300px + Soft Edge Fade Gradient + Room for Parabolic Arch */
+/* 3D Viewport: Perspective 1300px + Room for Parabolic Arch (No edge fade) */
 .rev-cylinder-viewport {
   width: 100%;
   position: relative;
   overflow: hidden;
-  padding: 3.5rem 0 2.5rem;
+  padding: 3rem 0 2rem;
   perspective: 1300px;
   perspective-origin: 50% 50%;
-  mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
   user-select: none;
 }
 
@@ -659,21 +657,22 @@ require __DIR__ . '/../components/header.php';
   will-change: transform;
 }
 
-/* Uniform Vertical 9:16 Cards (~215px x 375px) */
+/* Uniform Vertical 9:16 Cards (~200px x 350px) - Compact Sleek Size, Full Opacity */
 .rev-cylinder-card {
-  width: 215px;
-  height: 375px;
-  border-radius: 22px;
+  width: 200px;
+  height: 350px;
+  border-radius: 20px;
   overflow: hidden;
   position: relative;
   background: #0B2922;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.65);
   flex-shrink: 0;
   cursor: pointer;
   transform-origin: center center;
   transform-style: preserve-3d;
-  will-change: transform, opacity;
+  will-change: transform;
+  opacity: 1; /* Full opacity - No fading */
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
@@ -743,15 +742,15 @@ require __DIR__ . '/../components/header.php';
 /* Mobile Responsive */
 @media (max-width: 600px) {
   .rev-cylinder-card {
-    width: 175px;
-    height: 310px;
-    border-radius: 18px;
+    width: 165px;
+    height: 290px;
+    border-radius: 16px;
   }
   .rev-cylinder-track {
     gap: 12px;
   }
   .rev-cylinder-viewport {
-    padding: 2.5rem 0 1.5rem;
+    padding: 2.2rem 0 1.2rem;
   }
 }
 
@@ -2113,7 +2112,7 @@ function cycleReviews(delta) {
 
     // Total width of one original set of 8 videos (with gaps)
     const isMobile = window.innerWidth <= 600;
-    const cardWidth = isMobile ? 175 : 215;
+    const cardWidth = isMobile ? 165 : 200;
     const gap = isMobile ? 12 : 16;
     const singleSetWidth = 8 * (cardWidth + gap);
 
@@ -2137,38 +2136,34 @@ function cycleReviews(delta) {
       const cardCenterX = cardRect.left + cardRect.width / 2;
       const dist = cardCenterX - centerX;
       
-      // Normalized distance d (-1 at far left, 0 at center, +1 at far right)
-      const d = Math.max(-1.3, Math.min(1.3, dist / halfW));
+      // Normalized distance d (-1 at left edge, 0 at center, +1 at right edge)
+      const d = Math.max(-1.4, Math.min(1.4, dist / halfW));
       const absD = Math.min(1, Math.abs(d));
 
       // 1. Inward cylinder rotation:
       // Left cards face inwards to center (+), right cards face inwards to center (-)
-      const rotY = d * -36;
+      const rotY = d * -28;
 
-      // 2. Parabolic vertical ribbon arch (matching reference):
-      // Center cards sit lower, sides gently lift upward by ~30px
-      const archFactor = isMobile ? 18 : 30;
+      // 2. Parabolic vertical ribbon arch:
+      // Subtle elegant lift towards sides
+      const archFactor = isMobile ? 12 : 22;
       const archY = -(d * d) * archFactor;
 
-      // 3. 3D depth curvature in Z-space:
-      const transZ = (1 - Math.cos(d * 1.2)) * -85;
-
-      // 4. Soft scaling and fade:
-      const baseScale = 1 - absD * 0.10;
-      const opacity = Math.max(0.28, 1 - absD * 0.52);
-
+      // 3. UNIFORM CARD SIZE: No middle magnification (only lift on user hover)
       const isHov = (card === hoveredCard);
-      const finalScale = isHov ? baseScale * 1.06 : baseScale;
+      const scale = isHov ? 1.05 : 1.0;
 
-      // Combined 3D transform: translateY (arch), translateZ (depth), rotateY (cylinder), scale
-      card.style.transform = `translate3d(0, ${archY.toFixed(2)}px, ${transZ.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${finalScale.toFixed(3)})`;
-      card.style.opacity = isHov ? 1 : opacity;
-      card.style.zIndex = isHov ? 50 : Math.round(30 - absD * 20);
+      // Combined 3D transform (No translateZ to prevent center card magnification)
+      card.style.transform = `translateY(${archY.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale})`;
+      
+      // 4. SOLID 100% OPACITY ACROSS ENTIRE TRACK: No edge fading!
+      card.style.opacity = '1';
+      card.style.zIndex = isHov ? 50 : Math.round(30 - absD * 10);
 
       // Performance: pause offscreen videos
       const video = card.querySelector('video');
       if (video) {
-        const isOffscreen = (cardRect.right < vpRect.left - 150 || cardRect.left > vpRect.right + 150);
+        const isOffscreen = (cardRect.right < vpRect.left - 200 || cardRect.left > vpRect.right + 200);
         if (isOffscreen && !video.paused) {
           video.pause();
         } else if (!isOffscreen && video.paused) {
