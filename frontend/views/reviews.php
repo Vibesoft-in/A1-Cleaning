@@ -88,6 +88,176 @@ require __DIR__ . '/../components/header.php';
     </div>
 
     <!-- ===================================================================
+         VERIFIED VIDEO REVIEWS: 3D COVERFLOW REELS CAROUSEL
+         Auto-advances 1-by-1 right-to-left only when current video finishes OR on manual click
+         Active center card enlarged with glowing emerald border, audio toggle & progress bar
+         =================================================================== -->
+    <section class="rev-video-carousel-section" aria-label="Customer Video Reviews Carousel">
+      <div class="rev-video-section-header text-center">
+        <div class="rev-video-badge">
+          <span class="rev-video-badge-dot"></span>
+          <span>Verified Video Proof</span>
+        </div>
+        <h2 class="rev-video-heading">Live Cleaning In Action</h2>
+        <p class="rev-video-subheading">Unedited reels from our recent doorstep visits. Center video plays to its full length before advancing to the next review.</p>
+      </div>
+
+      <div class="rev-cf-wrapper" id="revCoverflowWrapper">
+        <!-- 3D Stage -->
+        <div class="rev-cf-stage" id="cfStage">
+          <!-- Floating Navigation Controls positioned inside stage -->
+          <button type="button" class="rev-cf-nav-btn rev-cf-prev" id="cfPrevBtn" aria-label="Previous Video Review">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="rev-cf-nav-btn rev-cf-next" id="cfNextBtn" aria-label="Next Video Review">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <?php
+          $videoReviews = [
+            [
+              'file' => 'sofa_shampoo_cleaning_6c6a0420.mp4',
+              'customer' => 'Ankit Chauhan',
+              'location' => 'Manpur, Kashipur',
+              'service' => 'Sofa Foam Extraction',
+              'rating' => '5.0',
+              'review' => 'Tea & oil stains vanished in under 45 mins. Fabric looks brand new!',
+              'badge' => 'Living Room'
+            ],
+            [
+              'file' => 'bathroom_deep_cleaning_9d6155cb_1080p.mp4',
+              'customer' => 'Vikram Rawat',
+              'location' => 'Awas Vikas, Kashipur',
+              'service' => 'Bathroom Hard-Water Descaling',
+              'rating' => '5.0',
+              'review' => 'Hard water stains removed from glass & floor tiles completely.',
+              'badge' => 'Deep Scrub'
+            ],
+            [
+              'file' => 'deep_home_cleaning_6ce7a0e5.mp4',
+              'customer' => 'Dr. Alok Verma',
+              'location' => 'Giri Hospital Area',
+              'service' => 'Full Villa Deep Sanitization',
+              'rating' => '5.0',
+              'review' => 'Spotless 3BHK transformation before our housewarming puja ceremony.',
+              'badge' => 'Complete Villa'
+            ],
+            [
+              'file' => 'balcony_and_floor_deep_scrub_9643e5bc_1080p.mp4',
+              'customer' => 'Ritu Joshi',
+              'location' => 'Ramnagar Road',
+              'service' => 'Balcony & Tile Rotary Scrub',
+              'rating' => '5.0',
+              'review' => 'Stubborn moss and weather marks gone. Outstanding machine work.',
+              'badge' => 'High Pressure'
+            ],
+            [
+              'file' => 'Person_cleaning_kitchen_82bbe15d.mp4',
+              'customer' => 'Meenakshi Pant',
+              'location' => 'Surya Enclave, Kashipur',
+              'service' => 'Kitchen Chimney & Degreasing',
+              'rating' => '5.0',
+              'review' => 'Chimney filters and grease behind stove restored to factory shine.',
+              'badge' => 'Degreasing'
+            ],
+            [
+              'file' => 'carpet_and_rug_deep_wash_ed47a45e.mp4',
+              'customer' => 'Deepak Mehrotra',
+              'location' => 'Bazpur Road',
+              'service' => 'Kashmiri Carpet Injection',
+              'rating' => '5.0',
+              'review' => 'Years of trapped dust extracted gently without damp odor or color fade.',
+              'badge' => 'Fabric Care'
+            ],
+            [
+              'file' => 'Person_cleaning_water_tank_bc0ad2f8.mp4',
+              'customer' => 'Praveen Bisht',
+              'location' => 'Jaspur Road',
+              'service' => 'Water Tank UV Sanitization',
+              'rating' => '5.0',
+              'review' => 'Sediment sludge vacuumed clean and UV sanitized for safe water.',
+              'badge' => 'Pure Water'
+            ],
+            [
+              'file' => 'curtain_steam_clean_6bd86d98.mp4',
+              'customer' => 'Sunita Agarwal',
+              'location' => 'Kashipur City',
+              'service' => 'Curtain On-Site Steaming',
+              'rating' => '5.0',
+              'review' => 'Steam sanitized full-height living room drapes without taking them down.',
+              'badge' => 'Steam Care'
+            ]
+          ];
+
+          foreach ($videoReviews as $idx => $v):
+            $videoSrc = SITE_URL . '/assets/cleaning%20videos/' . rawurlencode($v['file']);
+          ?>
+            <article class="rev-cf-card" data-index="<?= $idx ?>" onclick="handleCfCardClick(<?= $idx ?>)" role="button" tabindex="0" aria-label="Video review from <?= htmlspecialchars($v['customer']) ?>">
+              <div class="rev-cf-video-wrap">
+                <video 
+                  class="rev-cf-video" 
+                  src="<?= $videoSrc ?>#t=0.5" 
+                  preload="auto" 
+                  muted 
+                  playsinline
+                  webkit-playsinline
+                ></video>
+                <div class="rev-cf-gradient-overlay"></div>
+
+                <!-- Top Badges & Audio Toggle -->
+                <div class="rev-cf-topbar">
+                  <span class="rev-cf-pill-live">
+                    <span class="rev-cf-pulse"></span>
+                    <span><?= htmlspecialchars($v['badge']) ?></span>
+                  </span>
+                  <button type="button" class="rev-cf-mute-btn" onclick="toggleCfAudio(<?= $idx ?>, event)" aria-label="Toggle audio">
+                    <svg class="rev-cf-icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+                    <svg class="rev-cf-icon-unmuted" style="display:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                  </button>
+                </div>
+
+                <!-- Center Play Indicator (shows on pause or side card) -->
+                <div class="rev-cf-center-play">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+
+                <!-- Bottom Metadata & Progress Bar -->
+                <div class="rev-cf-bottombar">
+                  <div class="rev-cf-stars-row">
+                    <span class="rev-cf-star">★</span>
+                    <span class="rev-cf-star">★</span>
+                    <span class="rev-cf-star">★</span>
+                    <span class="rev-cf-star">★</span>
+                    <span class="rev-cf-star">★</span>
+                    <span class="rev-cf-rating-val"><?= $v['rating'] ?></span>
+                  </div>
+                  <h4 class="rev-cf-cust-name"><?= htmlspecialchars($v['customer']) ?></h4>
+                  <div class="rev-cf-cust-sub">
+                    <span class="rev-cf-loc"><?= htmlspecialchars($v['location']) ?></span>
+                    <span class="rev-cf-sep">•</span>
+                    <span class="rev-cf-serv"><?= htmlspecialchars($v['service']) ?></span>
+                  </div>
+                  <p class="rev-cf-quote">"<?= htmlspecialchars($v['review']) ?>"</p>
+
+                  <!-- Playback Duration Progress Bar -->
+                  <div class="rev-cf-progress-track">
+                    <div class="rev-cf-progress-fill" id="cfProgressFill-<?= $idx ?>"></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          <?php endforeach; ?>
+        </div><!-- /.rev-cf-stage -->
+
+        <!-- Bottom Pagination Dots & Mode indicator -->
+        <div class="rev-cf-dots" id="cfDots">
+          <?php foreach ($videoReviews as $idx => $v): ?>
+            <button type="button" class="rev-cf-dot <?= $idx === 0 ? 'active' : '' ?>" onclick="handleCfCardClick(<?= $idx ?>)" aria-label="Go to video <?= $idx + 1 ?>"></button>
+          <?php endforeach; ?>
+        </div>
+      </div><!-- /.rev-cf-wrapper -->
+    </section>
+
+    <!-- ===================================================================
          THE BENTO GRID CANVAS (11 Distinct Cards matching User Reference 1:1)
          =================================================================== -->
     <main class="rev-bento-layout" id="revBentoGrid">
@@ -468,6 +638,390 @@ require __DIR__ . '/../components/header.php';
      Matching Reference Aesthetics: Translucent Glass, Ambient Glows & Neon Accents
      ======================================================================= -->
 <style>
+/* ==========================================================================
+   3D COVERFLOW VIDEO REVIEWS SHOWCASE
+   Looping right-to-left carousel with enlarged active center video
+   ========================================================================== */
+.rev-video-carousel-section {
+  margin: 1.75rem 0 3.5rem;
+  position: relative;
+  width: 100%;
+}
+.rev-video-section-header {
+  margin-bottom: 1.5rem;
+}
+.rev-video-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(34, 160, 107, 0.16);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: #34D399;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.95rem;
+  border-radius: 9999px;
+  margin-bottom: 0.6rem;
+}
+.rev-video-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #34D399;
+  box-shadow: 0 0 10px #34D399;
+  animation: revPulseDot 1.8s infinite ease-in-out;
+}
+@keyframes revPulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}
+.rev-video-heading {
+  font-size: 2.15rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0 0 0.45rem;
+  letter-spacing: -0.02em;
+}
+.rev-video-subheading {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.55;
+}
+
+/* Stage & Wrapper */
+.rev-cf-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.5rem 0 1.25rem;
+  user-select: none;
+}
+.rev-cf-stage {
+  position: relative;
+  width: 100%;
+  height: 530px;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Floating Nav Buttons */
+.rev-cf-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(11, 41, 34, 0.88);
+  border: 1px solid rgba(52, 211, 153, 0.45);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 45;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+.rev-cf-nav-btn:hover {
+  background: #22A06B;
+  border-color: #34D399;
+  transform: translateY(-50%) scale(1.12);
+  box-shadow: 0 0 24px rgba(52, 211, 153, 0.65);
+}
+.rev-cf-prev { left: 14px; }
+.rev-cf-next { right: 14px; }
+
+/* 3D Coverflow Cards */
+.rev-cf-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 250px;
+  height: 430px;
+  margin-left: -125px;
+  margin-top: -215px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #0B2922;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), 
+              opacity 0.55s ease, 
+              filter 0.55s ease, 
+              box-shadow 0.5s ease, 
+              border-color 0.4s ease;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+}
+
+/* Active Center Card styling */
+.rev-cf-card.is-active {
+  border: 2px solid #34D399;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 45px rgba(52, 211, 153, 0.5);
+  cursor: pointer;
+}
+.rev-cf-card.is-active .rev-cf-center-play {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Video Inside Card */
+.rev-cf-video-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  overflow: hidden;
+}
+.rev-cf-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.rev-cf-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg, 
+    rgba(7, 25, 20, 0.72) 0%, 
+    rgba(7, 25, 20, 0.05) 30%, 
+    rgba(7, 25, 20, 0.25) 55%, 
+    rgba(7, 25, 20, 0.95) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Top bar inside card */
+.rev-cf-topbar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 5;
+}
+.rev-cf-pill-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(7, 25, 20, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(52, 211, 153, 0.45);
+  padding: 3px 9px;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #34D399;
+  text-transform: uppercase;
+}
+.rev-cf-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #34D399;
+}
+.rev-cf-mute-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(7, 25, 20, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.rev-cf-mute-btn:hover {
+  background: #22A06B;
+  border-color: #34D399;
+  transform: scale(1.08);
+}
+.rev-cf-mute-btn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Center Play Icon on inactive cards */
+.rev-cf-center-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(7, 25, 20, 0.85);
+  border: 1px solid rgba(52, 211, 153, 0.55);
+  color: #34D399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.rev-cf-center-play .material-symbols-outlined {
+  font-size: 28px;
+}
+
+/* Bottom info inside card */
+.rev-cf-bottombar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 14px 14px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rev-cf-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #FBBF24;
+  font-size: 0.85rem;
+}
+.rev-cf-rating-val {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-left: 4px;
+}
+.rev-cf-cust-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.2;
+}
+.rev-cf-cust-sub {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+.rev-cf-quote {
+  font-size: 0.75rem;
+  color: #EAF3EE;
+  margin: 2px 0 6px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-style: italic;
+}
+
+/* Progress track */
+.rev-cf-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 2px;
+}
+.rev-cf-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #22A06B, #34D399);
+  border-radius: 9999px;
+  transition: width 0.12s linear;
+}
+
+/* Pagination Dots */
+.rev-cf-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1.25rem;
+}
+.rev-cf-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.25);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+.rev-cf-dot.active {
+  background: #34D399;
+  width: 28px;
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.75);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .rev-cf-stage {
+    height: 470px;
+  }
+  .rev-cf-card {
+    width: 220px;
+    height: 380px;
+    margin-left: -110px;
+    margin-top: -190px;
+  }
+  .rev-cf-prev { left: 8px; }
+  .rev-cf-next { right: 8px; }
+}
+
+@media (max-width: 576px) {
+  .rev-video-heading {
+    font-size: 1.55rem;
+  }
+  .rev-video-subheading {
+    font-size: 0.85rem;
+  }
+  .rev-cf-stage {
+    height: 410px;
+  }
+  .rev-cf-card {
+    width: 180px;
+    height: 320px;
+    margin-left: -90px;
+    margin-top: -160px;
+    border-radius: 16px;
+  }
+  .rev-cf-nav-btn {
+    width: 38px;
+    height: 38px;
+  }
+  .rev-cf-bottombar {
+    padding: 8px 10px 10px;
+  }
+  .rev-cf-quote {
+    display: none; /* keep clean on compact screens */
+  }
+  .rev-cf-cust-name {
+    font-size: 0.85rem;
+  }
+}
+
 /* --------------------------------------------------------------------------
    Canvas & Ambient Lighting
    -------------------------------------------------------------------------- */
@@ -1778,9 +2332,256 @@ function handleReviewSubmit(e) {
 let currentDotIndex = 0;
 function cycleReviews(delta) {
   const dots = document.querySelectorAll('.rev-dot');
+  if (!dots.length) return;
   dots[currentDotIndex].classList.remove('active');
   currentDotIndex = (currentDotIndex + delta + dots.length) % dots.length;
   dots[currentDotIndex].classList.add('active');
+}
+
+// ============================================================================
+// 9. 3D COVERFLOW VIDEO REVIEWS CAROUSEL
+// Loops right-to-left, auto-advances only on video completion (ended) or user click
+// Center active card prominently enlarged with glowing emerald border & audio toggle
+// ============================================================================
+let cfActiveIndex = 0;
+const cfCards = document.querySelectorAll('.rev-cf-card');
+const cfDots = document.querySelectorAll('.rev-cf-dot');
+const totalCfCards = cfCards.length;
+let isAudioGloballyUnmuted = false;
+let cfFallbackTimer = null;
+
+function updateCoverflowLayout() {
+  if (!totalCfCards) return;
+  const isMobile = window.innerWidth <= 576;
+  const isTablet = window.innerWidth > 576 && window.innerWidth <= 991;
+
+  // Horizontal spacing per viewport
+  const stepX = isMobile ? 125 : (isTablet ? 175 : 230);
+  const zStep = isMobile ? 45 : 80;
+
+  if (cfFallbackTimer) {
+    clearTimeout(cfFallbackTimer);
+    cfFallbackTimer = null;
+  }
+
+  cfCards.forEach((card, idx) => {
+    let diff = idx - cfActiveIndex;
+
+    // Wrap diff into range [-total/2, total/2] for infinite seamless loop
+    if (diff > totalCfCards / 2) diff -= totalCfCards;
+    if (diff < -totalCfCards / 2) diff += totalCfCards;
+
+    const absDiff = Math.abs(diff);
+    const video = card.querySelector('.rev-cf-video');
+    const playIcon = card.querySelector('.rev-cf-center-play');
+    const progressFill = document.getElementById(`cfProgressFill-${idx}`);
+
+    if (diff === 0) {
+      // CENTER ACTIVE CARD (Prominently Enlarged, Bright & Elevated)
+      const scale = isMobile ? 1.12 : 1.18;
+      card.style.transform = `translate3d(0, 0, ${zStep}px) scale(${scale}) rotateY(0deg)`;
+      card.style.zIndex = '30';
+      card.style.opacity = '1';
+      card.style.filter = 'none';
+      card.style.pointerEvents = 'auto';
+      card.classList.add('is-active');
+
+      if (playIcon) playIcon.style.opacity = '0';
+
+      // Play center video
+      if (video) {
+        video.muted = !isAudioGloballyUnmuted;
+        
+        // Ensure clean event binding
+        video.onended = () => {
+          advanceCoverflow(1); // Advance to next video in right-to-left loop!
+        };
+
+        video.ontimeupdate = () => {
+          if (progressFill && video.duration && !isNaN(video.duration)) {
+            const pct = (video.currentTime / video.duration) * 100;
+            progressFill.style.width = Math.min(pct, 100) + '%';
+          }
+        };
+
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // If browser blocks autoplay until first user gesture
+            if (playIcon) playIcon.style.opacity = '1';
+            // Set safe fallback timeout if user hasn't interacted yet
+            cfFallbackTimer = setTimeout(() => {
+              advanceCoverflow(1);
+            }, 8000);
+          });
+        }
+      }
+    } else if (absDiff === 1) {
+      // ADJACENT LEFT & RIGHT CARDS (Scaled down, Angled 3D)
+      const xOffset = diff * stepX;
+      const rotY = diff > 0 ? -12 : 12;
+      const scale = isMobile ? 0.82 : 0.86;
+      card.style.transform = `translate3d(${xOffset}px, 0, -35px) scale(${scale}) rotateY(${rotY}deg)`;
+      card.style.zIndex = '15';
+      card.style.opacity = '0.62';
+      card.style.filter = 'blur(0.5px)';
+      card.style.pointerEvents = 'auto';
+      card.classList.remove('is-active');
+
+      if (playIcon) playIcon.style.opacity = '0.7';
+
+      // Pause non-active video and reset
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+        video.onended = null;
+        video.ontimeupdate = null;
+      }
+      if (progressFill) progressFill.style.width = '0%';
+    } else if (absDiff === 2) {
+      // OUTER FLANK CARDS
+      const xOffset = diff * (stepX * 1.75);
+      const rotY = diff > 0 ? -22 : 22;
+      const scale = isMobile ? 0.65 : 0.72;
+      card.style.transform = `translate3d(${xOffset}px, 0, -85px) scale(${scale}) rotateY(${rotY}deg)`;
+      card.style.zIndex = '8';
+      card.style.opacity = '0.35';
+      card.style.filter = 'blur(1.5px)';
+      card.style.pointerEvents = 'auto';
+      card.classList.remove('is-active');
+
+      if (playIcon) playIcon.style.opacity = '0';
+
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+        video.onended = null;
+        video.ontimeupdate = null;
+      }
+      if (progressFill) progressFill.style.width = '0%';
+    } else {
+      // OFF-STAGE CARDS (Hidden from view)
+      const xOffset = diff > 0 ? stepX * 2.6 : -stepX * 2.6;
+      card.style.transform = `translate3d(${xOffset}px, 0, -150px) scale(0.5)`;
+      card.style.zIndex = '1';
+      card.style.opacity = '0';
+      card.style.filter = 'blur(3px)';
+      card.style.pointerEvents = 'none';
+      card.classList.remove('is-active');
+
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+        video.onended = null;
+        video.ontimeupdate = null;
+      }
+      if (progressFill) progressFill.style.width = '0%';
+    }
+  });
+
+  // Update dots indicator
+  cfDots.forEach((dot, dIdx) => {
+    if (dIdx === cfActiveIndex) dot.classList.add('active');
+    else dot.classList.remove('active');
+  });
+}
+
+function advanceCoverflow(dir = 1) {
+  // Clear progress of current card
+  const curFill = document.getElementById(`cfProgressFill-${cfActiveIndex}`);
+  if (curFill) curFill.style.width = '0%';
+
+  cfActiveIndex = (cfActiveIndex + dir + totalCfCards) % totalCfCards;
+  updateCoverflowLayout();
+}
+
+function handleCfCardClick(idx) {
+  if (idx === cfActiveIndex) {
+    // If active center card clicked, toggle pause/play
+    const activeCard = cfCards[cfActiveIndex];
+    const video = activeCard ? activeCard.querySelector('.rev-cf-video') : null;
+    const playIcon = activeCard ? activeCard.querySelector('.rev-cf-center-play') : null;
+    if (video) {
+      if (video.paused) {
+        video.play();
+        if (playIcon) playIcon.style.opacity = '0';
+      } else {
+        video.pause();
+        if (playIcon) playIcon.style.opacity = '1';
+      }
+    }
+  } else {
+    // Jump directly to clicked card
+    cfActiveIndex = idx;
+    updateCoverflowLayout();
+  }
+}
+
+function toggleCfAudio(idx, e) {
+  if (e) e.stopPropagation();
+  isAudioGloballyUnmuted = !isAudioGloballyUnmuted;
+
+  cfCards.forEach(card => {
+    const video = card.querySelector('.rev-cf-video');
+    const mutedIcon = card.querySelector('.rev-cf-icon-muted');
+    const unmutedIcon = card.querySelector('.rev-cf-icon-unmuted');
+    if (video) video.muted = !isAudioGloballyUnmuted;
+    if (mutedIcon && unmutedIcon) {
+      if (isAudioGloballyUnmuted) {
+        mutedIcon.style.display = 'none';
+        unmutedIcon.style.display = 'inline-block';
+      } else {
+        mutedIcon.style.display = 'inline-block';
+        unmutedIcon.style.display = 'none';
+      }
+    }
+  });
+}
+
+// Touch swipe support for mobile
+let cfTouchStartX = 0;
+let cfTouchEndX = 0;
+const cfWrapper = document.getElementById('revCoverflowWrapper');
+if (cfWrapper) {
+  cfWrapper.addEventListener('touchstart', e => {
+    cfTouchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  cfWrapper.addEventListener('touchend', e => {
+    cfTouchEndX = e.changedTouches[0].screenX;
+    const diff = cfTouchStartX - cfTouchEndX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) advanceCoverflow(1); // Swiped left -> advance right to left
+      else advanceCoverflow(-1);        // Swiped right -> go back
+    }
+  }, { passive: true });
+}
+
+// Arrow Button Listeners
+const cfPrevBtn = document.getElementById('cfPrevBtn');
+const cfNextBtn = document.getElementById('cfNextBtn');
+if (cfPrevBtn) cfPrevBtn.addEventListener('click', () => advanceCoverflow(-1));
+if (cfNextBtn) cfNextBtn.addEventListener('click', () => advanceCoverflow(1));
+
+// Keyboard arrow navigation
+window.addEventListener('keydown', e => {
+  if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+  if (e.key === 'ArrowLeft') advanceCoverflow(-1);
+  if (e.key === 'ArrowRight') advanceCoverflow(1);
+});
+
+// Window resize listener
+let cfResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(cfResizeTimer);
+  cfResizeTimer = setTimeout(updateCoverflowLayout, 100);
+});
+
+// Initialize on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', updateCoverflowLayout);
+} else {
+  updateCoverflowLayout();
 }
 </script>
 
