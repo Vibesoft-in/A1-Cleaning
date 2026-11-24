@@ -7,47 +7,61 @@
  */
 require_once __DIR__ . '/../../backend/helpers/security.php';
 
-$pageTitle = "Complete Your Booking | A1 Cleaning Doorstep Mechanized Services";
-$pageDescription = "Book your doorstep mechanized cleaning in Kashipur, Jaspur, Ramnagar or nearby towns. Zero advance payment, verified Kärcher equipment, pay after 100% satisfaction.";
-$canonicalUrl = SeoHelper::getCanonicalUrl('book-now');
-
 // Services & Cities data
 $servicesList = require __DIR__ . '/../../backend/data/services.php';
 $citiesList = require __DIR__ . '/../../backend/data/cities.php';
 
-$prefilledCity = strtolower(trim($_GET['city'] ?? ''));
-$prefilledService = strtolower(trim($_GET['service'] ?? ''));
+$rawService = strtolower(trim($_GET['service'] ?? ''));
 $prefilledPackage = trim($_GET['packageName'] ?? ($_GET['package'] ?? ''));
 $prefilledAmount = trim($_GET['amount'] ?? '');
 $prefilledAddons = trim($_GET['addons'] ?? '');
+$prefilledCity = strtolower(trim($_GET['city'] ?? ''));
 
-// Match default service
-if (!$prefilledService || !isset($servicesList[$prefilledService])) {
-    $prefilledService = 'home-cleaning';
+// Determine if the user actually has an item in cart or came with a selected service/package
+$hasCartItem = (!empty($rawService) && isset($servicesList[$rawService]))
+            || !empty($prefilledPackage)
+            || !empty($prefilledAmount)
+            || !empty($_SESSION['cart_item'])
+            || !empty($_SESSION['cart']);
+
+if ($hasCartItem) {
+    $prefilledService = (!empty($rawService) && isset($servicesList[$rawService])) ? $rawService : 'home-cleaning';
+    $activeServiceData = $servicesList[$prefilledService] ?? reset($servicesList);
+
+    // Calculate initial base price
+    $defaultBasePrice = 1999;
+    if ($prefilledAmount && is_numeric($prefilledAmount)) {
+        $defaultBasePrice = (int)$prefilledAmount;
+    } else if (!empty($activeServiceData['packages'][0]['price'])) {
+        $defaultBasePrice = (int)$activeServiceData['packages'][0]['price'];
+    } else if (!empty($activeServiceData['starting_price'])) {
+        $num = preg_replace('/[^0-9]/', '', $activeServiceData['starting_price']);
+        if ($num) $defaultBasePrice = (int)$num;
+    }
+
+    $autoMessage = '';
+    if ($prefilledPackage || $prefilledAmount) {
+        $autoMessage = "Service: " . ucwords(str_replace('-', ' ', $prefilledService)) . 
+            ($prefilledPackage ? " | Package: " . $prefilledPackage : "") . 
+            ($prefilledAddons ? " | Add-ons: " . $prefilledAddons : "") . 
+            ($prefilledAmount ? " | Estimated Total: ₹" . $prefilledAmount : "");
+    }
+
+    $pageTitle = "Complete Your Booking | A1 Cleaning Doorstep Mechanized Services";
+    $pageDescription = "Book your doorstep mechanized cleaning in Kashipur, Jaspur, Ramnagar or nearby towns. Zero advance payment, verified Kärcher equipment, pay after 100% satisfaction.";
+} else {
+    $prefilledService = '';
+    $activeServiceData = null;
+    $defaultBasePrice = 0;
+    $autoMessage = '';
+
+    $pageTitle = "Your Cart is Empty | A1 Cleaning Doorstep Mechanized Services";
+    $pageDescription = "Your A1 Cleaning cart is empty. Explore our verified doorstep mechanized cleaning services across Kashipur, Jaspur, Ramnagar and nearby towns.";
 }
-$activeServiceData = $servicesList[$prefilledService] ?? reset($servicesList);
 
-// Calculate initial base price
-$defaultBasePrice = 1999;
-if ($prefilledAmount && is_numeric($prefilledAmount)) {
-    $defaultBasePrice = (int)$prefilledAmount;
-} else if (!empty($activeServiceData['packages'][0]['price'])) {
-    $defaultBasePrice = (int)$activeServiceData['packages'][0]['price'];
-} else if (!empty($activeServiceData['starting_price'])) {
-    $num = preg_replace('/[^0-9]/', '', $activeServiceData['starting_price']);
-    if ($num) $defaultBasePrice = (int)$num;
-}
-
+$canonicalUrl = SeoHelper::getCanonicalUrl('book-now');
 $tomorrowDate = date('Y-m-d', strtotime('+1 day'));
 $tomorrowDisplay = date('D, M j, Y', strtotime('+1 day'));
-
-$autoMessage = '';
-if ($prefilledPackage || $prefilledAmount) {
-    $autoMessage = "Service: " . ucwords(str_replace('-', ' ', $prefilledService)) . 
-        ($prefilledPackage ? " | Package: " . $prefilledPackage : "") . 
-        ($prefilledAddons ? " | Add-ons: " . $prefilledAddons : "") . 
-        ($prefilledAmount ? " | Estimated Total: ₹" . $prefilledAmount : "");
-}
 
 $csrfToken = Security::generateCsrfToken();
 $errorMessage = $_SESSION['form_error'] ?? null;
@@ -56,6 +70,7 @@ unset($_SESSION['form_error']);
 require __DIR__ . '/../components/header.php';
 ?>
 
+<?php if ($hasCartItem): ?>
 <!-- Pass Data to Client Script -->
 <script>
 window.A1_SERVICES_MAP = <?= json_encode(array_map(function($s) {
@@ -536,6 +551,39 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 
   </div>
 </div><!-- /.vossy-checkout-page -->
+
+<?php else: ?>
+
+<!-- =======================================================================
+     AUTHENTIC EMPTY CART STATE (Matches User Reference 1:1)
+     Clean white container, soft coral icon badge, bold title, descriptive text,
+     and vibrant coral-orange pill button to explore services.
+     ======================================================================= -->
+<main class="empty-cart-page" role="main">
+  <div class="container">
+    <div class="empty-cart-card">
+      <div class="empty-cart-icon-circle" aria-hidden="true">
+        <!-- Vibrant Orange Shopping Cart Icon matching reference -->
+        <svg class="empty-cart-svg" viewBox="0 0 24 24" width="38" height="38" fill="currentColor">
+          <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+        </svg>
+      </div>
+
+      <h1 class="empty-cart-title">Your cart is empty</h1>
+
+      <p class="empty-cart-subtitle">
+        You haven't selected any home or commercial maintenance packages yet. Explore our verified services to get started.
+      </p>
+
+      <a href="<?= SITE_URL ?>/services/" class="btn-empty-cart-explore" id="emptyCartExploreBtn">
+        <span>Explore Services Now</span>
+        <span class="empty-cart-arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<?php endif; ?>
 
 <!-- =======================================================================
      SCOPED STYLES: VOSSY LUXURY BOOKING CHECKOUT EXPERIENCE
@@ -1279,8 +1327,140 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
     height: 160px;
   }
 }
+
+/* =======================================================================
+   AUTHENTIC EMPTY CART STYLES (Matching User Reference 1:1)
+   Clean white card, rounded 28px, soft peach badge, bold title, neutral text,
+   and coral-orange gradient pill CTA button.
+   ======================================================================= */
+.empty-cart-page {
+  background: #FFFFFF;
+  min-height: calc(100vh - 280px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.25rem 5.5rem;
+  box-sizing: border-box;
+}
+.empty-cart-card {
+  background: #FFFFFF;
+  border: 1px solid #EEF2F6;
+  border-radius: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  max-width: 540px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3.75rem 2.5rem 3.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+.empty-cart-icon-circle {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #FFF1EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #EE592B;
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
+}
+.empty-cart-icon-circle svg {
+  width: 38px;
+  height: 38px;
+  fill: #EE592B;
+}
+.empty-cart-title {
+  font-family: inherit;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1E293B;
+  margin: 0 0 0.85rem 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.empty-cart-subtitle {
+  font-size: 0.92rem;
+  color: #64748B;
+  line-height: 1.55;
+  max-width: 430px;
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+.btn-empty-cart-explore {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #EE592B 0%, #E04815 100%);
+  color: #FFFFFF !important;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  padding: 0.92rem 2.4rem;
+  border-radius: 9999px;
+  box-shadow: 0 8px 22px rgba(238, 89, 43, 0.32);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  cursor: pointer;
+}
+.btn-empty-cart-explore:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(238, 89, 43, 0.42);
+  background: linear-gradient(135deg, #F06336 0%, #E54E1B 100%);
+  color: #FFFFFF !important;
+}
+.btn-empty-cart-explore:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px rgba(238, 89, 43, 0.28);
+}
+.empty-cart-arrow {
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+.btn-empty-cart-explore:hover .empty-cart-arrow {
+  transform: translateX(4px);
+}
+@media (max-width: 640px) {
+  .empty-cart-page {
+    padding: 2.25rem 1rem 4rem;
+    min-height: calc(100vh - 220px);
+  }
+  .empty-cart-card {
+    padding: 2.75rem 1.5rem 2.5rem;
+    border-radius: 22px;
+  }
+  .empty-cart-icon-circle {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 1.25rem;
+  }
+  .empty-cart-icon-circle svg {
+    width: 34px;
+    height: 34px;
+  }
+  .empty-cart-title {
+    font-size: 1.4rem;
+  }
+  .empty-cart-subtitle {
+    font-size: 0.88rem;
+    max-width: 320px;
+    margin-bottom: 1.75rem;
+  }
+  .btn-empty-cart-explore {
+    width: 100%;
+    max-width: 320px;
+    padding: 0.85rem 1.5rem;
+  }
+}
 </style>
 
+<?php if ($hasCartItem): ?>
 <!-- =======================================================================
      DYNAMIC SYNCHRONIZATION JAVASCRIPT
      ======================================================================= -->
@@ -1411,5 +1591,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+<?php endif; ?>
 
 <?php require __DIR__ . '/../components/footer.php'; ?>

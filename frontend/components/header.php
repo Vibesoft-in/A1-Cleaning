@@ -202,10 +202,10 @@ $citiesList = require __DIR__ . '/../../backend/data/cities.php';
           </a>
 
           <!-- Cart Icon with 0 Badge -->
-          <a href="<?= SITE_URL ?>/book-now/" class="tool-link icon-badge-tool" aria-label="Cart">
+          <a href="<?= SITE_URL ?>/cart/" class="tool-link icon-badge-tool" aria-label="Cart">
             <span class="tool-icon-wrapper">
               <span class="material-symbols-outlined tool-main-icon">shopping_cart</span>
-              <span class="tool-count-badge">0</span>
+              <span class="tool-count-badge" id="header-cart-badge"><?= (!empty($hasCartItem) || !empty($_SESSION['cart_item'])) ? '1' : '0' ?></span>
             </span>
           </a>
 

@@ -260,8 +260,9 @@ document.addEventListener('DOMContentLoaded', function () {
       isDismissed = sessionStorage.getItem('a1_offer_popup_dismissed_now') === 'true';
     } catch (err) {}
 
-    // Show popup smoothly after 900ms on first load or when forced
-    if (forceShow || !isDismissed) {
+    // Show popup smoothly after 900ms on first load or when forced (never auto-interrupt checkout or cart)
+    const isCartOrBookingPage = window.location.pathname.includes('/cart') || window.location.pathname.includes('/book-now');
+    if (forceShow || (!isDismissed && !isCartOrBookingPage)) {
       setTimeout(function () {
         window.openOfferModal();
       }, 900);

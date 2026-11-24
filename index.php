@@ -101,8 +101,8 @@ if (isset($citiesList[$firstSegment])) {
     }
 }
 
-// 4. Booking Funnel
-if ($firstSegment === 'book-now') {
+// 4. Booking Funnel & Cart View
+if ($firstSegment === 'book-now' || $firstSegment === 'cart') {
     if (count($segments) === 1) {
         require __DIR__ . '/frontend/views/book-now.php';
         exit;
