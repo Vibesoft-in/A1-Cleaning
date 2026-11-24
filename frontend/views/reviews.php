@@ -2185,8 +2185,9 @@ function cycleReviews(delta) {
     const totalCards = cards.length;
     const totalTrackLen = totalCards * cardSpacing;
 
-    // True 3D Concave Cylinder Radius (Curving into depth -Z)
-    const R = isMobile ? 650 : 1050;
+    // True 3D Concave Cylinder Radius & Inward Depth
+    const R = isMobile ? 650 : 980;
+    const centerDepth = isMobile ? 80 : 130;
 
     // Inertia & momentum decay when user releases drag
     if (!isDragging) {
@@ -2223,18 +2224,18 @@ function cycleReviews(delta) {
 
       card.style.display = 'block';
 
-      // 3D Cylinder Coordinates:
-      // X = R * sin(theta)
-      // Z = -(R * (1 - cos(theta)))  --> Negative Z curves INTO screen (TRUE CONCAVE!)
+      // 3D True Concave Coordinates:
+      // Center card (theta=0) pushed deep into screen (-centerDepth)
+      // Sides curve forward towards viewer (+Z) wrapping around the user (BOWL / THEATER)
       const x = R * Math.sin(theta);
-      const z = -(R * (1 - Math.cos(theta)));
-      const rotY = deg;
+      const z = (R * (1 - Math.cos(theta))) - centerDepth;
+      const rotY = -deg; // Faces inwards towards the deep center
 
       const isHov = (card === hoveredCard && !isDragging);
       const scale = isHov ? 1.06 : 1.0;
 
       card.style.transform = `translate3d(${x.toFixed(1)}px, 0px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(1)}deg) scale(${scale})`;
-      card.style.zIndex = Math.round(100 - Math.abs(deg));
+      card.style.zIndex = isHov ? 100 : Math.round(50 + Math.abs(deg));
 
       const video = card.querySelector('video');
       if (video && video.paused) {
