@@ -313,7 +313,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
           <div class="cart-addons-section-card" id="cartAddonsCard">
             <div class="cart-addons-head">
               <div class="cart-addons-title-wrap">
-                <span class="material-symbols-outlined icon-amber" style="color: #F59E0B; font-size: 1.25rem;">bolt</span>
+                <span class="material-symbols-outlined" style="color: #22A06B; font-size: 1.25rem;">bolt</span>
                 <h3 class="cart-addons-title">Frequently Added Add-ons</h3>
               </div>
               <span class="cart-addons-badge">Pairs with your service</span>
@@ -1508,27 +1508,27 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 
 /* =======================================================================
-   CARD A: SELECTED SERVICES & QUANTITY STEPPER (Matching User Reference)
+   CARD A: SELECTED SERVICES & QUANTITY STEPPER (Strict A1 Website Theme)
    ======================================================================= */
 .cart-selected-services-card {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #D6E8DC;
   border-radius: 18px;
   padding: 1.25rem 1.5rem;
   margin-bottom: 1.25rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 6px 20px rgba(11, 41, 34, 0.04);
 }
 .cart-services-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-bottom: 0.85rem;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid #EAF3EE;
 }
 .cart-services-heading {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #1E293B;
+  color: #0B2922;
   margin: 0;
   display: flex;
   align-items: center;
@@ -1568,7 +1568,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   border-radius: 12px;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #D6E8DC;
 }
 .cart-service-text-wrap {
   min-width: 0;
@@ -1576,19 +1576,19 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 .cart-service-title {
   font-size: 1rem;
   font-weight: 700;
-  color: #1E293B;
+  color: #0B2922;
   margin: 0 0 0.2rem;
   line-height: 1.3;
 }
 .cart-service-duration {
   font-size: 0.82rem;
-  color: #64748B;
+  color: #526E65;
   margin-bottom: 0.25rem;
 }
 .cart-service-unit-price {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #E04815;
+  color: #22A06B;
 }
 .cart-service-controls {
   display: flex;
@@ -1601,7 +1601,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  border: 1px solid #CBD5E1;
+  border: 1px solid #D6E8DC;
   border-radius: 8px;
   padding: 2px 4px;
   background: #FFFFFF;
@@ -1609,10 +1609,10 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 .cart-stepper-btn {
   width: 26px;
   height: 26px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #D6E8DC;
   border-radius: 6px;
-  background: #F8FAFC;
-  color: #334155;
+  background: #EAF3EE;
+  color: #0B2922;
   font-size: 1.05rem;
   font-weight: 700;
   display: inline-flex;
@@ -1623,32 +1623,33 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   transition: all 0.15s ease;
 }
 .cart-stepper-btn:hover {
-  background: #E2E8F0;
-  color: #0F172A;
+  background: #22A06B;
+  color: #FFFFFF;
+  border-color: #22A06B;
 }
 .cart-stepper-val {
   min-width: 22px;
   text-align: center;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #0F172A;
+  color: #0B2922;
 }
 .cart-service-row-total {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #1E293B;
+  color: #0B2922;
 }
 
 /* =======================================================================
-   CARD B: FREQUENTLY ADDED ADD-ONS GRID (Matching User Reference)
+   CARD B: FREQUENTLY ADDED ADD-ONS GRID (Strict A1 Website Theme)
    ======================================================================= */
 .cart-addons-section-card {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #D6E8DC;
   border-radius: 18px;
   padding: 1.35rem 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 6px 20px rgba(11, 41, 34, 0.04);
 }
 .cart-addons-head {
   display: flex;
@@ -1664,12 +1665,13 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 .cart-addons-title {
   font-size: 1.1rem;
   font-weight: 800;
-  color: #1E293B;
+  color: #0B2922;
   margin: 0;
 }
 .cart-addons-badge {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #EAF3EE;
+  color: #1B8356;
+  border: 1px solid #D6E8DC;
   font-size: 0.72rem;
   font-weight: 700;
   padding: 3px 10px;
@@ -1678,7 +1680,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 .cart-addons-sub {
   font-size: 0.82rem;
-  color: #64748B;
+  color: #526E65;
   margin: 0 0 1rem 0;
 }
 .cart-addons-grid {
@@ -1687,7 +1689,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   gap: 12px;
 }
 .cart-addon-item {
-  border: 1px solid #E2E8F0;
+  border: 1px solid #D6E8DC;
   border-radius: 14px;
   padding: 10px 12px;
   background: #FFFFFF;
@@ -1698,12 +1700,12 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   transition: all 0.2s ease;
 }
 .cart-addon-item:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border-color: #22A06B;
+  box-shadow: 0 4px 14px rgba(34, 160, 107, 0.08);
 }
 .cart-addon-item.is-selected {
   border-color: #22A06B;
-  background: #F0FDF4;
+  background: #EAF3EE;
 }
 .cart-addon-left {
   display: flex;
@@ -1717,15 +1719,16 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   border-radius: 8px;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #D6E8DC;
 }
 .cart-addon-details {
   min-width: 0;
 }
 .cart-addon-tag {
   display: inline-block;
-  background: #FEF9C3;
-  color: #854D0E;
+  background: #EAF3EE;
+  color: #166534;
+  border: 1px solid rgba(34, 160, 107, 0.2);
   font-size: 0.68rem;
   font-weight: 700;
   padding: 2px 6px;
@@ -1735,7 +1738,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 .cart-addon-title {
   font-size: 0.86rem;
   font-weight: 700;
-  color: #1E293B;
+  color: #0B2922;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1745,12 +1748,12 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 .cart-addon-pricing {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #E04815;
+  color: #22A06B;
 }
 .btn-addon-add {
   border: none;
   border-radius: 9999px;
-  background: #0F172A;
+  background: #0B2922;
   color: #FFFFFF;
   font-size: 0.78rem;
   font-weight: 700;
@@ -1763,12 +1766,13 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   gap: 3px;
 }
 .btn-addon-add:hover {
-  background: #1E293B;
+  background: #1B8356;
   transform: translateY(-1px);
 }
 .btn-addon-add.is-added {
   background: #22A06B !important;
   color: #FFFFFF !important;
+  box-shadow: 0 3px 10px rgba(34, 160, 107, 0.35);
 }
 @media (max-width: 640px) {
   .cart-addons-grid {
