@@ -651,22 +651,22 @@ require __DIR__ . '/../components/header.php';
 .rev-cylinder-track {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   width: max-content;
   transform-style: preserve-3d;
   will-change: transform;
 }
 
-/* Uniform Vertical 9:16 Cards (~200px x 350px) - Compact Sleek Size, Full Opacity */
+/* Compact Vertical 9:16 Cards (~190px x 330px) - Full Opacity */
 .rev-cylinder-card {
-  width: 200px;
-  height: 350px;
-  border-radius: 20px;
+  width: 190px;
+  height: 330px;
+  border-radius: 18px;
   overflow: hidden;
   position: relative;
   background: #0B2922;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.65);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
   flex-shrink: 0;
   cursor: pointer;
   transform-origin: center center;
@@ -742,15 +742,15 @@ require __DIR__ . '/../components/header.php';
 /* Mobile Responsive */
 @media (max-width: 600px) {
   .rev-cylinder-card {
-    width: 165px;
-    height: 290px;
-    border-radius: 16px;
+    width: 155px;
+    height: 270px;
+    border-radius: 14px;
   }
   .rev-cylinder-track {
-    gap: 12px;
+    gap: 10px;
   }
   .rev-cylinder-viewport {
-    padding: 2.2rem 0 1.2rem;
+    padding: 2rem 0 1rem;
   }
 }
 
@@ -2112,8 +2112,8 @@ function cycleReviews(delta) {
 
     // Total width of one original set of 8 videos (with gaps)
     const isMobile = window.innerWidth <= 600;
-    const cardWidth = isMobile ? 165 : 200;
-    const gap = isMobile ? 12 : 16;
+    const cardWidth = isMobile ? 155 : 190;
+    const gap = isMobile ? 10 : 14;
     const singleSetWidth = 8 * (cardWidth + gap);
 
     if (!isPaused && dt > 0 && dt < 0.2) {
@@ -2142,21 +2142,23 @@ function cycleReviews(delta) {
 
       // 1. Inward cylinder rotation:
       // Left cards face inwards to center (+), right cards face inwards to center (-)
-      const rotY = d * -28;
+      const rotY = d * -26;
 
       // 2. Parabolic vertical ribbon arch:
       // Subtle elegant lift towards sides
-      const archFactor = isMobile ? 12 : 22;
+      const archFactor = isMobile ? 10 : 18;
       const archY = -(d * d) * archFactor;
 
-      // 3. UNIFORM CARD SIZE: No middle magnification (only lift on user hover)
+      // 3. Middle video size reduction:
+      // Middle card scales down to ~0.88, smoothly expanding to 1.0 towards edges
+      const centerTaper = 0.88 + Math.min(0.12, absD * 0.12);
       const isHov = (card === hoveredCard);
-      const scale = isHov ? 1.05 : 1.0;
+      const scale = isHov ? centerTaper * 1.08 : centerTaper;
 
-      // Combined 3D transform (No translateZ to prevent center card magnification)
-      card.style.transform = `translateY(${archY.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale})`;
+      // Combined 3D transform (Arch + rotateY + middle-reduced scale)
+      card.style.transform = `translateY(${archY.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
       
-      // 4. SOLID 100% OPACITY ACROSS ENTIRE TRACK: No edge fading!
+      // 4. Solid 100% opacity across entire track: No edge fading!
       card.style.opacity = '1';
       card.style.zIndex = isHov ? 50 : Math.round(30 - absD * 10);
 
