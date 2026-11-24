@@ -40,6 +40,9 @@ require __DIR__ . '/../components/header.php';
 }
 </script>
 
+<!-- Google Font: Caveat for Authentic Hand-Drawn Doodle Annotations -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap">
+
 <!-- =======================================================================
      LUXURY DARK BENTO-GRID REVIEWS CANVAS
      Atmospheric Deep Forest Canvas (#071914) with Glowing Emerald & Teal Ambience
@@ -88,18 +91,27 @@ require __DIR__ . '/../components/header.php';
     </div>
 
     <!-- ===================================================================
-         VERIFIED VIDEO REVIEWS: 3D CURVED CYLINDER MARQUEE
-         Continuous 60fps auto-scroll marquee, all uniform size 220x390,
-         Cylinder 3D perspective with dynamic rotateY, smooth edge fade, hover preview
+         VERIFIED VIDEO REVIEWS: 3D ARCHED CYLINDER VIDEO RIBBON
+         Inspired by Modern Hero Video Ribbon (Continuous 60fps auto-scroll,
+         uniform vertical cards, 3D parabolic arch, rotateY & depth curve, soft fade)
          =================================================================== -->
-    <section class="rev-video-carousel-section" aria-label="Customer Video Reviews Cylinder Marquee">
+    <section class="rev-video-carousel-section" aria-label="Customer Video Reviews 3D Arched Ribbon">
       <div class="rev-video-section-header text-center">
         <div class="rev-video-badge">
           <span class="rev-video-badge-dot"></span>
           <span>Verified Video Proof</span>
         </div>
-        <h2 class="rev-video-heading">Live Cleaning In Action</h2>
-        <p class="rev-video-subheading">Continuous 3D cylinder marquee showcasing our doorstep service results across Uttarakhand.</p>
+        <div class="rev-video-title-wrap">
+          <h2 class="rev-video-heading">Live Cleaning In Action</h2>
+          <!-- Hand-Drawn Doodle Annotation (Matching Reference Aesthetic) -->
+          <div class="rev-doodle-annotation" aria-hidden="true">
+            <span class="rev-doodle-text">100% Unedited Proof</span>
+            <svg class="rev-doodle-arrow" width="34" height="30" viewBox="0 0 34 30" fill="none" stroke="currentColor">
+              <path d="M4 4C12 4 26 8 28 22M28 22L22 19M28 22L31 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <p class="rev-video-subheading">Continuous 3D arched video ribbon showcasing our verified doorstep cleaning results across Uttarakhand.</p>
       </div>
 
       <div class="rev-cylinder-viewport" id="cylinderViewport">
@@ -526,9 +538,9 @@ require __DIR__ . '/../components/header.php';
      ======================================================================= -->
 <style>
 /* ==========================================================================
-   3D CURVED CYLINDER MARQUEE SHOWCASE
-   Continuous 60fps auto-scroll marquee, all uniform size 220x390,
-   Cylinder 3D perspective with dynamic rotateY, smooth edge fade, hover preview
+   3D ARCHED CYLINDER VIDEO RIBBON (Inspired by Modern Hero Video Ribbon)
+   Continuous 60fps auto-scroll marquee, uniform 9:16 vertical cards,
+   3D parabolic arch (translateY + translateZ + rotateY), soft edge fade
    ========================================================================== */
 .rev-video-carousel-section {
   width: 100vw;
@@ -539,11 +551,12 @@ require __DIR__ . '/../components/header.php';
   margin-right: -50vw;
   margin-top: 1.5rem;
   margin-bottom: 3.5rem;
-  overflow: visible; /* No overflow clipping that cuts cards sharply */
+  overflow: visible;
 }
 .rev-video-section-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   padding: 0 1rem;
+  position: relative;
 }
 .rev-video-badge {
   display: inline-flex;
@@ -572,12 +585,48 @@ require __DIR__ . '/../components/header.php';
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.4); opacity: 0.5; }
 }
+.rev-video-title-wrap {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+}
 .rev-video-heading {
-  font-size: 2.15rem;
+  font-size: 2.25rem;
   font-weight: 800;
   color: #FFFFFF;
   margin: 0 0 0.45rem;
   letter-spacing: -0.02em;
+}
+/* Hand-Drawn Doodle Annotation (Matching Reference Aesthetic) */
+.rev-doodle-annotation {
+  position: absolute;
+  top: -12px;
+  right: -135px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #34D399;
+  pointer-events: none;
+}
+.rev-doodle-text {
+  font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  transform: rotate(5deg);
+  white-space: nowrap;
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
+}
+.rev-doodle-arrow {
+  margin-left: 10px;
+  margin-top: 2px;
+  color: #34D399;
+  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.4));
+}
+@media (max-width: 768px) {
+  .rev-doodle-annotation {
+    display: none;
+  }
 }
 .rev-video-subheading {
   font-size: 0.95rem;
@@ -587,16 +636,16 @@ require __DIR__ . '/../components/header.php';
   line-height: 1.55;
 }
 
-/* 3D Viewport: Full Width, Perspective 1200px + Soft Edge Fade Gradient */
+/* 3D Viewport: Perspective 1300px + Soft Edge Fade Gradient + Room for Parabolic Arch */
 .rev-cylinder-viewport {
   width: 100%;
   position: relative;
   overflow: hidden;
-  padding: 2.5rem 0;
-  perspective: 1200px;
+  padding: 3.5rem 0 2.5rem;
+  perspective: 1300px;
   perspective-origin: 50% 50%;
-  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
   user-select: none;
 }
 
@@ -610,16 +659,16 @@ require __DIR__ . '/../components/header.php';
   will-change: transform;
 }
 
-/* Uniform Vertical 9:16 Cards (~220px x 390px) */
+/* Uniform Vertical 9:16 Cards (~215px x 375px) */
 .rev-cylinder-card {
-  width: 220px;
-  height: 390px;
-  border-radius: 20px;
+  width: 215px;
+  height: 375px;
+  border-radius: 22px;
   overflow: hidden;
   position: relative;
   background: #0B2922;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
   flex-shrink: 0;
   cursor: pointer;
   transform-origin: center center;
@@ -646,15 +695,15 @@ require __DIR__ . '/../components/header.php';
 /* Tiny Category Pill at Top Left */
 .rev-cylinder-pill {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 14px;
+  left: 14px;
   background: rgba(7, 25, 20, 0.82);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(52, 211, 153, 0.45);
   color: #34D399;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 3px 9px;
+  padding: 3px 10px;
   border-radius: 9999px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -696,10 +745,13 @@ require __DIR__ . '/../components/header.php';
   .rev-cylinder-card {
     width: 175px;
     height: 310px;
-    border-radius: 16px;
+    border-radius: 18px;
   }
   .rev-cylinder-track {
     gap: 12px;
+  }
+  .rev-cylinder-viewport {
+    padding: 2.5rem 0 1.5rem;
   }
 }
 
@@ -2020,9 +2072,9 @@ function cycleReviews(delta) {
 }
 
 // ============================================================================
-// 9. 3D CURVED CYLINDER MARQUEE SHOWCASE
-// Continuous right-to-left auto-scroll at 40px/s, seamless infinite loop
-// Cylinder 3D perspective with dynamic rotateY per-frame, pauses on hover
+// 9. 3D ARCHED CYLINDER VIDEO RIBBON (Inspired by Modern Hero Video Ribbon)
+// Continuous right-to-left auto-scroll at 38px/s, seamless infinite loop
+// Parabolic arch + inward rotateY + depth translateZ per-frame, pauses on hover
 // ============================================================================
 (function initCylinderMarquee() {
   const track = document.getElementById('cylinderTrack');
@@ -2033,7 +2085,7 @@ function cycleReviews(delta) {
   if (!cards.length) return;
 
   let scrollX = 0;
-  const speed = 40; // 40px per second
+  const speed = 38; // 38px per second for elegant cinematic drift
   let isPaused = false;
   let hoveredCard = null;
 
@@ -2060,8 +2112,8 @@ function cycleReviews(delta) {
     lastTime = now;
 
     // Total width of one original set of 8 videos (with gaps)
-    const cardWidth = cards[0].offsetWidth || 220;
     const isMobile = window.innerWidth <= 600;
+    const cardWidth = isMobile ? 175 : 215;
     const gap = isMobile ? 12 : 16;
     const singleSetWidth = 8 * (cardWidth + gap);
 
@@ -2075,7 +2127,7 @@ function cycleReviews(delta) {
     // Move track smoothly
     track.style.transform = `translateX(${-scrollX}px)`;
 
-    // Calculate dynamic 3D cylinder curve per card
+    // Calculate dynamic 3D arched cylinder curve per card
     const vpRect = viewport.getBoundingClientRect();
     const centerX = vpRect.left + vpRect.width / 2;
     const halfW = vpRect.width / 2;
@@ -2086,20 +2138,30 @@ function cycleReviews(delta) {
       const dist = cardCenterX - centerX;
       
       // Normalized distance d (-1 at far left, 0 at center, +1 at far right)
-      const d = Math.max(-1.25, Math.min(1.25, dist / halfW));
+      const d = Math.max(-1.3, Math.min(1.3, dist / halfW));
       const absD = Math.min(1, Math.abs(d));
 
-      // User requirement: rotateY(d * -45deg) scale(1 - Math.abs(d) * 0.12)
-      // opacity: 1 - Math.abs(d) * 0.55
-      const rotY = d * -45;
-      const baseScale = 1 - absD * 0.12;
-      const opacity = Math.max(0.2, 1 - absD * 0.55);
+      // 1. Inward cylinder rotation:
+      // Left cards face inwards to center (+), right cards face inwards to center (-)
+      const rotY = d * -36;
+
+      // 2. Parabolic vertical ribbon arch (matching reference):
+      // Center cards sit lower, sides gently lift upward by ~30px
+      const archFactor = isMobile ? 18 : 30;
+      const archY = -(d * d) * archFactor;
+
+      // 3. 3D depth curvature in Z-space:
+      const transZ = (1 - Math.cos(d * 1.2)) * -85;
+
+      // 4. Soft scaling and fade:
+      const baseScale = 1 - absD * 0.10;
+      const opacity = Math.max(0.28, 1 - absD * 0.52);
 
       const isHov = (card === hoveredCard);
       const finalScale = isHov ? baseScale * 1.06 : baseScale;
 
-      // Apply transform: ONLY rotateY and scale! Zero rotateZ, zero rotateX, zero skew, zero translateY/Z
-      card.style.transform = `rotateY(${rotY}deg) scale(${finalScale})`;
+      // Combined 3D transform: translateY (arch), translateZ (depth), rotateY (cylinder), scale
+      card.style.transform = `translate3d(0, ${archY.toFixed(2)}px, ${transZ.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${finalScale.toFixed(3)})`;
       card.style.opacity = isHov ? 1 : opacity;
       card.style.zIndex = isHov ? 50 : Math.round(30 - absD * 20);
 
