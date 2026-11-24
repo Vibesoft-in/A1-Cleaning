@@ -641,7 +641,7 @@ require __DIR__ . '/../components/header.php';
   width: 100%;
   position: relative;
   overflow: hidden;
-  padding: 3rem 0 2rem;
+  padding: 2.2rem 0 1.2rem;
   perspective: 1300px;
   perspective-origin: 50% 50%;
   user-select: none;
@@ -651,22 +651,22 @@ require __DIR__ . '/../components/header.php';
 .rev-cylinder-track {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   width: max-content;
   transform-style: preserve-3d;
   will-change: transform;
 }
 
-/* Compact Vertical 9:16 Cards (~190px x 330px) - Full Opacity */
+/* Compact Sleek Vertical 9:16 Cards (~155px x 275px) - Full Opacity */
 .rev-cylinder-card {
-  width: 190px;
-  height: 330px;
-  border-radius: 18px;
+  width: 155px;
+  height: 275px;
+  border-radius: 16px;
   overflow: hidden;
   position: relative;
   background: #0B2922;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
   flex-shrink: 0;
   cursor: pointer;
   transform-origin: center center;
@@ -678,7 +678,7 @@ require __DIR__ . '/../components/header.php';
 
 .rev-cylinder-card:hover {
   border-color: #34D399;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(52, 211, 153, 0.45);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(52, 211, 153, 0.45);
   z-index: 50 !important;
 }
 
@@ -694,15 +694,15 @@ require __DIR__ . '/../components/header.php';
 /* Tiny Category Pill at Top Left */
 .rev-cylinder-pill {
   position: absolute;
-  top: 14px;
-  left: 14px;
+  top: 10px;
+  left: 10px;
   background: rgba(7, 25, 20, 0.82);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(52, 211, 153, 0.45);
   color: #34D399;
-  font-size: 0.7rem;
+  font-size: 0.64rem;
   font-weight: 700;
-  padding: 3px 10px;
+  padding: 2px 8px;
   border-radius: 9999px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -716,11 +716,11 @@ require __DIR__ . '/../components/header.php';
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 18px 14px 14px;
+  padding: 14px 10px 10px;
   background: linear-gradient(to top, rgba(7, 25, 20, 0.95), rgba(7, 25, 20, 0.5) 60%, transparent);
   z-index: 6;
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(6px);
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 }
@@ -729,28 +729,34 @@ require __DIR__ . '/../components/header.php';
   transform: translateY(0);
 }
 .rev-cylinder-name {
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: #FFFFFF;
   margin-bottom: 2px;
 }
 .rev-cylinder-serv {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: #A7F3D0;
 }
 
 /* Mobile Responsive */
 @media (max-width: 600px) {
   .rev-cylinder-card {
-    width: 155px;
-    height: 270px;
-    border-radius: 14px;
+    width: 125px;
+    height: 220px;
+    border-radius: 12px;
   }
   .rev-cylinder-track {
-    gap: 10px;
+    gap: 8px;
+  }
+  .rev-cylinder-pill {
+    top: 7px;
+    left: 7px;
+    font-size: 0.56rem;
+    padding: 2px 6px;
   }
   .rev-cylinder-viewport {
-    padding: 2rem 0 1rem;
+    padding: 1.5rem 0 0.8rem;
   }
 }
 
@@ -2110,10 +2116,10 @@ function cycleReviews(delta) {
     const dt = (now - lastTime) / 1000;
     lastTime = now;
 
-    // Total width of one original set of 8 videos (with gaps)
+    // Total width of one original set of 8 videos (with gaps) - Reduced overall size
     const isMobile = window.innerWidth <= 600;
-    const cardWidth = isMobile ? 155 : 190;
-    const gap = isMobile ? 10 : 14;
+    const cardWidth = isMobile ? 125 : 155;
+    const gap = isMobile ? 8 : 12;
     const singleSetWidth = 8 * (cardWidth + gap);
 
     if (!isPaused && dt > 0 && dt < 0.2) {
@@ -2142,20 +2148,20 @@ function cycleReviews(delta) {
 
       // 1. Inward cylinder rotation:
       // Left cards face inwards to center (+), right cards face inwards to center (-)
-      const rotY = d * -26;
+      const rotY = d * -24;
 
       // 2. Parabolic vertical ribbon arch:
       // Subtle elegant lift towards sides
-      const archFactor = isMobile ? 10 : 18;
+      const archFactor = isMobile ? 8 : 14;
       const archY = -(d * d) * archFactor;
 
-      // 3. Middle video size reduction:
-      // Middle card scales down to ~0.88, smoothly expanding to 1.0 towards edges
-      const centerTaper = 0.88 + Math.min(0.12, absD * 0.12);
+      // 3. Compact uniform card scale:
+      // Subtle center taper so middle card never overpowers
+      const centerTaper = 0.90 + Math.min(0.10, absD * 0.10);
       const isHov = (card === hoveredCard);
       const scale = isHov ? centerTaper * 1.08 : centerTaper;
 
-      // Combined 3D transform (Arch + rotateY + middle-reduced scale)
+      // Combined 3D transform (Arch + rotateY + compact scale)
       card.style.transform = `translateY(${archY.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
       
       // 4. Solid 100% opacity across entire track: No edge fading!
