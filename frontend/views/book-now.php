@@ -1460,53 +1460,6 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   text-decoration: underline;
 }
 
-/* ==========================================================================
-   MOBILE RESPONSIVENESS (<= 768px)
-   ========================================================================== */
-@media (max-width: 768px) {
-  .vossy-top-security-bar {
-    font-size: 0.7rem;
-    padding: 0.45rem 0.5rem;
-  }
-  .vossy-checkout-page {
-    padding: 1.25rem 0 2.5rem;
-  }
-  .vossy-page-header {
-    margin-bottom: 1.25rem;
-  }
-  .vossy-main-title {
-    font-size: 1.45rem;
-    margin-bottom: 0.25rem;
-  }
-  .vossy-main-sub {
-    font-size: 0.78rem;
-    line-height: 1.4;
-    padding: 0 0.5rem;
-  }
-  .vossy-form-card {
-    padding: 1.15rem 1rem;
-    border-radius: 12px;
-    margin-bottom: 0.85rem;
-  }
-  .vossy-card-header {
-    margin-bottom: 0.85rem;
-  }
-  .vossy-card-title {
-    font-size: 1.05rem;
-  }
-  .vossy-input {
-    font-size: 16px !important; /* iOS Safari auto-zoom guard */
-    padding: 0.55rem 0.75rem;
-  }
-  .vossy-summary-card {
-    position: static;
-    margin-top: 0.5rem;
-  }
-  .vossy-summary-media {
-    height: 160px;
-  }
-}
-
 /* =======================================================================
    CARD A: SELECTED SERVICES & QUANTITY STEPPER (Strict A1 Website Theme)
    ======================================================================= */
@@ -1572,6 +1525,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 .cart-service-text-wrap {
   min-width: 0;
+  flex: 1;
 }
 .cart-service-title {
   font-size: 1rem;
@@ -1723,6 +1677,7 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 .cart-addon-details {
   min-width: 0;
+  flex: 1;
 }
 .cart-addon-tag {
   display: inline-block;
@@ -1774,21 +1729,331 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   color: #FFFFFF !important;
   box-shadow: 0 3px 10px rgba(34, 160, 107, 0.35);
 }
+/* ==========================================================================
+   MULTI-DEVICE RESPONSIVENESS & MOBILE VIEW OPTIMIZATIONS
+   Seamless adaptation across:
+   - 992px: Tablet Landscape / Small Laptop
+   - 768px: Tablet Portrait / Large Mobile
+   - 640px: Standard Mobile (Pixel, Galaxy, iPhone standard)
+   - 380px: Compact Mobile (iPhone SE, iPhone Mini, Galaxy Fold)
+   ========================================================================== */
+@media (max-width: 992px) {
+  .vossy-checkout-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .vossy-summary-card {
+    position: static;
+    margin-top: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .vossy-top-security-bar {
+    font-size: 0.72rem;
+    padding: 0.45rem 0.6rem;
+  }
+  .vossy-checkout-page {
+    padding: 1.25rem 0 2.5rem;
+  }
+  .vossy-page-header {
+    margin-bottom: 1.25rem;
+  }
+  .vossy-main-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+  .vossy-main-sub {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    padding: 0 0.5rem;
+  }
+  .vossy-form-card,
+  .cart-selected-services-card,
+  .cart-addons-section-card {
+    padding: 1.2rem 1.15rem;
+    border-radius: 14px;
+    margin-bottom: 1rem;
+  }
+  .vossy-card-header {
+    margin-bottom: 0.85rem;
+  }
+  .vossy-card-title {
+    font-size: 1.08rem;
+  }
+  .vossy-input {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS */
+    padding: 0.6rem 0.75rem;
+  }
+  .vossy-summary-media {
+    height: 160px;
+  }
+}
+
 @media (max-width: 640px) {
+  .vossy-top-security-bar {
+    font-size: 0.68rem;
+    padding: 0.4rem 0.5rem;
+    letter-spacing: 0.01em;
+  }
+  .vossy-checkout-page {
+    padding: 1rem 0 2rem;
+  }
+  .vossy-page-header {
+    margin-bottom: 1rem;
+  }
+  .vossy-main-title {
+    font-size: 1.35rem;
+  }
+  .vossy-main-sub {
+    font-size: 0.76rem;
+    padding: 0;
+  }
+  .vossy-form-card,
+  .cart-selected-services-card,
+  .cart-addons-section-card {
+    padding: 1rem 0.85rem;
+    border-radius: 12px;
+    margin-bottom: 0.85rem;
+  }
+
+  /* Selected Services Card Mobile */
+  .cart-services-heading {
+    font-size: 1.02rem;
+  }
+  .btn-clear-cart {
+    font-size: 0.82rem;
+    padding: 2px 6px;
+  }
+  .cart-service-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+  }
+  .cart-service-info {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .cart-service-thumb {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+  }
+  .cart-service-title {
+    font-size: 0.95rem;
+    line-height: 1.3;
+  }
+  .cart-service-duration {
+    font-size: 0.76rem;
+  }
+  .cart-service-unit-price {
+    font-size: 0.86rem;
+  }
+  .cart-service-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.65rem;
+    border-top: 1px dashed #D6E8DC;
+  }
+  .cart-qty-stepper {
+    padding: 2px 4px;
+    gap: 0.35rem;
+  }
+  .cart-stepper-btn {
+    width: 26px;
+    height: 26px;
+  }
+  .cart-service-row-total {
+    font-size: 1.15rem;
+  }
+
+  /* Addons Section Card Mobile */
+  .cart-addons-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+  .cart-addons-title {
+    font-size: 1.02rem;
+  }
+  .cart-addons-badge {
+    align-self: flex-start;
+    font-size: 0.68rem;
+    padding: 2px 8px;
+  }
+  .cart-addons-sub {
+    font-size: 0.78rem;
+    margin-bottom: 0.85rem;
+  }
   .cart-addons-grid {
     grid-template-columns: 1fr;
     gap: 10px;
   }
-  .cart-service-row {
-    flex-wrap: wrap;
+  .cart-addon-item {
+    padding: 8px 10px;
+    border-radius: 12px;
   }
-  .cart-service-controls {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 0.5rem;
-    border-top: 1px dashed #E2E8F0;
+  .cart-addon-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+  }
+  .cart-addon-title {
+    font-size: 0.82rem;
+    max-width: 170px;
+  }
+  .btn-addon-add {
+    font-size: 0.75rem;
+    padding: 5px 12px;
+  }
+
+  /* Form Inputs & Grid Mobile */
+  .vossy-row-2col {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .vossy-payment-head {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .vossy-radio-box {
+    padding: 0.75rem 0.85rem;
+  }
+  .vossy-total-callout-box {
+    padding: 0.85rem 0.95rem;
+  }
+  .vossy-total-lbl {
+    font-size: 0.95rem;
+  }
+  .vossy-total-val {
+    font-size: 1.3rem;
+  }
+  .vossy-btn-confirm {
+    padding: 0.85rem 1.25rem;
+    font-size: 0.92rem;
+  }
+
+  /* Studio Banner Mobile */
+  .vossy-studio-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .vossy-studio-price-box {
+    text-align: left;
+  }
+
+  /* Summary Card Mobile */
+  .vossy-summary-media {
+    height: 150px;
+  }
+  .vossy-summary-body {
+    padding: 1rem 0.95rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .vossy-top-security-bar {
+    font-size: 0.65rem;
+    padding: 0.35rem 0.35rem;
+  }
+  .vossy-main-title {
+    font-size: 1.25rem;
+  }
+  .vossy-form-card,
+  .cart-selected-services-card,
+  .cart-addons-section-card {
+    padding: 0.85rem 0.7rem;
+    border-radius: 12px;
+  }
+  .cart-services-heading {
+    font-size: 0.94rem;
+  }
+  .btn-clear-cart {
+    font-size: 0.78rem;
+    padding: 2px 5px;
+  }
+  .cart-service-thumb {
+    width: 46px;
+    height: 46px;
+  }
+  .cart-service-title {
+    font-size: 0.88rem;
+  }
+  .cart-service-duration {
+    font-size: 0.72rem;
+  }
+  .cart-service-unit-price {
+    font-size: 0.82rem;
+  }
+  .cart-addon-left {
+    gap: 8px;
+  }
+  .cart-addon-thumb {
+    width: 40px;
+    height: 40px;
+  }
+  .cart-addon-title {
+    font-size: 0.76rem;
+    max-width: 120px;
+  }
+  .cart-addon-pricing {
+    font-size: 0.72rem;
+  }
+  .btn-addon-add {
+    font-size: 0.72rem;
+    padding: 4px 9px;
+  }
+  .cart-stepper-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 0.9rem;
+  }
+  .cart-stepper-val {
+    min-width: 18px;
+    font-size: 0.88rem;
+  }
+  .cart-service-row-total {
+    font-size: 1.05rem;
+  }
+  .vossy-card-title {
+    font-size: 0.98rem;
+  }
+  .vossy-total-lbl {
+    font-size: 0.92rem;
+  }
+  .vossy-total-val {
+    font-size: 1.22rem;
+  }
+  .vossy-btn-confirm {
+    font-size: 0.88rem;
+    padding: 0.75rem 1rem;
+  }
+  .vossy-summary-title {
+    font-size: 1.1rem;
+  }
+  .vossy-gt-amount {
+    font-size: 1.3rem;
+  }
+  .empty-cart-card {
+    padding: 2.25rem 0.85rem 2rem;
+  }
+  .empty-cart-title {
+    font-size: 1.25rem;
+  }
+  .empty-cart-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .btn-empty-cart-explore {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.85rem;
   }
 }
 
