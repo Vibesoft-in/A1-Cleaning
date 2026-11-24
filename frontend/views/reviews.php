@@ -636,14 +636,12 @@ require __DIR__ . '/../components/header.php';
   line-height: 1.55;
 }
 
-/* 3D Viewport: Perspective 1300px + Interactive Grab / Swipeable Track (Matching Image 2) */
+/* Arched Ribbon Viewport: Interactive Grab / Swipeable Track (Matching Reference Image 2) */
 .rev-cylinder-viewport {
   width: 100%;
   position: relative;
   overflow: hidden;
   padding: 3rem 0 2rem;
-  perspective: 1300px;
-  perspective-origin: 50% 50%;
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
@@ -655,13 +653,12 @@ require __DIR__ . '/../components/header.php';
   pointer-events: none;
 }
 
-/* 3D Ribbon Track: Uniform Spacing, Zero Overlap */
+/* Ribbon Track: 100% Uniform Spacing & Gaps, Zero Overlap */
 .rev-cylinder-track {
   display: flex;
   align-items: center;
   gap: 16px;
   width: max-content;
-  transform-style: preserve-3d;
   will-change: transform;
 }
 
@@ -677,8 +674,6 @@ require __DIR__ . '/../components/header.php';
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
   flex-shrink: 0;
   cursor: pointer;
-  transform-origin: center center;
-  transform-style: preserve-3d;
   will-change: transform;
   opacity: 1; /* Solid 100% opacity - No fade */
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
@@ -2202,44 +2197,33 @@ function cycleReviews(delta) {
     track.style.transform = `translateX(${-scrollX}px)`;
 
     // Calculate dynamic 3D arched ribbon per card
-    const vpRect = viewport.getBoundingClientRect();
-    const centerX = vpRect.left + vpRect.width / 2;
-    const halfW = vpRect.width / 2;
+    const halfW = viewport.clientWidth / 2;
+    const archFactor = isMobile ? 12 : 24;
 
-    cards.forEach(card => {
-      const cardRect = card.getBoundingClientRect();
-      const cardCenterX = cardRect.left + cardRect.width / 2;
-      const dist = cardCenterX - centerX;
-      
-      // Normalized distance d (-1 at left edge, 0 at center, +1 at right edge)
-      const d = Math.max(-1.4, Math.min(1.4, dist / halfW));
-      const absD = Math.min(1, Math.abs(d));
+    cards.forEach((card, idx) => {
+      // Direct mathematical track position relative to viewport center:
+      // Guarantees 100% constant, uniform gap across every single card!
+      const cardTrackCenter = idx * (cardWidth + gap) + cardWidth / 2;
+      const currentScreenX = cardTrackCenter - scrollX;
+      const dist = currentScreenX - halfW;
+      const d = dist / halfW;
 
-      // 1. Subtle 3D inward cylinder rotation (Image 2 aesthetic)
-      const rotY = d * -24;
-
-      // 2. Parabolic vertical ribbon arch:
-      // Center cards sit lower, sides gently lift upward by ~24px
-      const archFactor = isMobile ? 12 : 24;
+      // Parabolic vertical ribbon arch: Center sits lower, sides curve gently upward
       const archY = -(d * d) * archFactor;
 
-      // 3. UNIFORM CARD SCALE (Image 2: ALL cards scale = 1.0!)
-      // No center shrinking -> NO massive empty gap!
-      // No side expanding -> ZERO overlap or collision!
+      // Card scale: uniform 1.0 everywhere, slight 1.05 on hover
       const isHov = (card === hoveredCard && !isDragging);
       const scale = isHov ? 1.05 : 1.0;
 
-      // Combined 3D transform (Arch + rotateY + uniform scale)
-      card.style.transform = `translateY(${archY.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale})`;
-      
-      // 4. Solid 100% opacity across entire track: No edge fading!
+      // Pure arched ribbon: ZERO rotateY -> ZERO overlap -> 100% uniform gap everywhere!
+      card.style.transform = `translateY(${archY.toFixed(2)}px) scale(${scale})`;
       card.style.opacity = '1';
-      card.style.zIndex = isHov ? 50 : Math.round(30 - absD * 10);
+      card.style.zIndex = isHov ? 50 : 10;
 
       // Performance: pause far-offscreen videos only
       const video = card.querySelector('video');
       if (video) {
-        const isFarOffscreen = (cardRect.right < -400 || cardRect.left > window.innerWidth + 400);
+        const isFarOffscreen = (currentScreenX < -400 || currentScreenX > window.innerWidth + 400);
         if (isFarOffscreen && !video.paused) {
           video.pause();
         } else if (!isFarOffscreen && video.paused) {
