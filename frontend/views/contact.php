@@ -228,14 +228,14 @@ require __DIR__ . '/../components/header.php';
             <h3 class="vorxus-map-title">Find Us Here!</h3>
             <div class="vorxus-map-wrapper">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d55684.77673551532!2d78.920703!3d29.210419!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390a424a1b0b65f3%3A0x6b1e6a978f8d6728!2sKashipur%2C%20Uttarakhand!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3310.156698993979!2d78.96045777552224!3d29.209837975354006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390a432be71f8e7b%3A0xc7715da046aa02b9!2sA1%20Cleaning%20%7C%20Professional%20Cleaning%20Service%20%7C%20Kashipur!5e1!3m2!1sen!2sin!4v1795584604054!5m2!1sen!2sin" 
                 width="100%" 
                 height="310" 
                 style="border:0; display:block;" 
                 allowfullscreen="" 
                 loading="lazy" 
-                referrerpolicy="no-referrer-when-downgrade"
-                title="A1 Cleaning Kashipur Operational Area Map">
+                referrerpolicy="strict-origin-when-cross-origin"
+                title="A1 Cleaning | Professional Cleaning Service | Kashipur">
               </iframe>
             </div>
             <div class="vorxus-map-meta">
@@ -304,6 +304,18 @@ require __DIR__ . '/../components/header.php';
               <div class="vorxus-form-group">
                 <label for="contact-message" class="vorxus-label">Message :</label>
                 <textarea id="contact-message" class="vorxus-input vorxus-textarea" rows="3" placeholder="Tell us about your space (e.g. 3BHK flat, 5-seater L-shape sofa, immediate deep clean required)..."></textarea>
+              </div>
+
+              <!-- Row 5: Privacy Policy, Terms & Future Information Consent -->
+              <div class="vorxus-consent-box">
+                <label class="vorxus-consent-item">
+                  <input type="checkbox" id="contact-agree-terms" required>
+                  <span>I have read and agree to the <a href="<?= SITE_URL ?>/privacy/" target="_blank" rel="noopener">Privacy Policy</a> &amp; <a href="<?= SITE_URL ?>/terms/" target="_blank" rel="noopener">Terms &amp; Conditions</a>. *</span>
+                </label>
+                <label class="vorxus-consent-item is-secondary">
+                  <input type="checkbox" id="contact-agree-updates">
+                  <span><strong>Future Updates (Optional):</strong> Allow A1 Cleaning to use my details for callback quotes, WhatsApp booking updates, seasonal cleaning reminders &amp; offers (zero third-party data sharing).</span>
+                </label>
               </div>
 
               <!-- Submit Button -->
@@ -425,6 +437,7 @@ function handleVorxusFormSubmit(e) {
   const service = document.getElementById('contact-service').value;
   const locality = document.getElementById('contact-locality').value.trim();
   const message = document.getElementById('contact-message').value.trim();
+  const futureOptIn = document.getElementById('contact-agree-updates')?.checked ? 'Yes' : 'No';
 
   const submitBtn = document.getElementById('vorxus-submit-btn');
   submitBtn.disabled = true;
@@ -451,7 +464,8 @@ function handleVorxusFormSubmit(e) {
       'Phone: ' + phone + '\n' +
       'Service: ' + service + '\n' +
       (locality ? 'Locality: ' + locality + '\n' : '') +
-      (message ? 'Requirement: ' + message : '')
+      (message ? 'Requirement: ' + message + '\n' : '') +
+      'Policy Accepted: Yes | Future Updates Consent: ' + futureOptIn
     );
     const waUrl = 'https://wa.me/<?= BUSINESS_PHONE_RAW ?>?text=' + waText;
 
@@ -907,6 +921,43 @@ function handleVorxusFormSubmit(e) {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
+}
+.vorxus-consent-box {
+  background: #F6FBF8;
+  border: 1px solid #D3E6DA;
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.vorxus-consent-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.76rem;
+  line-height: 1.42;
+  color: #1F3F36;
+  cursor: pointer;
+}
+.vorxus-consent-item.is-secondary {
+  padding-top: 0.45rem;
+  border-top: 1px dashed #D7E7DD;
+  color: #4A6358;
+}
+.vorxus-consent-item input[type="checkbox"] {
+  accent-color: #22A06B;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.vorxus-consent-item a {
+  color: #16794F;
+  font-weight: 700;
+  text-decoration: underline;
 }
 .vorxus-form-guarantee {
   display: flex;
@@ -1540,4 +1591,7 @@ button.contact-faq-trigger {
 }
 </style>
 
-<?php require __DIR__ . '/../components/footer.php'; ?>
+<?php
+$footerWaveBg = '#F8FBF9';
+require __DIR__ . '/../components/footer.php';
+?>

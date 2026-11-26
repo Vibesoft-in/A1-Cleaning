@@ -137,6 +137,14 @@ switch ($firstSegment) {
     case 'reviews':
         require __DIR__ . '/frontend/views/reviews.php';
         exit;
+    case 'privacy':
+    case 'privacy-policy':
+        require __DIR__ . '/frontend/views/privacy.php';
+        exit;
+    case 'terms':
+    case 'terms-and-conditions':
+        require __DIR__ . '/frontend/views/terms.php';
+        exit;
 }
 
 // 6. 404 Fallback for any unknown route

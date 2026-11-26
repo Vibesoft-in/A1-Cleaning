@@ -14,13 +14,17 @@ $citiesList = require __DIR__ . '/../../backend/data/cities.php';
 ?>
 
 <?php if (empty($hideFooter) && ($currentRoute ?? '') !== 'account'): ?>
+<?php
+require_once __DIR__ . '/wave-divider.php';
+renderA1MergeWave('footer', $footerWaveBg ?? '#FFFFFF', !empty($footerPrevIsDark));
+?>
 <footer class="theme-footer">
   <div class="container">
     <div class="footer-grid-theme">
       <!-- Col 1: Brand & Bio -->
       <div class="footer-col-brand">
         <a href="<?= SITE_URL ?>/" class="site-logo" style="margin-bottom: 1.25rem; display: inline-block;">
-          <img src="<?= SITE_URL ?>/assets/images/brand/logo-horizontal-dark.png" alt="A1 Cleaning" width="220" height="64">
+          <img src="<?= SITE_URL ?>/assets/images/brand/logo-horizontal-white.png" alt="A1 Cleaning" width="220" height="64">
         </a>
         <p class="brand-tagline-text">
           India's trusted doorstep mechanized cleaning &amp; sanitization platform. Delivering certified hygiene for homes, offices, and resorts across Uttarakhand.

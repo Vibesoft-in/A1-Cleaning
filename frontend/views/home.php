@@ -187,6 +187,11 @@ require __DIR__ . '/../components/header.php';
 
         </div>
 
+        <label class="home-booking-consent">
+          <input type="checkbox" name="agree_terms" value="1" required>
+          <span>I have read and accept the <a href="<?= SITE_URL ?>/privacy/" target="_blank" rel="noopener">Privacy Policy</a> &amp; <a href="<?= SITE_URL ?>/terms/" target="_blank" rel="noopener">Terms &amp; Conditions</a> (details are used for booking coordination, invoices &amp; opt-in service reminders). *</span>
+        </label>
+
         <div class="booking-footer-guarantee">
           <span><span class="material-symbols-outlined icon-sm">check_circle</span> Zero Advance Payment</span>
           <span><span class="material-symbols-outlined icon-sm">check_circle</span> Pay Only After 100% Inspection</span>
@@ -978,4 +983,7 @@ require __DIR__ . '/../components/header.php';
   </svg>
 </a>
 
-<?php require __DIR__ . '/../components/footer.php'; ?>
+<?php
+$footerWaveBg = '#F8FBF9';
+require __DIR__ . '/../components/footer.php';
+?>

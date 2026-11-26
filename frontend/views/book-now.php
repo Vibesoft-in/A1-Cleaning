@@ -77,16 +77,28 @@ if ($hasCartItem) {
         'tile-descale' => '⭐ Frequently Added',
     ];
 
+    $resolveBookImg = function($path, $fallback = '') {
+        $p = !empty($path) ? $path : $fallback;
+        if (strpos($p, '<?= SITE_URL ?>') === 0) {
+            return SITE_URL . substr($p, strlen('<?= SITE_URL ?>'));
+        }
+        if (strpos($p, './') === 0) {
+            return SITE_URL . '/' . substr($p, 2);
+        }
+        return $p;
+    };
+
     if (!empty($serviceAddons)) {
         foreach ($serviceAddons as $sa) {
             $key = $sa['key'] ?? 'addon-' . count($frequentlyAddedAddons);
+            $fallbackThumb = $resolveBookImg($activeServiceData['thumb'] ?? '', SITE_URL . '/assets/images/pricing/home-cleaning.jpg');
             $frequentlyAddedAddons[] = [
                 'key' => $key,
                 'name' => $sa['name'],
                 'price' => (int)($sa['price'] ?? 199),
                 'tag' => $addonTagsPool[$key] ?? '⚡ Quick Addon',
                 'time' => '~20-30m',
-                'img' => $addonImagesPool[$key] ?? (!empty($activeServiceData['thumb']) ? $activeServiceData['thumb'] : SITE_URL . '/assets/images/pricing/home-cleaning.jpg')
+                'img' => $addonImagesPool[$key] ?? $fallbackThumb
             ];
             if (count($frequentlyAddedAddons) >= 4) break;
         }
@@ -577,12 +589,22 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
               </label>
             </div>
 
-            <!-- Terms & Cancellation Checkbox -->
+            <!-- Terms, Privacy Policy & Client Data Usage Checkboxes -->
             <div class="vossy-terms-wrap">
-              <label class="vossy-checkbox-label">
-                <input type="checkbox" id="agree_terms" name="agree_terms" required checked>
-                <span>I agree to the <a href="<?= SITE_URL ?>/terms/" target="_blank">Terms of Service</a> and understand the flexible cancellation &amp; satisfaction policy.</span>
-              </label>
+              <div class="vossy-consent-card">
+                <div class="vossy-consent-title">
+                  <span class="material-symbols-outlined icon-xs text-fresh-green">policy</span>
+                  <span>Before Confirming — Please Read &amp; Tick</span>
+                </div>
+                <label class="vossy-checkbox-label">
+                  <input type="checkbox" id="agree_terms" name="agree_terms" value="1" required>
+                  <span>I have read and agree to the <a href="<?= SITE_URL ?>/terms/" target="_blank" rel="noopener">Terms &amp; Conditions</a> and <a href="<?= SITE_URL ?>/privacy/" target="_blank" rel="noopener">Privacy Policy</a> (including 2-hour free cancellation &amp; Pay-After-Inspection rules). *</span>
+                </label>
+                <label class="vossy-checkbox-label vossy-checkbox-secondary">
+                  <input type="checkbox" id="agree_future_updates" name="agree_future_updates" value="1">
+                  <span><strong>Future Information Use (Optional):</strong> Allow A1 Cleaning to store my contact &amp; service history to share WhatsApp/SMS arrival alerts, GST invoices, warranty support, 6-month tank/deep-clean reminders &amp; member offers. We never sell client data to third parties.</span>
+                </label>
+              </div>
             </div>
 
             <!-- Total Amount Callout Box (Matching Reference) -->
@@ -790,14 +812,14 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 .vossy-checkout-page {
   background: #F8FAF9;
   min-height: 80vh;
-  padding: 2.25rem 0 3.5rem;
+  padding: 1.5rem 0 3.5rem;
   color: #0B2922;
 }
 
 /* Page Headline */
 .vossy-page-header {
   max-width: 680px;
-  margin: 0 auto 2rem;
+  margin: 0 auto 1.35rem;
 }
 .vossy-main-title {
   font-size: clamp(1.75rem, 2.5vw, 2.25rem);
@@ -833,7 +855,14 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   display: grid;
   grid-template-columns: 1fr 370px;
   gap: 2rem;
-  align-items: start;
+  align-items: stretch;
+}
+.vossy-form-column,
+.vossy-sidebar-column {
+  min-width: 0;
+}
+.vossy-sidebar-column {
+  position: relative;
 }
 @media (max-width: 992px) {
   .vossy-checkout-grid {
@@ -1206,24 +1235,49 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 .vossy-terms-wrap {
   margin: 1.15rem 0;
 }
+.vossy-consent-card {
+  background: #F6FBF8;
+  border: 1.5px solid #CFE3D7;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.vossy-consent-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #0B2922;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
 .vossy-checkbox-label {
   display: flex;
   align-items: flex-start;
   gap: 0.55rem;
   font-size: 0.78rem;
-  color: #3F554B;
+  color: #2D4339;
   cursor: pointer;
-  line-height: 1.4;
+  line-height: 1.45;
+}
+.vossy-checkbox-secondary {
+  padding-top: 0.55rem;
+  border-top: 1px dashed #D7E7DD;
+  color: #465E53;
 }
 .vossy-checkbox-label input[type="checkbox"] {
   accent-color: #22A06B;
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   margin-top: 2px;
+  flex-shrink: 0;
   cursor: pointer;
 }
 .vossy-checkbox-label a {
-  color: #22A06B;
+  color: #16794F;
   font-weight: 700;
   text-decoration: underline;
 }
@@ -1298,19 +1352,25 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
    ========================================================================== */
 .vossy-summary-card {
   position: sticky;
-  top: 90px;
+  top: var(--vossy-sticky-top, 138px);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--vossy-sticky-top, 138px) - 14px);
+  max-height: calc(100dvh - var(--vossy-sticky-top, 138px) - 14px);
   background: #FFFFFF;
   border: 1.5px solid #D6E8DC;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 6px 24px rgba(11, 41, 34, 0.06);
+  z-index: 20;
 }
 .vossy-summary-top-banner {
+  flex-shrink: 0;
   background: #0B2922;
   color: #FFFFFF;
-  font-size: 0.74rem;
+  font-size: 0.73rem;
   font-weight: 700;
-  padding: 0.55rem 0.85rem;
+  padding: 0.42rem 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1319,8 +1379,9 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 .vossy-summary-media {
   position: relative;
+  flex-shrink: 0;
   width: 100%;
-  height: 185px;
+  height: 118px;
   overflow: hidden;
   background: #EAF3EE;
 }
@@ -1335,13 +1396,13 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 }
 .vossy-summary-media-badge {
   position: absolute;
-  bottom: 10px;
+  bottom: 8px;
   left: 10px;
   background: rgba(11, 41, 34, 0.85);
   color: #FFFFFF;
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 700;
-  padding: 0.2rem 0.6rem;
+  padding: 0.18rem 0.55rem;
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -1349,30 +1410,35 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   backdrop-filter: blur(4px);
 }
 .vossy-summary-body {
-  padding: 1.15rem 1.25rem 1.35rem;
+  padding: 0.8rem 1.05rem 0.9rem;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  scrollbar-width: thin;
 }
 .vossy-summary-title {
-  font-size: 1.2rem;
+  font-size: 1.08rem;
   font-weight: 800;
   color: #0B2922;
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.15rem;
   letter-spacing: -0.01em;
 }
 .vossy-summary-location {
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   color: #4B5E55;
-  margin-bottom: 0.95rem;
+  margin-bottom: 0.55rem;
 }
 
 /* Specs Table */
 .vossy-specs-table {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  font-size: 0.78rem;
+  gap: 0.28rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
 }
 .vossy-spec-row {
   display: flex;
@@ -1392,15 +1458,16 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 .vossy-summary-divider {
   height: 1px;
   background: #EAF3EE;
-  margin: 0.95rem 0;
+  margin: 0.55rem 0;
 }
 
 /* Price Breakdown */
 .vossy-price-breakdown {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  font-size: 0.78rem;
+  gap: 0.26rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
 }
 .vossy-breakdown-row {
   display: flex;
@@ -1422,23 +1489,23 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   align-items: flex-end;
   justify-content: space-between;
   gap: 0.5rem;
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
 }
 .vossy-gt-label {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 800;
   color: #0B2922;
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
 .vossy-gt-badge {
-  font-size: 0.66rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: #198754;
   margin-top: 2px;
 }
 .vossy-gt-amount {
-  font-size: 1.45rem;
+  font-size: 1.32rem;
   font-weight: 900;
   color: #0B2922;
   letter-spacing: -0.01em;
@@ -1446,22 +1513,33 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
 
 /* Direct Support Help Box */
 .vossy-support-box {
-  margin-top: 1.15rem;
+  margin-top: 0.65rem;
   background: #F4F8F6;
   border: 1px solid #D6E8DC;
   border-radius: 10px;
-  padding: 0.75rem 0.85rem;
+  padding: 0.5rem 0.75rem;
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.6rem;
 }
 .vossy-support-title {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: #556B63;
 }
 .vossy-support-call {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: #0B2922;
+}
+@media (min-width: 993px) and (max-height: 700px) {
+  .vossy-summary-media {
+    height: 92px;
+  }
+  .vossy-summary-body {
+    padding: 0.65rem 0.95rem 0.75rem;
+  }
+  .vossy-summary-divider {
+    margin: 0.42rem 0;
+  }
 }
 .vossy-support-call a {
   color: #22A06B;
@@ -1752,10 +1830,20 @@ window.A1_PREFILLED_ADDONS = <?= json_encode($prefilledAddons ?: null) ?>;
   .vossy-checkout-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+    align-items: start;
   }
   .vossy-summary-card {
     position: static;
+    max-height: none;
+    overflow: hidden;
     margin-top: 0.75rem;
+  }
+  .vossy-summary-media {
+    height: 175px;
+  }
+  .vossy-summary-body {
+    overflow: visible;
+    padding: 1.1rem 1.15rem 1.25rem;
   }
 }
 
@@ -2474,6 +2562,23 @@ document.addEventListener('DOMContentLoaded', function() {
   if (phoneInput) {
     const val = phoneInput.value.replace(/[^0-9]/g, '');
     if (val.length === 10 && /^[6-9]\d{9}$/.test(val)) phoneInput.classList.add('is-valid');
+  }
+
+  // Keep sticky booking summary clearance synced cleanly below the fixed site header
+  const headerWrap = document.getElementById('a1-site-header-fixed-wrap');
+  const summaryCard = document.querySelector('.vossy-summary-card');
+  function syncSummaryStickyTop() {
+    if (!headerWrap || !summaryCard) return;
+    const h = Math.ceil(headerWrap.getBoundingClientRect().height);
+    summaryCard.style.setProperty('--vossy-sticky-top', (h + 12) + 'px');
+  }
+  if (headerWrap && summaryCard) {
+    syncSummaryStickyTop();
+    window.addEventListener('scroll', syncSummaryStickyTop, { passive: true });
+    window.addEventListener('resize', syncSummaryStickyTop, { passive: true });
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(syncSummaryStickyTop).observe(headerWrap);
+    }
   }
 });
 </script>

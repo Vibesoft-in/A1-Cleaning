@@ -19,49 +19,33 @@ require __DIR__ . '/../components/header.php';
      ========================================================================= -->
 <section class="a1-pricing-hero">
   <div class="container">
-    
-    <!-- Top Trust Row -->
-    <div class="a1-studio-trust-strip">
-      <div class="a1-trust-pill">
-        <span class="material-symbols-outlined">verified</span>
-        <span>Zero Advance Payment</span>
-      </div>
-      <div class="a1-trust-pill">
-        <span class="material-symbols-outlined">sentiment_very_satisfied</span>
-        <span>Pay After 100% Satisfaction</span>
-      </div>
-      <div class="a1-trust-pill">
-        <span class="material-symbols-outlined">eco</span>
-        <span>100% Eco-Safe Non-Toxic Formulas</span>
-      </div>
-      <div class="a1-trust-pill">
-        <span class="material-symbols-outlined">precision_manufacturing</span>
-        <span>German High-Pressure Equipment</span>
-      </div>
-    </div>
 
-    <!-- Main Title & Guarantee Card Row -->
+    <!-- Main Title & Customizable Quotation Card Row -->
     <div class="a1-hero-header-row">
       <div class="a1-hero-title-wrap">
-        <span class="a1-studio-kicker">
-          <span class="material-symbols-outlined icon-xs">tune</span>
-          A1 Interactive Cost Studio
-        </span>
         <h1 class="a1-hero-title">
           Configure Your Cleaning Estimate <span class="highlight-text">Live</span>
         </h1>
         <p class="a1-hero-sub">
-          Select your core mechanized cleaning service, choose an intensity package tier, and fine-tune with precision add-ons for an upfront transparent quote.
+          Select your core mechanized cleaning service, choose an intensity package tier, or customize a quotation for your home, villa, or residency size.
         </p>
       </div>
 
-      <div class="a1-hero-guarantee-card">
-        <div class="a1-guarantee-icon">
-          <span class="material-symbols-outlined">receipt_long</span>
-        </div>
-        <div>
-          <h4 class="a1-guarantee-title">Written Quote Guarantee</h4>
-          <p class="a1-guarantee-sub">Zero Hidden Surcharges</p>
+      <div class="a1-hero-custom-card" id="a1HeroCustomQuoteCard" onclick="openCustomQuoteDialog()">
+        <div class="a1-custom-card-top">
+          <div class="a1-custom-card-icon">
+            <span class="material-symbols-outlined">tune</span>
+          </div>
+          <div class="a1-custom-card-text">
+            <h4 class="a1-custom-card-title">Custom Property Quotation</h4>
+            <p class="a1-custom-card-sub" id="heroCustomQuoteSummary">
+              Small Home, Big Villa or Residency — select your size
+            </p>
+          </div>
+          <button type="button" class="a1-custom-card-btn" onclick="event.stopPropagation(); openCustomQuoteDialog()" aria-label="Customize quotation by property size">
+            <span>Customize</span>
+            <span class="material-symbols-outlined icon-xs">arrow_forward</span>
+          </button>
         </div>
       </div>
     </div>
@@ -632,6 +616,16 @@ require __DIR__ . '/../components/header.php';
             <div>
               <h4 class="a1-blueprint-title" id="summaryMainTitle">Bathroom Deep Clean</h4>
               <p class="a1-blueprint-sub" id="summaryMainSub">Please choose a package from above to configure your quote</p>
+              <div class="a1-summary-custom-actions" id="summaryCustomActions" hidden>
+                <button type="button" class="a1-summary-action-btn" onclick="openCustomQuoteDialog()">
+                  <span class="material-symbols-outlined">edit</span>
+                  <span>Edit Property Size</span>
+                </button>
+                <button type="button" class="a1-summary-action-btn is-reset" onclick="resetCustomQuote()">
+                  <span class="material-symbols-outlined">restart_alt</span>
+                  <span>Switch to Standard Package</span>
+                </button>
+              </div>
             </div>
           </div>
           <div class="a1-blueprint-price" id="summaryMainPrice">₹0</div>
@@ -3318,7 +3312,963 @@ body.a1-sheet-lock .tab-whatsapp {
   background: #1C8658;
   transform: translateY(-1px);
 }
+/* Custom Summary Card Inline Action Row */
+.a1-summary-custom-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.a1-summary-custom-actions[hidden] {
+  display: none !important;
+}
+.a1-summary-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #EAF3EE;
+  color: #0B2922;
+  border: 1px solid rgba(34, 160, 107, 0.35);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.a1-summary-action-btn:hover {
+  background: #22A06B;
+  color: #FFFFFF;
+}
+.a1-summary-action-btn.is-reset {
+  background: #F9FAFB;
+  color: #4B5563;
+  border-color: #D1D5DB;
+}
+.a1-summary-action-btn.is-reset:hover {
+  background: #E5E7EB;
+  color: #111827;
+}
+.a1-summary-action-btn .material-symbols-outlined {
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Native <dialog> Custom Property Quotation Studio
+   ========================================================================== */
+#a1CustomQuoteDialog {
+  border: none;
+  padding: 0;
+  width: min(94vw, 680px);
+  max-width: 680px;
+  max-height: min(90vh, 840px);
+  border-radius: 22px;
+  background: #FFFFFF;
+  color: #0B2922;
+  box-shadow: 0 24px 64px rgba(11, 41, 34, 0.32);
+  overflow: hidden;
+  margin: auto;
+}
+
+#a1CustomQuoteDialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+#a1CustomQuoteDialog:modal {
+  overscroll-behavior: contain;
+}
+
+#a1CustomQuoteDialog::backdrop {
+  background: rgba(11, 41, 34, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.a1-cq-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #0B2922 0%, #123D33 100%);
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.a1-cq-head-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.a1-cq-head-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(34, 160, 107, 0.25);
+  color: #6EE7B7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.a1-cq-dialog-title {
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.a1-cq-dialog-sub {
+  font-size: 0.74rem;
+  color: #A7D7C5;
+  margin: 2px 0 0;
+  line-height: 1.3;
+}
+
+.a1-cq-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.a1-cq-close-btn:hover {
+  background: #22A06B;
+}
+
+.a1-cq-dialog-body {
+  padding: 1rem 1.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  flex: 1 1 auto;
+  background: #F8FAF9;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.a1-cq-block {
+  background: #FFFFFF;
+  border: 1px solid #DFECE5;
+  border-radius: 14px;
+  padding: 0.85rem 0.95rem;
+}
+
+.a1-cq-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 0.65rem;
+}
+
+.a1-cq-block-label {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #0B2922;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.a1-cq-block-label .material-symbols-outlined {
+  font-size: 16px;
+  color: #22A06B;
+}
+
+.a1-cq-block-hint {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #22A06B;
+}
+
+.a1-cq-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.a1-cq-cat-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 3px;
+  padding: 0.65rem 0.7rem;
+  border-radius: 12px;
+  border: 1.5px solid #DCE7E1;
+  background: #FFFFFF;
+  color: #0B2922;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.a1-cq-cat-btn:hover {
+  border-color: #22A06B;
+}
+
+.a1-cq-cat-btn.is-selected {
+  background: #EAF3EE;
+  border-color: #22A06B;
+  box-shadow: 0 0 0 1px #22A06B;
+}
+
+.a1-cq-cat-icon {
+  color: #22A06B;
+  font-size: 20px;
+}
+
+.a1-cq-cat-name {
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.a1-cq-cat-sub {
+  font-size: 0.67rem;
+  color: #4B6B60;
+  line-height: 1.25;
+}
+
+.a1-cq-presets-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.a1-cq-preset-btn {
+  flex: 1 1 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  border: 1.5px solid #DCE7E1;
+  background: #F9FCFA;
+  color: #0B2922;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.a1-cq-preset-btn:hover {
+  border-color: #22A06B;
+}
+
+.a1-cq-preset-btn.is-selected {
+  background: #0B2922;
+  border-color: #0B2922;
+  color: #FFFFFF;
+}
+
+.a1-cq-preset-name {
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.a1-cq-preset-meta {
+  font-size: 0.68rem;
+  color: #22A06B;
+  font-weight: 700;
+}
+
+.a1-cq-preset-btn.is-selected .a1-cq-preset-meta {
+  color: #6EE7B7;
+}
+
+/* Native Range Slider for Property Sq.Ft (modern-web-guidance compliant) */
+.a1-cq-slider-wrap {
+  margin-bottom: 0.85rem;
+}
+
+.a1-cq-slider-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.a1-cq-slider-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0B2922;
+}
+
+.a1-cq-sqft-pill {
+  background: #EAF3EE;
+  color: #0B2922;
+  border: 1px solid rgba(34, 160, 107, 0.35);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+input[type="range"].a1-cq-range-slider {
+  --slider-track-size: 0.48rem;
+  --slider-thumb-size: 1.25rem;
+  --slider-track-radius: 999px;
+  --slider-thumb-radius: 50%;
+  --slider-track-color: #D7E5DE;
+  --slider-fill-color: #22A06B;
+  --slider-thumb-color: #0B2922;
+  --slider-direction: to right;
+  --attr-min: 300;
+  --attr-max: 6000;
+  --control-value: 1050;
+  --slider-progress: calc(
+    progress(var(--control-value), var(--attr-min), var(--attr-max)) * 100%
+  );
+
+  appearance: none;
+  inline-size: 100%;
+  block-size: 2.25rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+@supports not (opacity: progress(1, 0, 100)) {
+  input[type="range"].a1-cq-range-slider {
+    --slider-progress: calc(
+      (var(--control-value) - var(--attr-min)) /
+      (var(--attr-max) - var(--attr-min)) * 100%
+    );
+  }
+}
+
+input[type="range"].a1-cq-range-slider::-webkit-slider-runnable-track {
+  block-size: var(--slider-track-size);
+  border: 0;
+  border-radius: var(--slider-track-radius);
+  background: linear-gradient(
+    var(--slider-direction),
+    var(--slider-fill-color) var(--slider-progress),
+    var(--slider-track-color) var(--slider-progress)
+  );
+}
+
+input[type="range"].a1-cq-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  inline-size: var(--slider-thumb-size);
+  block-size: var(--slider-thumb-size);
+  margin-block-start: calc((var(--slider-track-size) - var(--slider-thumb-size)) / 2);
+  border: 2.5px solid #FFFFFF;
+  box-shadow: 0 2px 6px rgba(11, 41, 34, 0.28);
+  border-radius: var(--slider-thumb-radius);
+  background: var(--slider-thumb-color);
+}
+
+input[type="range"].a1-cq-range-slider::-moz-range-track {
+  block-size: var(--slider-track-size);
+  border: 0;
+  border-radius: var(--slider-track-radius);
+  background: var(--slider-track-color);
+}
+
+input[type="range"].a1-cq-range-slider::-moz-range-progress {
+  block-size: var(--slider-track-size);
+  border-radius: var(--slider-track-radius);
+  background: var(--slider-fill-color);
+}
+
+input[type="range"].a1-cq-range-slider::-moz-range-thumb {
+  inline-size: var(--slider-thumb-size);
+  block-size: var(--slider-thumb-size);
+  border: 2.5px solid #FFFFFF;
+  box-shadow: 0 2px 6px rgba(11, 41, 34, 0.28);
+  border-radius: var(--slider-thumb-radius);
+  background: var(--slider-thumb-color);
+}
+
+input[type="range"].a1-cq-range-slider:focus-visible {
+  outline: 2px solid var(--slider-fill-color);
+  outline-offset: 4px;
+}
+
+.a1-cq-slider-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.66rem;
+  color: #6B7280;
+  font-weight: 600;
+  margin-top: -2px;
+}
+
+/* 2x2 Room Counters Grid */
+.a1-cq-rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.a1-cq-stepper-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #DFECE5;
+  border-radius: 10px;
+  background: #F9FCFA;
+}
+
+.a1-cq-stepper-info {
+  min-width: 0;
+}
+
+.a1-cq-stepper-name {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #0B2922;
+  line-height: 1.2;
+}
+
+.a1-cq-stepper-rate {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #22A06B;
+}
+
+.a1-cq-stepper-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.a1-cq-step-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid #C8DFD4;
+  background: #FFFFFF;
+  color: #0B2922;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.a1-cq-step-btn:hover {
+  background: #22A06B;
+  color: #FFFFFF;
+  border-color: #22A06B;
+}
+
+.a1-cq-step-val {
+  min-width: 18px;
+  text-align: center;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #0B2922;
+}
+
+/* Cleaning Grade Chips */
+.a1-cq-grade-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.a1-cq-grade-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  border: 1.5px solid #DCE7E1;
+  background: #FFFFFF;
+  color: #0B2922;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.a1-cq-grade-btn.is-selected {
+  background: #EAF3EE;
+  border-color: #22A06B;
+  box-shadow: 0 0 0 1px #22A06B;
+}
+
+.a1-cq-grade-name {
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.a1-cq-grade-tag {
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #22A06B;
+  margin-top: 2px;
+}
+
+/* Optional Extra Modules */
+.a1-cq-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+}
+
+.a1-cq-mod-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0.5rem 0.65rem;
+  border-radius: 10px;
+  border: 1.5px solid #DCE7E1;
+  background: #FFFFFF;
+  color: #0B2922;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.a1-cq-mod-btn.is-selected {
+  background: #EAF3EE;
+  border-color: #22A06B;
+}
+
+.a1-cq-mod-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.a1-cq-mod-left .material-symbols-outlined {
+  font-size: 16px;
+  color: #22A06B;
+  flex-shrink: 0;
+}
+
+.a1-cq-mod-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.a1-cq-mod-price {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #22A06B;
+  white-space: nowrap;
+}
+
+/* Breakdown Table */
+.a1-cq-breakdown {
+  background: #F4FAF6;
+  border: 1.5px dashed #B9DEC8;
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+}
+
+.a1-cq-breakdown-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.a1-cq-breakdown-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #374151;
+}
+
+.a1-cq-breakdown-list li strong {
+  color: #0B2922;
+  font-weight: 800;
+}
+
+.a1-cq-team-meta {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed #CBE5D6;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #22A06B;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Sticky Dialog Footer */
+.a1-cq-dialog-footer {
+  background: #0B2922;
+  color: #FFFFFF;
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.a1-cq-foot-price-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.a1-cq-foot-summary {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #A7D7C5;
+}
+
+.a1-cq-foot-total {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  line-height: 1.1;
+}
+
+.a1-cq-foot-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.a1-cq-btn-apply {
+  background: rgba(255, 255, 255, 0.14);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  padding: 8px 13px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.a1-cq-btn-apply:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.a1-cq-btn-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #14533C;
+  color: #6EE7B7;
+  border: 1px solid #22A06B;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.a1-cq-btn-wa:hover {
+  background: #1B6B4E;
+  color: #FFFFFF;
+}
+
+.a1-cq-btn-book {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #22A06B;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.a1-cq-btn-book:hover {
+  background: #1C8658;
+}
+
+@media (max-width: 640px) {
+  #a1CustomQuoteDialog {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92dvh;
+    border-radius: 22px 22px 0 0;
+    margin: auto auto 0;
+  }
+  .a1-cq-dialog-head,
+  .a1-cq-dialog-body,
+  .a1-cq-dialog-footer {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+  .a1-cq-cat-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .a1-cq-cat-btn {
+    padding: 0.5rem 0.45rem;
+    align-items: center;
+    text-align: center;
+  }
+  .a1-cq-cat-name {
+    font-size: 0.72rem;
+  }
+  .a1-cq-cat-sub {
+    display: none;
+  }
+  .a1-cq-rooms-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .a1-cq-stepper-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 0.5rem 0.55rem;
+  }
+  .a1-cq-grade-row,
+  .a1-cq-modules-grid {
+    grid-template-columns: 1fr;
+  }
+  .a1-cq-dialog-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .a1-cq-foot-actions {
+    justify-content: space-between;
+  }
+  .a1-cq-btn-book {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
 </style>
+
+<!-- Custom Property Quotation Native Modal Dialog -->
+<dialog id="a1CustomQuoteDialog" closedby="any" aria-labelledby="cqDialogTitle">
+  <div class="a1-cq-dialog-head">
+    <div class="a1-cq-head-left">
+      <div class="a1-cq-head-badge">
+        <span class="material-symbols-outlined">calculate</span>
+      </div>
+      <div>
+        <h1 id="cqDialogTitle" class="a1-cq-dialog-title">Customize Property Quotation</h1>
+        <p class="a1-cq-dialog-sub">Select home size, big villa, or residency layout for an instant quote</p>
+      </div>
+    </div>
+    <button type="button" class="a1-cq-close-btn" onclick="closeCustomQuoteDialog()" aria-label="Close custom quotation builder">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  <div class="a1-cq-dialog-body">
+    <!-- 1. Property Type Category -->
+    <div class="a1-cq-block">
+      <div class="a1-cq-block-head">
+        <h2 class="a1-cq-block-label">
+          <span class="material-symbols-outlined">domain</span>
+          <span>1. Property Type</span>
+        </h2>
+        <span class="a1-cq-block-hint">Residential &amp; Commercial</span>
+      </div>
+      <div class="a1-cq-cat-grid">
+        <button type="button" class="a1-cq-cat-btn is-selected" id="cqCat-small" onclick="selectCqCategory('small')" autofocus>
+          <span class="material-symbols-outlined a1-cq-cat-icon">home</span>
+          <span class="a1-cq-cat-name">Small Home</span>
+          <span class="a1-cq-cat-sub">1 RK, 1 BHK, 2 BHK Flats</span>
+        </button>
+        <button type="button" class="a1-cq-cat-btn" id="cqCat-villa" onclick="selectCqCategory('villa')">
+          <span class="material-symbols-outlined a1-cq-cat-icon">villa</span>
+          <span class="a1-cq-cat-name">Big Home / Villa</span>
+          <span class="a1-cq-cat-sub">3 BHK, 4 BHK Duplex &amp; Kothi</span>
+        </button>
+        <button type="button" class="a1-cq-cat-btn" id="cqCat-residency" onclick="selectCqCategory('residency')">
+          <span class="material-symbols-outlined a1-cq-cat-icon">apartment</span>
+          <span class="a1-cq-cat-name">Residency / Society</span>
+          <span class="a1-cq-cat-sub">PG, Hostel Wing, Guest House</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. Layout Presets -->
+    <div class="a1-cq-block">
+      <div class="a1-cq-block-head">
+        <h2 class="a1-cq-block-label">
+          <span class="material-symbols-outlined">view_quilt</span>
+          <span>2. Quick Size Preset</span>
+        </h2>
+        <span class="a1-cq-block-hint">Or customize rooms below</span>
+      </div>
+      <div class="a1-cq-presets-row" id="cqPresetsRow"></div>
+    </div>
+
+    <!-- 3. Custom Area & Room Counts -->
+    <div class="a1-cq-block">
+      <div class="a1-cq-block-head">
+        <h2 class="a1-cq-block-label">
+          <span class="material-symbols-outlined">straighten</span>
+          <span>3. Property Area &amp; Rooms</span>
+        </h2>
+        <span class="a1-cq-block-hint">Fine-tune exact layout</span>
+      </div>
+
+      <div class="a1-cq-slider-wrap">
+        <div class="a1-cq-slider-header">
+          <label for="cqSqftRange" class="a1-cq-slider-label">Built-up Cleaning Area (Sq.Ft)</label>
+          <span class="a1-cq-sqft-pill" id="cqSqftDisplay">1,050 sq.ft</span>
+        </div>
+        <input type="range" id="cqSqftRange" class="a1-cq-range-slider" min="300" max="6000" step="50" value="1050" aria-valuetext="1,050 sq.ft" oninput="onCqSqftInput(this.value)">
+        <div class="a1-cq-slider-scale">
+          <span>300 sq.ft</span>
+          <span>1,500 sq.ft</span>
+          <span>3,000 sq.ft</span>
+          <span>6,000 sq.ft</span>
+        </div>
+      </div>
+
+      <div class="a1-cq-rooms-grid">
+        <div class="a1-cq-stepper-card">
+          <div class="a1-cq-stepper-info">
+            <span class="a1-cq-stepper-name">Rooms / Halls</span>
+            <span class="a1-cq-stepper-rate">₹300 per room</span>
+          </div>
+          <div class="a1-cq-stepper-controls">
+            <button type="button" class="a1-cq-step-btn" onclick="stepCqCount('rooms', -1)" aria-label="Decrease rooms">−</button>
+            <span class="a1-cq-step-val" id="cqVal-rooms">3</span>
+            <button type="button" class="a1-cq-step-btn" onclick="stepCqCount('rooms', 1)" aria-label="Increase rooms">+</button>
+          </div>
+        </div>
+
+        <div class="a1-cq-stepper-card">
+          <div class="a1-cq-stepper-info">
+            <span class="a1-cq-stepper-name">Washrooms / Toilets</span>
+            <span class="a1-cq-stepper-rate">₹400 per bathroom</span>
+          </div>
+          <div class="a1-cq-stepper-controls">
+            <button type="button" class="a1-cq-step-btn" onclick="stepCqCount('bathrooms', -1)" aria-label="Decrease washrooms">−</button>
+            <span class="a1-cq-step-val" id="cqVal-bathrooms">2</span>
+            <button type="button" class="a1-cq-step-btn" onclick="stepCqCount('bathrooms', 1)" aria-label="Increase washrooms">+</button>
+          </div>
+        </div>
+
+        <div class="a1-cq-stepper-card">
+          <div class="a1-cq-stepper-info">
+            <span class="a1-cq-stepper-name">Kitchens / Pantries</span>
+            <span class="a1-cq-stepper-rate">₹550 per kitchen</span>
+          </div>
+          <div class="a1-cq-stepper-controls">
+            <button type="button" class="a1-cq-step-btn" onclick="stepCqCount('kitchens', -1)" aria-label="Decrease kitchens">−</button>
+            <span class="a1-cq-step-val" id="cqVal-kitchens">1</span>
+            <button type="button" class="a1-cq-step-btn" onclick="stepCqCount('kitchens', 1)" aria-label="Increase kitchens">+</button>
+          </div>
+        </div>
+
+        <div class="a1-cq-stepper-card">
+          <div class="a1-cq-stepper-info">
+            <span class="a1-cq-stepper-name">Balconies / Terraces</span>
+            <span class="a1-cq-stepper-rate">₹150 per area</span>
+          </div>
+          <div class="a1-cq-stepper-controls">
+            <button type="button" class="a1-cq-step-btn" onclick="stepCqCount('balconies', -1)" aria-label="Decrease balconies">−</button>
+            <span class="a1-cq-step-val" id="cqVal-balconies">1</span>
+            <button type="button" class="a1-cq-step-btn" onclick="stepCqCount('balconies', 1)" aria-label="Increase balconies">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Cleaning Grade -->
+    <div class="a1-cq-block">
+      <div class="a1-cq-block-head">
+        <h2 class="a1-cq-block-label">
+          <span class="material-symbols-outlined">cleaning_services</span>
+          <span>4. Cleaning Depth Grade</span>
+        </h2>
+      </div>
+      <div class="a1-cq-grade-row">
+        <button type="button" class="a1-cq-grade-btn is-selected" id="cqGrade-standard" onclick="selectCqGrade('standard')">
+          <span class="a1-cq-grade-name">Standard Deep Clean</span>
+          <span class="a1-cq-grade-tag">Included in Base</span>
+        </button>
+        <button type="button" class="a1-cq-grade-btn" id="cqGrade-steam" onclick="selectCqGrade('steam')">
+          <span class="a1-cq-grade-name">Heavy + 140°C Steam</span>
+          <span class="a1-cq-grade-tag">+20% Germ Kill</span>
+        </button>
+        <button type="button" class="a1-cq-grade-btn" id="cqGrade-handover" onclick="selectCqGrade('handover')">
+          <span class="a1-cq-grade-name">Post-Paint / Move-In</span>
+          <span class="a1-cq-grade-tag">+30% Intensive</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 5. Optional Property Add-on Modules -->
+    <div class="a1-cq-block">
+      <div class="a1-cq-block-head">
+        <h2 class="a1-cq-block-label">
+          <span class="material-symbols-outlined">add_box</span>
+          <span>5. Optional Extra Modules</span>
+        </h2>
+        <span class="a1-cq-block-hint">Tap to bundle</span>
+      </div>
+      <div class="a1-cq-modules-grid" id="cqModulesGrid"></div>
+    </div>
+
+    <!-- 6. Live Transparent Cost Breakdown -->
+    <div class="a1-cq-breakdown">
+      <ul class="a1-cq-breakdown-list" id="cqBreakdownList"></ul>
+      <div class="a1-cq-team-meta" id="cqTeamMeta"></div>
+    </div>
+  </div>
+
+  <div class="a1-cq-dialog-footer">
+    <div class="a1-cq-foot-price-wrap">
+      <span class="a1-cq-foot-summary" id="cqSummaryBadge">2 BHK Flat • 1,050 sq.ft</span>
+      <span class="a1-cq-foot-total" id="cqTotalDisplay">₹2,925</span>
+    </div>
+    <div class="a1-cq-foot-actions">
+      <button type="button" class="a1-cq-btn-apply" onclick="applyCustomQuoteToSummary()">Apply to Summary</button>
+      <a href="#" id="cqWaBtn" target="_blank" rel="noopener" class="a1-cq-btn-wa">
+        <span class="material-symbols-outlined icon-xs">chat</span>
+        <span>WhatsApp</span>
+      </a>
+      <button type="button" class="a1-cq-btn-book" onclick="bookCustomQuoteOnline()">
+        <span>Book Quote</span>
+        <span class="material-symbols-outlined icon-xs">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</dialog>
 
 <!-- Quick Customisation & Add-ons Modal Drawer (Blinkit Style, Requested by User) -->
 <div id="a1QuickAddDrawerBackdrop" class="a1-quick-add-backdrop" onclick="closeQuickAddDrawer(event)">
@@ -4867,6 +5817,10 @@ let activeAddons = {}; // { 'addon-key': { name: '...', price: 50 } }
  */
 function selectServiceCategory(serviceKey, element) {
   if (!SERVICES_DATA[serviceKey]) return;
+  if (typeof customQuoteState !== 'undefined' && customQuoteState.active) {
+    customQuoteState.active = false;
+    if (typeof syncCustomHeroCardUI === 'function') syncCustomHeroCardUI();
+  }
   currentServiceKey = serviceKey;
   selectedPackageIndex = null;
 
@@ -4948,6 +5902,7 @@ let currentQuickDrawerPackageIndex = null;
  * Open Blinkit-Style Quick Customization & Add-ons Drawer (Requested by User)
  */
 function openQuickAddDrawer(index) {
+  if (typeof clearCustomQuoteActiveState === 'function') clearCustomQuoteActiveState();
   currentQuickDrawerPackageIndex = index;
   selectedPackageIndex = index;
 
@@ -5230,6 +6185,7 @@ function proceedToBookingFromQuickDrawer() {
  * Add Package to Cart (Clicking 'Add' button)
  */
 function addPackageToCart(index) {
+  if (typeof clearCustomQuoteActiveState === 'function') clearCustomQuoteActiveState();
   if (selectedPackageIndex === index) {
     selectedPackageIndex = null;
     showCartToast('Package removed from cart');
@@ -6842,6 +7798,104 @@ function updateAddonsTrayUI() {
  * Real-time Calculation Engine & Sticky Console Updater
  */
 function updateCalculation() {
+  const customAct = document.getElementById('summaryCustomActions');
+
+  if (typeof customQuoteState !== 'undefined' && customQuoteState.active) {
+    const cq = computeCustomQuoteTotals();
+    let pageAddonsSum = 0;
+    const addonKeys = Object.keys(activeAddons);
+    addonKeys.forEach(k => {
+      if (activeAddons[k] && typeof activeAddons[k].price === 'number') {
+        pageAddonsSum += activeAddons[k].price;
+      }
+    });
+
+    const grandTotal = cq.total + pageAddonsSum;
+    const formattedTotal = '₹' + grandTotal.toLocaleString('en-IN');
+
+    const summaryTitleEl = document.getElementById('summaryMainTitle');
+    if (summaryTitleEl) {
+      summaryTitleEl.textContent = `Custom Quote: ${cq.presetTitle} (${cq.catMeta.label})`;
+    }
+
+    const summarySubEl = document.getElementById('summaryMainSub');
+    if (summarySubEl) {
+      summarySubEl.textContent = `${cq.sqftFormatted} • ${cq.rooms} Rooms • ${cq.bathrooms} Washrooms • ${cq.kitchens} Kitchens • ${cq.balconies} Balconies • ${cq.gradeMeta.label}`;
+    }
+
+    if (customAct) customAct.hidden = false;
+
+    const summaryPriceEl = document.getElementById('summaryMainPrice');
+    if (summaryPriceEl) {
+      summaryPriceEl.textContent = '₹' + cq.total.toLocaleString('en-IN');
+    }
+
+    updateAddonsTrayUI();
+
+    const totalCartCount = 1 + cq.selectedModules.length + addonKeys.length;
+    document.querySelectorAll('.tool-count-badge, #headerCartCount').forEach(badge => {
+      badge.textContent = totalCartCount;
+    });
+
+    const totalDisplay = document.getElementById('calcTotalDisplay');
+    if (totalDisplay) totalDisplay.textContent = formattedTotal;
+
+    const tableTotalEl = document.getElementById('calcTableTotal');
+    if (tableTotalEl) tableTotalEl.textContent = formattedTotal;
+
+    const tableBody = document.getElementById('calcTableBody');
+    if (tableBody) {
+      let rowsHtml = `
+        <tr>
+          <td class="line-name">${cq.presetTitle} (${cq.sqftFormatted}, ${cq.rooms}R/${cq.bathrooms}B/${cq.kitchens}K/${cq.balconies}Bal)</td>
+          <td class="line-val">₹${cq.baseSubtotal.toLocaleString('en-IN')}</td>
+        </tr>
+      `;
+      if (cq.gradeUplift > 0) {
+        rowsHtml += `
+          <tr class="addon-row">
+            <td class="line-name">${cq.gradeMeta.label} Upgrade</td>
+            <td class="line-val">+₹${cq.gradeUplift.toLocaleString('en-IN')}</td>
+          </tr>
+        `;
+      }
+      cq.selectedModules.forEach(mod => {
+        rowsHtml += `
+          <tr class="addon-row">
+            <td class="line-name">${mod.name}</td>
+            <td class="line-val">+₹${mod.price.toLocaleString('en-IN')}</td>
+          </tr>
+        `;
+      });
+      addonKeys.forEach(k => {
+        const item = activeAddons[k];
+        if (item) {
+          rowsHtml += `
+            <tr class="addon-row">
+              <td class="line-name">${item.name}</td>
+              <td class="line-val">+₹${item.price.toLocaleString('en-IN')}</td>
+            </tr>
+          `;
+        }
+      });
+      tableBody.innerHTML = rowsHtml;
+    }
+
+    const waBtn = document.getElementById('btnBookWhatsApp');
+    if (waBtn) {
+      waBtn.href = buildCustomQuoteWaUrl(cq, grandTotal, addonKeys);
+    }
+
+    const onlineBtn = document.getElementById('btnBookOnline');
+    if (onlineBtn) {
+      onlineBtn.href = buildCustomQuoteBookingUrl(cq, grandTotal, addonKeys);
+      onlineBtn.onclick = null;
+    }
+    return;
+  }
+
+  if (customAct) customAct.hidden = true;
+
   const data = SERVICES_DATA[currentServiceKey];
   if (!data) return;
 
@@ -7005,6 +8059,450 @@ function updateCalculation() {
   }
 }
 
+/* ==========================================================================
+   CUSTOM PROPERTY QUOTATION STUDIO ENGINE
+   ========================================================================== */
+const CQ_CATEGORY_META = {
+  small: {
+    label: 'Small Home / Flat',
+    sqftRate: 0.50,
+    serviceSlug: 'home-cleaning',
+    defaultPreset: '2bhk',
+    presets: [
+      { key: '1rk', name: '1 RK / Studio', meta: '~450 sq.ft • Compact', sqft: 450, rooms: 1, bathrooms: 1, kitchens: 1, balconies: 0 },
+      { key: '1bhk', name: '1 BHK Flat', meta: '~650 sq.ft • Standard', sqft: 650, rooms: 2, bathrooms: 1, kitchens: 1, balconies: 1 },
+      { key: '2bhk', name: '2 BHK Flat', meta: '~1,050 sq.ft • Family', sqft: 1050, rooms: 3, bathrooms: 2, kitchens: 1, balconies: 1 }
+    ]
+  },
+  villa: {
+    label: 'Big Home / Villa',
+    sqftRate: 0.50,
+    serviceSlug: 'home-cleaning',
+    defaultPreset: '3bhk',
+    presets: [
+      { key: '3bhk', name: '3 BHK Large Home', meta: '~1,500 sq.ft • Spacious', sqft: 1500, rooms: 4, bathrooms: 3, kitchens: 1, balconies: 2 },
+      { key: '4bhk', name: '4 BHK Duplex Villa', meta: '~2,200 sq.ft • Villa', sqft: 2200, rooms: 5, bathrooms: 4, kitchens: 1, balconies: 2 },
+      { key: 'kothi', name: '5+ BHK Kothi / Estate', meta: '~3,200 sq.ft • Luxury', sqft: 3200, rooms: 7, bathrooms: 5, kitchens: 2, balconies: 3 }
+    ]
+  },
+  residency: {
+    label: 'Residency / Society',
+    sqftRate: 0.70,
+    serviceSlug: 'commercial-cleaning',
+    defaultPreset: 'wing',
+    presets: [
+      { key: 'pg-floor', name: 'PG / Hostel Floor', meta: '~1,200 sq.ft • Multi-Bed', sqft: 1200, rooms: 4, bathrooms: 3, kitchens: 1, balconies: 1 },
+      { key: 'wing', name: 'Residency Wing / Flats', meta: '~2,500 sq.ft • Multi-Unit', sqft: 2500, rooms: 8, bathrooms: 6, kitchens: 2, balconies: 2 },
+      { key: 'full-residency', name: 'Full Residency / Bldg', meta: '~4,500 sq.ft • Turnkey', sqft: 4500, rooms: 14, bathrooms: 8, kitchens: 2, balconies: 3 }
+    ]
+  }
+};
+
+const CQ_GRADES = {
+  standard: { label: 'Standard Deep Clean', multiplier: 1.0 },
+  steam: { label: 'Heavy + 140°C Steam', multiplier: 1.2 },
+  handover: { label: 'Post-Paint / Move-In', multiplier: 1.3 }
+};
+
+const CQ_MODULES = [
+  { key: 'sofa', name: 'Sofa / Upholstery Shampoo', price: 699, icon: 'chair' },
+  { key: 'tank', name: '6-Stage Water Tank Clean', price: 799, icon: 'water_drop' },
+  { key: 'chimney', name: 'Kitchen Chimney Degrease', price: 499, icon: 'countertops' },
+  { key: 'carpet', name: 'Carpet & Curtain Steam', price: 499, icon: 'curtains' },
+  { key: 'terrace', name: 'Terrace / Parking Jet Wash', price: 599, icon: 'deck' },
+  { key: 'fogging', name: 'Anti-Bacterial Fogging', price: 499, icon: 'sanitizer' }
+];
+
+const CQ_ROOM_LIMITS = {
+  rooms: [1, 25],
+  bathrooms: [0, 20],
+  kitchens: [0, 10],
+  balconies: [0, 15]
+};
+
+const customQuoteState = {
+  active: false,
+  hasConfigured: false,
+  category: 'small',
+  presetKey: '2bhk',
+  sqft: 1050,
+  rooms: 3,
+  bathrooms: 2,
+  kitchens: 1,
+  balconies: 1,
+  grade: 'standard',
+  modules: {}
+};
+
+function computeCustomQuoteTotals() {
+  const catMeta = CQ_CATEGORY_META[customQuoteState.category] || CQ_CATEGORY_META.small;
+  const preset = catMeta.presets.find(p => p.key === customQuoteState.presetKey) || null;
+  const gradeMeta = CQ_GRADES[customQuoteState.grade] || CQ_GRADES.standard;
+
+  const areaCharge = Math.round(customQuoteState.sqft * catMeta.sqftRate);
+  const roomsCharge = customQuoteState.rooms * 300;
+  const bathsCharge = customQuoteState.bathrooms * 400;
+  const kitchenCharge = customQuoteState.kitchens * 550;
+  const balconyCharge = customQuoteState.balconies * 150;
+  const baseSubtotal = areaCharge + roomsCharge + bathsCharge + kitchenCharge + balconyCharge;
+  const gradeUplift = Math.round(baseSubtotal * (gradeMeta.multiplier - 1));
+
+  const selectedModules = CQ_MODULES.filter(m => !!customQuoteState.modules[m.key]);
+  const modulesSum = selectedModules.reduce((acc, m) => acc + m.price, 0);
+  const total = baseSubtotal + gradeUplift + modulesSum;
+
+  const sqftFormatted = customQuoteState.sqft.toLocaleString('en-IN') + ' sq.ft';
+  const presetTitle = preset ? preset.name : 'Custom Layout';
+
+  let crewHint = '2 Verified Techs • Est. 2.5 - 4 hrs • Machines Included';
+  if (customQuoteState.sqft > 3000 || customQuoteState.rooms >= 10) {
+    crewHint = '6+ Verified Techs • Full-Day Crew • Multi-Machine Deployment';
+  } else if (customQuoteState.sqft > 1800) {
+    crewHint = '4-5 Verified Techs • Est. 5 - 7 hrs • Industrial Rotary & Vacuum';
+  } else if (customQuoteState.sqft > 900) {
+    crewHint = '3 Verified Techs • Est. 4 - 5.5 hrs • Single-Disc Scrubber & Steam';
+  }
+
+  return {
+    catMeta,
+    presetTitle,
+    gradeMeta,
+    areaCharge,
+    roomsCharge,
+    bathsCharge,
+    kitchenCharge,
+    balconyCharge,
+    baseSubtotal,
+    gradeUplift,
+    selectedModules,
+    modulesSum,
+    total,
+    sqftFormatted,
+    rooms: customQuoteState.rooms,
+    bathrooms: customQuoteState.bathrooms,
+    kitchens: customQuoteState.kitchens,
+    balconies: customQuoteState.balconies,
+    crewHint
+  };
+}
+
+function buildCustomQuoteWaUrl(cq, finalTotal, pageAddonKeys = []) {
+  const modsText = cq.selectedModules.length > 0
+    ? cq.selectedModules.map(m => `${m.name} (+₹${m.price})`).join(', ')
+    : 'None';
+  const extraAddonsText = pageAddonKeys.length > 0
+    ? pageAddonKeys.map(k => `${activeAddons[k].name} (+₹${activeAddons[k].price})`).join(', ')
+    : '';
+
+  let msg = `*Hello A1 Cleaning Services!*` +
+    `\nI built a Custom Property Quotation on your pricing calculator:` +
+    `\n• Property Type: ${cq.catMeta.label} (${cq.presetTitle})` +
+    `\n• Area & Layout: ${cq.sqftFormatted} | ${cq.rooms} Rooms | ${cq.bathrooms} Washrooms | ${cq.kitchens} Kitchens | ${cq.balconies} Balconies` +
+    `\n• Cleaning Grade: ${cq.gradeMeta.label}` +
+    `\n• Extra Modules: ${modsText}`;
+  if (extraAddonsText) {
+    msg += `\n• Targeted Add-ons: ${extraAddonsText}`;
+  }
+  msg += `\n• Total Custom Estimate: ₹${finalTotal.toLocaleString('en-IN')}` +
+    `\nPlease confirm slot availability in Kashipur/Jaspur/Ramnagar.`;
+
+  return `https://wa.me/<?= BUSINESS_PHONE_RAW ?>?text=${encodeURIComponent(msg)}`;
+}
+
+function buildCustomQuoteBookingUrl(cq, finalTotal, pageAddonKeys = []) {
+  const layoutName = cq.presetTitle === 'Custom Layout' ? 'Custom Property Layout' : `Custom ${cq.presetTitle}`;
+  const packageSummary = `${layoutName} (${cq.sqftFormatted} • ${cq.gradeMeta.label})`;
+  const scopeParts = [
+    `${cq.catMeta.label}`,
+    `${cq.rooms} Rooms, ${cq.bathrooms} Baths, ${cq.kitchens} Kitchens, ${cq.balconies} Balconies`,
+    ...cq.selectedModules.map(m => `${m.name} (+₹${m.price})`),
+    ...pageAddonKeys.map(k => `${activeAddons[k].name} (+₹${activeAddons[k].price})`)
+  ];
+  return `<?= SITE_URL ?>/book-now/?service=${encodeURIComponent(cq.catMeta.serviceSlug)}&packageName=${encodeURIComponent(packageSummary)}&amount=${finalTotal}&addons=${encodeURIComponent(scopeParts.join(' | '))}`;
+}
+
+function syncCustomHeroCardUI() {
+  const card = document.getElementById('a1HeroCustomQuoteCard');
+  const sub = document.getElementById('heroCustomQuoteSummary');
+  if (card) {
+    card.classList.toggle('is-configured', !!customQuoteState.active);
+  }
+  if (sub) {
+    if (customQuoteState.hasConfigured) {
+      const cq = computeCustomQuoteTotals();
+      sub.textContent = `${cq.presetTitle} • ${cq.sqftFormatted} • Est. ₹${cq.total.toLocaleString('en-IN')}`;
+    } else {
+      sub.textContent = 'Small Home, Big Villa or Residency — select your size';
+    }
+  }
+}
+
+function clearCustomQuoteActiveState() {
+  if (!customQuoteState.active) return;
+  customQuoteState.active = false;
+  syncCustomHeroCardUI();
+}
+
+function syncCqSqftSlider() {
+  const slider = document.getElementById('cqSqftRange');
+  const display = document.getElementById('cqSqftDisplay');
+  if (!slider) return;
+  slider.value = customQuoteState.sqft;
+  slider.style.setProperty('--attr-min', slider.min || 300);
+  slider.style.setProperty('--attr-max', slider.max || 6000);
+  slider.style.setProperty('--control-value', slider.value);
+  const labelText = customQuoteState.sqft.toLocaleString('en-IN') + ' sq.ft';
+  slider.setAttribute('aria-valuetext', labelText);
+  if (display) display.textContent = labelText;
+}
+
+function renderCqPresets() {
+  const row = document.getElementById('cqPresetsRow');
+  const catMeta = CQ_CATEGORY_META[customQuoteState.category] || CQ_CATEGORY_META.small;
+  if (!row) return;
+  row.innerHTML = catMeta.presets.map(p => {
+    const active = (customQuoteState.presetKey === p.key) ? 'is-selected' : '';
+    return `
+      <button type="button" class="a1-cq-preset-btn ${active}" onclick="selectCqPreset('${p.key}')">
+        <span class="a1-cq-preset-name">${p.name}</span>
+        <span class="a1-cq-preset-meta">${p.meta}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+function renderCqModules() {
+  const grid = document.getElementById('cqModulesGrid');
+  if (!grid) return;
+  grid.innerHTML = CQ_MODULES.map(m => {
+    const active = customQuoteState.modules[m.key] ? 'is-selected' : '';
+    return `
+      <button type="button" class="a1-cq-mod-btn ${active}" onclick="toggleCqModule('${m.key}')">
+        <span class="a1-cq-mod-left">
+          <span class="material-symbols-outlined">${active ? 'check_circle' : m.icon}</span>
+          <span class="a1-cq-mod-name">${m.name}</span>
+        </span>
+        <span class="a1-cq-mod-price">+₹${m.price}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+function renderCqQuotePreview() {
+  const cq = computeCustomQuoteTotals();
+
+  ['small', 'villa', 'residency'].forEach(cat => {
+    const btn = document.getElementById('cqCat-' + cat);
+    if (btn) btn.classList.toggle('is-selected', customQuoteState.category === cat);
+  });
+
+  ['standard', 'steam', 'handover'].forEach(g => {
+    const btn = document.getElementById('cqGrade-' + g);
+    if (btn) btn.classList.toggle('is-selected', customQuoteState.grade === g);
+  });
+
+  ['rooms', 'bathrooms', 'kitchens', 'balconies'].forEach(field => {
+    const valEl = document.getElementById('cqVal-' + field);
+    if (valEl) valEl.textContent = customQuoteState[field];
+  });
+
+  syncCqSqftSlider();
+
+  const listEl = document.getElementById('cqBreakdownList');
+  if (listEl) {
+    let items = `
+      <li><span>Floor Mechanized Care (${cq.sqftFormatted} × ₹${cq.catMeta.sqftRate.toFixed(2)})</span><strong>₹${cq.areaCharge.toLocaleString('en-IN')}</strong></li>
+      <li><span>Rooms / Halls (${cq.rooms} × ₹300)</span><strong>₹${cq.roomsCharge.toLocaleString('en-IN')}</strong></li>
+      <li><span>Washrooms / Toilets (${cq.bathrooms} × ₹400)</span><strong>₹${cq.bathsCharge.toLocaleString('en-IN')}</strong></li>
+      <li><span>Kitchens / Pantries (${cq.kitchens} × ₹550)</span><strong>₹${cq.kitchenCharge.toLocaleString('en-IN')}</strong></li>
+      <li><span>Balconies / Terraces (${cq.balconies} × ₹150)</span><strong>₹${cq.balconyCharge.toLocaleString('en-IN')}</strong></li>
+    `;
+    if (cq.gradeUplift > 0) {
+      items += `<li><span>${cq.gradeMeta.label}</span><strong>+₹${cq.gradeUplift.toLocaleString('en-IN')}</strong></li>`;
+    }
+    if (cq.modulesSum > 0) {
+      items += `<li><span>Extra Modules (${cq.selectedModules.length} selected)</span><strong>+₹${cq.modulesSum.toLocaleString('en-IN')}</strong></li>`;
+    }
+    listEl.innerHTML = items;
+  }
+
+  const teamEl = document.getElementById('cqTeamMeta');
+  if (teamEl) {
+    teamEl.innerHTML = `<span class="material-symbols-outlined icon-xs">groups</span><span>${cq.crewHint}</span>`;
+  }
+
+  const badgeEl = document.getElementById('cqSummaryBadge');
+  if (badgeEl) {
+    badgeEl.textContent = `${cq.presetTitle} • ${cq.sqftFormatted}`;
+  }
+
+  const totalEl = document.getElementById('cqTotalDisplay');
+  if (totalEl) {
+    totalEl.textContent = '₹' + cq.total.toLocaleString('en-IN');
+  }
+
+  const waEl = document.getElementById('cqWaBtn');
+  if (waEl) {
+    waEl.href = buildCustomQuoteWaUrl(cq, cq.total);
+  }
+}
+
+function refreshCqIfActive() {
+  if (customQuoteState.active) {
+    syncCustomHeroCardUI();
+    updateCalculation();
+  }
+}
+
+function selectCqCategory(cat) {
+  const catMeta = CQ_CATEGORY_META[cat];
+  if (!catMeta) return;
+  customQuoteState.category = cat;
+  customQuoteState.hasConfigured = true;
+  const preset = catMeta.presets.find(p => p.key === catMeta.defaultPreset) || catMeta.presets[0];
+  if (preset) {
+    customQuoteState.presetKey = preset.key;
+    customQuoteState.sqft = preset.sqft;
+    customQuoteState.rooms = preset.rooms;
+    customQuoteState.bathrooms = preset.bathrooms;
+    customQuoteState.kitchens = preset.kitchens;
+    customQuoteState.balconies = preset.balconies;
+  }
+  renderCqPresets();
+  renderCqQuotePreview();
+  refreshCqIfActive();
+}
+
+function selectCqPreset(presetKey) {
+  const catMeta = CQ_CATEGORY_META[customQuoteState.category] || CQ_CATEGORY_META.small;
+  const preset = catMeta.presets.find(p => p.key === presetKey);
+  if (!preset) return;
+  customQuoteState.hasConfigured = true;
+  customQuoteState.presetKey = preset.key;
+  customQuoteState.sqft = preset.sqft;
+  customQuoteState.rooms = preset.rooms;
+  customQuoteState.bathrooms = preset.bathrooms;
+  customQuoteState.kitchens = preset.kitchens;
+  customQuoteState.balconies = preset.balconies;
+  renderCqPresets();
+  renderCqQuotePreview();
+  refreshCqIfActive();
+}
+
+function onCqSqftInput(val) {
+  customQuoteState.hasConfigured = true;
+  customQuoteState.sqft = parseInt(val, 10) || 300;
+  customQuoteState.presetKey = 'custom';
+  renderCqPresets();
+  renderCqQuotePreview();
+  refreshCqIfActive();
+}
+
+function stepCqCount(field, delta) {
+  const bounds = CQ_ROOM_LIMITS[field];
+  if (!bounds) return;
+  const next = Math.max(bounds[0], Math.min(bounds[1], (customQuoteState[field] || 0) + delta));
+  if (next === customQuoteState[field]) return;
+  customQuoteState.hasConfigured = true;
+  customQuoteState[field] = next;
+  customQuoteState.presetKey = 'custom';
+  renderCqPresets();
+  renderCqQuotePreview();
+  refreshCqIfActive();
+}
+
+function selectCqGrade(gradeKey) {
+  if (!CQ_GRADES[gradeKey]) return;
+  customQuoteState.hasConfigured = true;
+  customQuoteState.grade = gradeKey;
+  renderCqQuotePreview();
+  refreshCqIfActive();
+}
+
+function toggleCqModule(modKey) {
+  customQuoteState.hasConfigured = true;
+  if (customQuoteState.modules[modKey]) {
+    delete customQuoteState.modules[modKey];
+  } else {
+    customQuoteState.modules[modKey] = true;
+  }
+  renderCqModules();
+  renderCqQuotePreview();
+  refreshCqIfActive();
+}
+
+function openCustomQuoteDialog(optionalCategory) {
+  const dialog = document.getElementById('a1CustomQuoteDialog');
+  if (!dialog) return;
+
+  if (optionalCategory && CQ_CATEGORY_META[optionalCategory] && (!customQuoteState.hasConfigured || customQuoteState.category !== optionalCategory)) {
+    selectCqCategory(optionalCategory);
+  } else {
+    customQuoteState.hasConfigured = true;
+    renderCqPresets();
+    renderCqModules();
+    renderCqQuotePreview();
+  }
+
+  renderCqModules();
+  if (!dialog.open) {
+    dialog.showModal();
+  }
+}
+
+function closeCustomQuoteDialog() {
+  const dialog = document.getElementById('a1CustomQuoteDialog');
+  if (dialog && dialog.open) {
+    dialog.close();
+  }
+}
+
+function applyCustomQuoteToSummary() {
+  customQuoteState.hasConfigured = true;
+  customQuoteState.active = true;
+  selectedPackageIndex = null;
+  renderPackages();
+  syncCustomHeroCardUI();
+  updateCalculation();
+  closeCustomQuoteDialog();
+  showCartToast('✓ Custom Property Quotation applied to your summary!');
+  scrollToSection('summarySection');
+}
+
+function resetCustomQuote() {
+  customQuoteState.active = false;
+  syncCustomHeroCardUI();
+  updateCalculation();
+  showCartToast('Switched back to standard package calculator');
+}
+
+function bookCustomQuoteOnline() {
+  const cq = computeCustomQuoteTotals();
+  window.location.href = buildCustomQuoteBookingUrl(cq, cq.total);
+}
+
+function initCustomQuoteDialogDismissal() {
+  const dialog = document.getElementById('a1CustomQuoteDialog');
+  if (!dialog) return;
+
+  dialog.addEventListener('close', () => {
+    dialog.returnValue = '';
+    syncCustomHeroCardUI();
+  });
+
+  if (!('closedBy' in HTMLDialogElement.prototype)) {
+    const isOutside = (e) => {
+      const r = dialog.getBoundingClientRect();
+      return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    };
+    let pressedOutside = false;
+    dialog.addEventListener('pointerdown', (e) => { pressedOutside = isOutside(e); });
+    dialog.addEventListener('pointerup', (e) => {
+      if (pressedOutside && isOutside(e)) dialog.close();
+    });
+  }
+}
+
 /**
  * Smooth Scroll Utility
  */
@@ -7071,6 +8569,11 @@ document.addEventListener('DOMContentLoaded', function() {
   updateCalculation();
   initServicesSliderSwipe();
   initAddonsSliderSwipe();
+  initCustomQuoteDialogDismissal();
+  renderCqPresets();
+  renderCqModules();
+  renderCqQuotePreview();
+  syncCustomHeroCardUI();
 });
 </script>
 

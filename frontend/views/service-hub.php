@@ -6,6 +6,8 @@
  * Real Before/After Slider, Add-ons, Reviews & Direct Booking Funnel.
  */
 
+require_once __DIR__ . '/../components/icons.php';
+
 if (empty($currentServiceData)) {
     http_response_code(404);
     require __DIR__ . '/404.php';
@@ -19,7 +21,8 @@ $beforeAfterPairs = !empty($currentServiceData['before_after']) ? $currentServic
 $addons = !empty($currentServiceData['addons']) ? $currentServiceData['addons'] : [];
 
 // Check selected package from query string (e.g. ?package=1 for Deep Cleaning)
-$selectedPkgIdx = isset($_GET['package']) ? (int)$_GET['package'] : 0;
+$hasExplicitPkgParam = isset($_GET['package']);
+$selectedPkgIdx = $hasExplicitPkgParam ? (int)$_GET['package'] : 0;
 if ($selectedPkgIdx < 0 || $selectedPkgIdx >= count($packages)) {
     $selectedPkgIdx = 0;
 }
@@ -144,12 +147,8 @@ require __DIR__ . '/../components/header.php';
               <span>Book Online</span>
             </a>
             <a href="https://wa.me/<?= BUSINESS_PHONE_RAW ?>?text=<?= rawurlencode("Hi A1 Cleaning, I want to book " . $serviceName . " (" . $activePkg['title'] . ") for ₹" . $activePkg['price'] . ".") ?>" target="_blank" rel="noopener" class="btn-a1-hero-wa" id="heroWaBtn">
-              <span class="material-symbols-outlined">chat</span>
+              <?= getThemeIcon('whatsapp', 17, '#FFFFFF') ?>
               <span>WhatsApp</span>
-            </a>
-            <a href="tel:<?= BUSINESS_PHONE_RAW ?>" class="btn-a1-hero-call">
-              <span class="material-symbols-outlined">call</span>
-              <span><?= BUSINESS_PHONE ?></span>
             </a>
           </div>
         </div>
@@ -161,12 +160,19 @@ require __DIR__ . '/../components/header.php';
           <?php 
           $heroVideo = !empty($activePkg['video']) ? $activePkg['video'] : (!empty($currentServiceData['video']) ? $currentServiceData['video'] : '');
           $heroThumb = !empty($activePkg['thumb']) ? $activePkg['thumb'] : (!empty($currentServiceData['thumb']) ? $currentServiceData['thumb'] : '');
-          if (!empty($heroThumb) && strpos($heroThumb, './') === 0) {
-              $heroThumb = SITE_URL . '/' . substr($heroThumb, 2);
-          }
-          if (!empty($heroVideo) && strpos($heroVideo, './') === 0) {
-              $heroVideo = SITE_URL . '/' . substr($heroVideo, 2);
-          }
+          // Resolve data-file path placeholders
+          $resolveSvcPath = function($path) {
+              if (empty($path)) return '';
+              if (strpos($path, '<?= SITE_URL ?>') === 0) {
+                  return SITE_URL . substr($path, strlen('<?= SITE_URL ?>'));
+              }
+              if (strpos($path, './') === 0) {
+                  return SITE_URL . '/' . substr($path, 2);
+              }
+              return $path;
+          };
+          $heroThumb = $resolveSvcPath($heroThumb);
+          $heroVideo = $resolveSvcPath($heroVideo);
           ?>
           <video 
             id="heroVideoPlayer"
@@ -195,32 +201,41 @@ require __DIR__ . '/../components/header.php';
 </section>
 
 <!-- =========================================================================
-     2. PACKAGES SELECTION SECTION (Compact Cards with Live Switching)
+     2. PACKAGES SELECTION SECTION (Full Always-Visible Spec Cards)
      ========================================================================= -->
 <section class="section" id="packagesSection">
   <div class="container">
     <div class="section-title text-center">
       <h2><?= htmlspecialchars($serviceName) ?> Packages</h2>
+      <p style="font-size: 0.9rem; color: #556B64; margin: 0.35rem 0 0;">Select a package to book — full specifications shown below each plan</p>
     </div>
 
     <div class="a1-svc-packages-grid">
-      <?php foreach ($packages as $pIdx => $pkg): 
-        $isSel = ($pIdx === $selectedPkgIdx);
+      <?php
+      $defaultExcludesFallback = [
+        'Structural civil repairs and tile replacement are not included',
+        'Hazardous areas beyond safe human reach are not included',
+        'Internal motor repairs or plumbing replacements are not included'
+      ];
+      foreach ($packages as $pIdx => $pkg):
+        $isSelected = ($pIdx === $selectedPkgIdx);
         $pkgThumb = !empty($pkg['thumb']) ? $pkg['thumb'] : $heroThumb;
-        if (strpos($pkgThumb, './') === 0) {
-            $pkgThumb = SITE_URL . '/' . substr($pkgThumb, 2);
-        }
+        $pkgThumb = $resolveSvcPath($pkgThumb);
+        $pkgIncItems = !empty($pkg['includes']) ? $pkg['includes'] : ($currentServiceData['checklist'] ?? []);
+        $pkgExcItems = !empty($pkg['excludes']) ? $pkg['excludes'] : $defaultExcludesFallback;
       ?>
-        <div class="a1-svc-pkg-card <?= $isSel ? 'is-selected' : '' ?> <?= !empty($pkg['featured']) ? 'is-featured' : '' ?>" id="svc-pkg-card-<?= $pIdx ?>" onclick="selectDesktopPackage(<?= $pIdx ?>)">
+        <div class="a1-svc-pkg-card <?= $isSelected ? 'is-selected' : '' ?> <?= !empty($pkg['featured']) ? 'is-featured' : '' ?>" id="svc-pkg-card-<?= $pIdx ?>" onclick="selectPackage(<?= $pIdx ?>)" role="button" tabindex="0" aria-pressed="<?= $isSelected ? 'true' : 'false' ?>">
           <?php if (!empty($pkg['featured'])): ?>
             <div class="a1-svc-pkg-ribbon">Most Popular</div>
           <?php endif; ?>
 
+          <!-- Package Image -->
           <div class="a1-svc-pkg-img-wrap">
             <img src="<?= htmlspecialchars($pkgThumb) ?>" alt="<?= htmlspecialchars($pkg['title']) ?>" class="a1-svc-pkg-img" loading="lazy">
             <span class="a1-svc-pkg-tier"><?= htmlspecialchars($pkg['tier'] ?? 'Package Plan') ?></span>
           </div>
 
+          <!-- Package Header & Meta -->
           <div class="a1-svc-pkg-body">
             <div class="a1-svc-pkg-header">
               <h3 class="a1-svc-pkg-title"><?= htmlspecialchars($pkg['title']) ?></h3>
@@ -234,10 +249,53 @@ require __DIR__ . '/../components/header.php';
               <span class="meta-item"><span class="material-symbols-outlined icon-xs">schedule</span> <?= htmlspecialchars($pkg['duration'] ?? '60 min') ?></span>
             </div>
 
-            <button type="button" class="btn-a1-select-pkg <?= $isSel ? 'is-active' : '' ?>">
-              <span class="material-symbols-outlined"><?= $isSel ? 'check_circle' : 'radio_button_unchecked' ?></span>
-              <span><?= $isSel ? 'Selected' : 'Select Plan' ?></span>
+            <!-- Select Button -->
+            <button
+              type="button"
+              class="btn-a1-select-pkg <?= $isSelected ? 'is-active' : '' ?>"
+              id="pkg-trigger-<?= $pIdx ?>"
+              aria-pressed="<?= $isSelected ? 'true' : 'false' ?>"
+              onclick="event.stopPropagation(); selectPackage(<?= $pIdx ?>)">
+              <span class="material-symbols-outlined btn-status-icon"><?= $isSelected ? 'check_circle' : 'radio_button_unchecked' ?></span>
+              <span class="btn-label-text"><?= $isSelected ? 'Selected' : 'Select Plan' ?></span>
             </button>
+          </div>
+
+          <!-- Package Specifications — Always Visible (single unified card) -->
+          <div class="a1-svc-pkg-specs" id="pkg-specs-<?= $pIdx ?>">
+            <div class="a1-svc-pkg-dropdown-inner">
+              <div class="a1-pkg-specs-head">
+                <span>Package Specifications</span>
+                <span class="a1-pkg-specs-badge">Included &amp; Excluded</span>
+              </div>
+
+              <!-- Single unified list: green ticks + red crosses together -->
+              <div class="a1-pkg-spec-group a1-pkg-spec-unified">
+                <div class="a1-pkg-spec-group-title">
+                  <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+                  <span>What is Included</span>
+                </div>
+                <ul class="a1-pkg-spec-items">
+                  <?php foreach ($pkgIncItems as $incItem): ?>
+                    <li>
+                      <span class="material-symbols-outlined spec-tick" aria-hidden="true">check_circle</span>
+                      <span><?= htmlspecialchars($incItem) ?></span>
+                    </li>
+                  <?php endforeach; ?>
+                  <?php foreach ($pkgExcItems as $excItem): ?>
+                    <li>
+                      <span class="material-symbols-outlined spec-cross" aria-hidden="true">cancel</span>
+                      <span><?= htmlspecialchars($excItem) ?></span>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+              </div>
+
+              <a href="<?= SITE_URL ?>/book-now/?service=<?= $serviceSlug ?>&package=<?= $pIdx ?>" class="btn-a1-pkg-dropdown-book" id="pkg-book-btn-<?= $pIdx ?>">
+                <span>Book <?= htmlspecialchars($pkg['title']) ?> (₹<?= number_format($pkg['price']) ?>)</span>
+                <span class="material-symbols-outlined icon-xs" aria-hidden="true">arrow_forward</span>
+              </a>
+            </div>
           </div>
         </div>
       <?php endforeach; ?>
@@ -246,114 +304,75 @@ require __DIR__ . '/../components/header.php';
 </section>
 
 <!-- =========================================================================
-     3. WHAT'S INCLUDED VS WHAT'S EXCLUDED (Detailed Specifications Box)
+     4. REAL BEFORE & AFTER TRANSFORMATIONS (Auto-Looping & Swipeable Carousel)
      ========================================================================= -->
-<section class="section section-bg-light" id="specsSection">
-  <div class="container">
-    <div class="section-title text-center">
-      <h2>Package Specifications</h2>
-      <p id="specsHeadingSub">Coverage for <strong id="specsPackageName"><?= htmlspecialchars($activePkg['title']) ?></strong></p>
-    </div>
-
-    <div class="a1-svc-specs-grid">
-      <!-- Included Column (Green) -->
-      <div class="a1-svc-specs-card card-included">
-        <div class="a1-svc-specs-header">
-          <span class="material-symbols-outlined check-icon">check_circle</span>
-          <h3>What is Included</h3>
-        </div>
-        <ul class="a1-svc-specs-list" id="includedList">
-          <?php 
-          $incItems = !empty($activePkg['includes']) ? $activePkg['includes'] : ($currentServiceData['checklist'] ?? []);
-          foreach ($incItems as $item): ?>
-            <li>
-              <span class="material-symbols-outlined icon-status">check</span>
-              <span><?= htmlspecialchars($item) ?></span>
-            </li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-
-      <!-- Excluded Column (Red/Neutral) -->
-      <div class="a1-svc-specs-card card-excluded">
-        <div class="a1-svc-specs-header">
-          <span class="material-symbols-outlined cancel-icon">cancel</span>
-          <h3>What is Excluded</h3>
-        </div>
-        <ul class="a1-svc-specs-list" id="excludedList">
-          <?php 
-          $excItems = !empty($activePkg['excludes']) ? $activePkg['excludes'] : [
-            'Structural civil repairs and tile replacement are not included',
-            'Hazardous areas beyond safe human reach are not included',
-            'Internal motor repairs or plumbing replacements are not included'
-          ];
-          foreach ($excItems as $item): ?>
-            <li>
-              <span class="material-symbols-outlined icon-status" style="color: #DC2626;">close</span>
-              <span><?= htmlspecialchars($item) ?></span>
-            </li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =========================================================================
-     4. REAL BEFORE & AFTER SLIDER (Desktop Interactive Showcase)
-     ========================================================================= -->
-<?php if (!empty($beforeAfterPairs)): 
-  $firstPair = $beforeAfterPairs[0];
-  $firstBefore = preg_replace('/^\.\//', SITE_URL . '/', $firstPair['before']);
-  $firstAfter = preg_replace('/^\.\//', SITE_URL . '/', $firstPair['after']);
+<?php if (!empty($beforeAfterPairs)):
+  $baCount = count($beforeAfterPairs);
+  $baRepeatsPerHalf = max(1, (int)ceil(6 / $baCount));
 ?>
-<section class="section" style="padding-top: 3.5rem; padding-bottom: 3.5rem;">
+<section class="section section-bg-light" id="beforeAfterSection" style="padding-top: 3.5rem; padding-bottom: 3.5rem; overflow: hidden;">
   <div class="container">
     <div class="section-title text-center">
       <h2>Real Before &amp; After Transformations</h2>
-      
+      <p class="a1-ba-section-sub">Auto-looping left to right &bull; Swipe or drag in either direction &bull; Slide any photo to compare</p>
     </div>
+  </div>
 
-    <!-- Switcher Pills -->
-    <div class="a1-desktop-ba-nav" id="desktopBaNav">
-      <?php foreach ($beforeAfterPairs as $bIdx => $pair): ?>
-        <button type="button" class="a1-desktop-ba-chip <?= ($bIdx === 0) ? 'is-active' : '' ?>" onclick="switchDesktopBaPair(<?= $bIdx ?>, this)">
-          <span class="material-symbols-outlined"><?= htmlspecialchars($pair['icon'] ?? 'compare') ?></span>
-          <span><?= htmlspecialchars($pair['title']) ?></span>
-        </button>
-      <?php endforeach; ?>
-    </div>
+  <div class="a1-ba-marquee-shell">
+    <div class="a1-ba-marquee-viewport" id="baMarqueeViewport" aria-label="Before and after transformations gallery">
+      <div class="a1-ba-marquee-track" id="baMarqueeTrack">
+        <?php for ($half = 0; $half < 2; $half++): ?>
+          <?php for ($rep = 0; $rep < $baRepeatsPerHalf; $rep++): ?>
+            <?php foreach ($beforeAfterPairs as $bIdx => $pair):
+              $pairBefore = preg_replace('/^\.\//', SITE_URL . '/', $pair['before']);
+              $pairAfter = preg_replace('/^\.\//', SITE_URL . '/', $pair['after']);
+              $pairTitle = $pair['title'] ?? 'Transformation';
+              $uid = "{$half}-{$rep}-{$bIdx}";
+            ?>
+              <article class="a1-ba-card" id="ba-card-<?= $uid ?>" data-ba-half="<?= $half ?>">
+                <div class="a1-ba-stage" style="--ba-split: 50%;">
+                  <!-- After Clean Image (Base) -->
+                  <img src="<?= htmlspecialchars($pairAfter) ?>" alt="After cleaning: <?= htmlspecialchars($pairTitle) ?>" class="a1-ba-img-after" loading="eager" decoding="async" draggable="false">
 
-    <!-- Large Interactive Desktop Before & After Slider -->
-    <div class="a1-desktop-ba-wrapper">
-      <div class="a1-desktop-ba-container" id="desktopBaContainer">
-        <!-- After Clean Image (Base) -->
-        <img src="<?= htmlspecialchars($firstAfter) ?>" alt="After Deep Cleaning" class="a1-desktop-ba-img-after" id="desktopBaImgAfter">
-        <span class="a1-desktop-ba-badge badge-after">AFTER CLEANING</span>
+                  <!-- Before Clean Image (Clipped Overlay) -->
+                  <div class="a1-ba-before-layer" aria-hidden="true">
+                    <img src="<?= htmlspecialchars($pairBefore) ?>" alt="" class="a1-ba-img-before" loading="eager" decoding="async" draggable="false">
+                  </div>
 
-        <!-- Before Clean Image (Overlay Clip) -->
-        <div class="a1-desktop-ba-before-wrap" id="desktopBaBeforeWrap" style="width: 50%;">
-          <img src="<?= htmlspecialchars($firstBefore) ?>" alt="Before Cleaning" class="a1-desktop-ba-img-before" id="desktopBaImgBefore">
-          <span class="a1-desktop-ba-badge badge-before">BEFORE CLEANING</span>
-        </div>
+                  <!-- Unclipped Comparison Labels -->
+                  <span class="a1-ba-badge badge-before" aria-hidden="true">BEFORE</span>
+                  <span class="a1-ba-badge badge-after" aria-hidden="true">AFTER</span>
 
-        <!-- Slider Divider Handle -->
-        <div class="a1-desktop-ba-handle" id="desktopBaHandle" style="left: 50%;">
-          <div class="a1-desktop-ba-knob">
-            <span class="material-symbols-outlined">swap_horiz</span>
-          </div>
-        </div>
+                  <!-- Accessible Range Input -->
+                  <label class="a1-sr-only" for="ba-range-<?= $uid ?>">Compare before and after for <?= htmlspecialchars($pairTitle) ?></label>
+                  <input type="range" min="0" max="100" value="50" class="a1-ba-range" id="ba-range-<?= $uid ?>" aria-valuetext="50% Before, 50% After" oninput="updateBaCardSlider(this)">
 
-        <!-- Range Input for Dragging -->
-        <input type="range" min="0" max="100" value="50" class="a1-desktop-ba-range" id="desktopBaRangeInput" oninput="updateDesktopBaSlider(this.value)" aria-label="Slide to compare before and after">
-      </div>
+                  <!-- Slider Divider Handle (after range input so :focus-visible + .a1-ba-handle highlights knob) -->
+                  <div class="a1-ba-handle" aria-hidden="true">
+                    <div class="a1-ba-knob">
+                      <span class="material-symbols-outlined">swap_horiz</span>
+                    </div>
+                  </div>
+                </div>
 
-      <div class="a1-desktop-ba-caption">
-        <span class="caption-desc" id="desktopBaDesc"><?= htmlspecialchars($firstPair['desc'] ?? '') ?></span>
-        <span class="caption-hint">
-          <span class="material-symbols-outlined">touch_app</span>
-          <span>Drag slider or hover to compare results</span>
-        </span>
+                <div class="a1-ba-card-head">
+                  <span class="a1-ba-head-icon" aria-hidden="true">
+                    <span class="material-symbols-outlined"><?= htmlspecialchars($pair['icon'] ?? 'compare') ?></span>
+                  </span>
+                  <h3><?= htmlspecialchars($pairTitle) ?></h3>
+                </div>
+
+                <div class="a1-ba-card-desc">
+                  <p><?= htmlspecialchars($pair['desc'] ?? '') ?></p>
+                  <span class="a1-ba-hint">
+                    <span class="material-symbols-outlined" aria-hidden="true">touch_app</span>
+                    <span>Slide to compare &bull; Drag card</span>
+                  </span>
+                </div>
+              </article>
+            <?php endforeach; ?>
+          <?php endfor; ?>
+        <?php endfor; ?>
       </div>
     </div>
   </div>
@@ -364,11 +383,10 @@ require __DIR__ . '/../components/header.php';
      5. RECOMMENDED ADD-ONS SECTION
      ========================================================================= -->
 <?php if (!empty($addons)): ?>
-<section class="section section-bg-light" style="padding-top: 3.5rem; padding-bottom: 3.5rem;">
+<section class="section section-bg-light" id="addonsSection" style="padding-top: 3.5rem; padding-bottom: 3.5rem;">
   <div class="container">
     <div class="section-title text-center">
       <h2>Recommended Add-ons for <?= htmlspecialchars($serviceName) ?></h2>
-      
     </div>
 
     <div class="a1-svc-addons-grid">
@@ -405,7 +423,7 @@ require __DIR__ . '/../components/header.php';
     <div class="a1-svc-reviews-layout">
       <!-- Left: Overall Rating & Progress Bars -->
       <div class="a1-svc-rating-summary-card">
-        <div class="rating-big"><?= htmlspecialchars($activePkg['rating'] ?? '4.85') ?></div>
+        <div class="rating-big" id="svcRatingBig"><?= htmlspecialchars($activePkg['rating'] ?? '4.85') ?></div>
         <div class="rating-stars">
           <span class="material-symbols-outlined filled">star</span>
           <span class="material-symbols-outlined filled">star</span>
@@ -413,9 +431,9 @@ require __DIR__ . '/../components/header.php';
           <span class="material-symbols-outlined filled">star</span>
           <span class="material-symbols-outlined filled">star</span>
         </div>
-        <span class="rating-count-text">Based on <?= htmlspecialchars($activePkg['reviewCount'] ?? '24') ?> verified reviews</span>
+        <span class="rating-count-text" id="svcRatingCount">Based on <?= htmlspecialchars($activePkg['reviewCount'] ?? '24') ?> verified reviews</span>
 
-        <div class="rating-breakdown-bars">
+        <div class="rating-breakdown-bars" id="svcRatingBars">
           <?php 
           $breakdown = !empty($activePkg['breakdown']) ? $activePkg['breakdown'] : [5 => 18, 4 => 4, 3 => 1, 2 => 1, 1 => 0];
           $tot = array_sum($breakdown) ?: 24;
@@ -435,33 +453,70 @@ require __DIR__ . '/../components/header.php';
       </div>
 
       <!-- Right: Customer Reviews Stream -->
-      <div class="a1-svc-reviews-stream">
-        <?php 
-        $reviews = !empty($activePkg['reviews']) ? $activePkg['reviews'] : [
-          ['name' => 'Rahul Chavan', 'date' => 'October 30, 2026', 'stars' => 5, 'comment' => 'Very satisfied with the thorough cleaning! Removed deep hard stains from our tiles that other local cleaners could never clear.'],
-          ['name' => 'Pooja Agarwal', 'date' => 'November 12, 2026', 'stars' => 5, 'comment' => 'Professional staff arrived on time with heavy machines. Transparent pricing with no hidden charges. Highly recommended in Kashipur.'],
-          ['name' => 'Amit Negi', 'date' => 'November 18, 2026', 'stars' => 4, 'comment' => 'Great work on our bathrooms and sofa. Technicians were polite and did a complete joint inspection after work.'],
-          ['name' => 'Deepak Rawat', 'date' => 'November 21, 2026', 'stars' => 5, 'comment' => 'The steam sanitation left the entire place feeling brand new and smelling fresh. Will book regularly.']
-        ];
-        foreach ($reviews as $rev): ?>
-          <div class="a1-svc-review-card">
-            <div class="review-header">
-              <div class="reviewer-avatar">
-                <span class="material-symbols-outlined">person</span>
+      <div class="a1-svc-reviews-col">
+        <?php
+        $orderedReviews = [];
+        $seenRevKeys = [];
+        $pkgOrder = array_unique(array_merge([$selectedPkgIdx], array_keys($packages)));
+        foreach ($pkgOrder as $pi) {
+          $pkgItem = $packages[$pi] ?? null;
+          if (!$pkgItem || empty($pkgItem['reviews'])) continue;
+          foreach ($pkgItem['reviews'] as $r) {
+            $rk = strtolower(trim($r['name'] ?? '') . '|' . trim($r['comment'] ?? ''));
+            if (isset($seenRevKeys[$rk])) continue;
+            $seenRevKeys[$rk] = true;
+            $r['plan'] = $pkgItem['title'] ?? $serviceName;
+            $orderedReviews[] = $r;
+          }
+        }
+        if (empty($orderedReviews)) {
+          $orderedReviews = [
+            ['name' => 'Rahul Chavan', 'date' => 'October 30, 2026', 'stars' => 5, 'plan' => $serviceName, 'comment' => 'Very satisfied with the thorough cleaning! Removed deep hard stains that other local cleaners could never clear.'],
+            ['name' => 'Pooja Agarwal', 'date' => 'November 12, 2026', 'stars' => 5, 'plan' => $serviceName, 'comment' => 'Professional staff arrived on time with heavy machines. Transparent pricing with no hidden charges.'],
+            ['name' => 'Amit Negi', 'date' => 'November 18, 2026', 'stars' => 4, 'plan' => $serviceName, 'comment' => 'Great work and polite technicians. Did a complete joint inspection before leaving.'],
+            ['name' => 'Deepak Rawat', 'date' => 'November 21, 2026', 'stars' => 5, 'plan' => $serviceName, 'comment' => 'Left the entire space feeling brand new and smelling fresh. Will book regularly.'],
+            ['name' => 'Neha Bisht', 'date' => 'November 19, 2026', 'stars' => 5, 'plan' => $serviceName, 'comment' => 'Booked in Kashipur—quick doorstep arrival, neat uniform crew, and zero mess left behind.'],
+            ['name' => 'Suresh Joshi', 'date' => 'November 16, 2026', 'stars' => 5, 'plan' => $serviceName, 'comment' => 'Eco-safe chemicals with zero strong odor. Highly recommended for family homes.'],
+          ];
+        }
+        $initialReviewLimit = 6;
+        $totalReviewCards = count($orderedReviews);
+        ?>
+        <div class="a1-svc-reviews-stream" id="svcReviewsStream">
+          <?php foreach ($orderedReviews as $rIdx => $rev):
+            $isHiddenExtra = ($rIdx >= $initialReviewLimit);
+          ?>
+            <div class="a1-svc-review-card <?= $isHiddenExtra ? 'is-extra-review' : '' ?>" <?= $isHiddenExtra ? 'hidden' : '' ?>>
+              <div class="review-header">
+                <div class="reviewer-avatar">
+                  <span class="material-symbols-outlined">person</span>
+                </div>
+                <div class="review-meta-wrap">
+                  <h4 class="reviewer-name"><?= htmlspecialchars($rev['name']) ?></h4>
+                  <span class="review-date"><?= htmlspecialchars($rev['date']) ?> &bull; Verified Client</span>
+                </div>
               </div>
-              <div>
-                <h4 class="reviewer-name"><?= htmlspecialchars($rev['name']) ?></h4>
-                <span class="review-date"><?= htmlspecialchars($rev['date']) ?> &bull; Verified Client</span>
+              <div class="review-stars-row">
+                <?php for ($s = 1; $s <= 5; $s++): ?>
+                  <span class="material-symbols-outlined star-icon <?= ($s <= $rev['stars']) ? 'filled' : 'empty' ?>">star</span>
+                <?php endfor; ?>
+                <?php if (!empty($rev['plan'])): ?>
+                  <span class="review-plan-pill"><?= htmlspecialchars($rev['plan']) ?></span>
+                <?php endif; ?>
               </div>
+              <p class="review-comment"><?= htmlspecialchars($rev['comment']) ?></p>
             </div>
-            <div class="review-stars-row">
-              <?php for ($s = 1; $s <= 5; $s++): ?>
-                <span class="material-symbols-outlined star-icon <?= ($s <= $rev['stars']) ? 'filled' : 'empty' ?>">star</span>
-              <?php endfor; ?>
-            </div>
-            <p class="review-comment"><?= htmlspecialchars($rev['comment']) ?></p>
+          <?php endforeach; ?>
+        </div>
+
+        <?php if ($totalReviewCards > $initialReviewLimit): ?>
+          <div class="a1-svc-reviews-more-wrap">
+            <button type="button" class="btn-a1-reviews-more" id="svcReviewsToggleBtn" aria-expanded="false" onclick="toggleAllSvcReviews()">
+              <span class="btn-reviews-more-text">Show All <?= $totalReviewCards ?> Reviews</span>
+              <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+            </button>
           </div>
-        <?php endforeach; ?>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -578,7 +633,7 @@ require __DIR__ . '/../components/header.php';
           <span>Book Online (₹<?= number_format($activePkg['price'] ?? 600) ?>)</span>
         </a>
         <a href="https://wa.me/<?= BUSINESS_PHONE_RAW ?>?text=<?= rawurlencode("Hi A1 Cleaning, I need to book " . $serviceName . ".") ?>" target="_blank" rel="noopener" class="btn-cta-wa">
-          <span class="material-symbols-outlined">chat</span>
+          <?= getThemeIcon('whatsapp', 17, '#FFFFFF') ?>
           <span>WhatsApp Quote</span>
         </a>
         <a href="tel:<?= BUSINESS_PHONE_RAW ?>" class="btn-cta-call">
@@ -648,7 +703,7 @@ require __DIR__ . '/../components/header.php';
 
 /* Hero Section (Crisp, Airy, Modern) */
 .a1-svc-hero-section {
-  background: linear-gradient(135deg, #0B2922 0%, #133D31 100%);
+  background: linear-gradient(180deg, #133D31 0%, #0B2922 80%);
   color: #FFFFFF;
   padding: 2.25rem 0 2.5rem;
   position: relative;
@@ -777,23 +832,6 @@ require __DIR__ . '/../components/header.php';
   background: #1EBE5D;
   transform: translateY(-1px);
 }
-.btn-a1-hero-call {
-  background: #FFFFFF;
-  color: #0B2922 !important;
-  font-weight: 700;
-  font-size: 0.85rem;
-  padding: 0.55rem 0.95rem;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-.btn-a1-hero-call:hover {
-  background: #EAF3EE;
-  transform: translateY(-1px);
-}
 
 /* Hero Media Frame */
 .a1-svc-media-frame {
@@ -829,34 +867,38 @@ require __DIR__ . '/../components/header.php';
   pointer-events: none;
 }
 
-/* Packages Grid & Compact Cards */
+/* Packages Grid & Full Always-Visible Spec Cards */
 .a1-svc-packages-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
-  max-width: 1040px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+  max-width: 1120px;
   margin: 0 auto;
 }
 .a1-svc-pkg-card {
   background: #FFFFFF;
   border: 1.5px solid #E5E7EB;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(11, 41, 34, 0.04);
-  cursor: pointer;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: auto auto 1fr;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  cursor: pointer;
 }
 .a1-svc-pkg-card:hover {
   border-color: #22A06B;
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(11, 41, 34, 0.09);
+  box-shadow: 0 10px 28px rgba(11, 41, 34, 0.11);
 }
 .a1-svc-pkg-card.is-selected {
   border-color: #22A06B;
-  box-shadow: 0 0 0 2px rgba(34, 160, 107, 0.2), 0 8px 20px rgba(11, 41, 34, 0.09);
+  box-shadow: 0 0 0 3px rgba(34, 160, 107, 0.18), 0 12px 28px rgba(11, 41, 34, 0.12);
 }
 .a1-svc-pkg-ribbon {
   position: absolute;
@@ -875,7 +917,7 @@ require __DIR__ . '/../components/header.php';
 }
 .a1-svc-pkg-img-wrap {
   position: relative;
-  height: 130px;
+  height: 200px;
   background: #F4F8F5;
   overflow: hidden;
 }
@@ -904,11 +946,10 @@ require __DIR__ . '/../components/header.php';
   padding: 0.95rem 1rem 1rem;
   display: flex;
   flex-direction: column;
-  flex: 1;
 }
 .a1-svc-pkg-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 0.45rem;
@@ -944,7 +985,7 @@ require __DIR__ . '/../components/header.php';
 }
 .btn-a1-select-pkg {
   width: 100%;
-  height: 36px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -967,238 +1008,378 @@ require __DIR__ . '/../components/header.php';
   color: #FFFFFF;
 }
 
-/* Specifications Grid & Cards */
-.a1-svc-specs-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  max-width: 980px;
-  margin: 0 auto;
+/* Always-Visible Package Specifications Panel */
+.a1-svc-pkg-specs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
-.a1-svc-specs-card {
-  background: #FFFFFF;
-  border-radius: 14px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 2px 10px rgba(11, 41, 34, 0.04);
-  border: 1px solid #E5E7EB;
+.a1-svc-pkg-specs .a1-svc-pkg-dropdown-inner {
+  border-top: 1px dashed #D6E8DE;
+  background: #FAFDFB;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
-.a1-svc-specs-card.card-included {
-  border-top: 3px solid #22A06B;
+.a1-svc-pkg-specs .btn-a1-pkg-dropdown-book {
+  margin-top: auto;
 }
-.a1-svc-specs-card.card-excluded {
-  border-top: 3px solid #EF4444;
+.a1-svc-pkg-dropdown-inner {
+  border-top: 1px dashed #D6E8DE;
+  background: #FAFDFB;
+  padding: 1.1rem 1.1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-.a1-svc-specs-header {
+.a1-pkg-specs-head {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  margin-bottom: 0.85rem;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px solid #F3F4F6;
-}
-.a1-svc-specs-header h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin: 0;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
   color: #0B2922;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
-.a1-svc-specs-header .check-icon {
-  color: #22A06B;
-  font-size: 22px;
+.a1-pkg-specs-badge {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  background: #EAF3EE;
+  color: #0B6B44;
+  border: 1px solid #C6E3D3;
+  padding: 2px 8px;
+  border-radius: 999px;
 }
-.a1-svc-specs-header .cancel-icon {
-  color: #EF4444;
-  font-size: 22px;
+.a1-pkg-spec-group {
+  border-radius: 10px;
+  padding: 0.65rem 0.75rem;
 }
-.a1-svc-specs-list {
+.a1-pkg-spec-group.is-included {
+  background: #F1FBF5;
+  border: 1px solid #C6EAD6;
+}
+.a1-pkg-spec-group.is-excluded {
+  background: #FEF5F5;
+  border: 1px solid #F9D2D2;
+}
+/* Unified single card for both included & excluded */
+.a1-pkg-spec-group.a1-pkg-spec-unified {
+  background: #F8FAFB;
+  border: 1px solid #E5E7EB;
+  padding: 1rem 1rem;
+  flex: 1;
+}
+.a1-pkg-spec-group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-bottom: 0.45rem;
+}
+.a1-pkg-spec-group.is-included .a1-pkg-spec-group-title {
+  color: #0B6B44;
+}
+.a1-pkg-spec-group.is-excluded .a1-pkg-spec-group-title {
+  color: #B91C1C;
+}
+.a1-pkg-spec-group.a1-pkg-spec-unified .a1-pkg-spec-group-title {
+  color: #0B6B44;
+}
+.a1-pkg-spec-group-title .material-symbols-outlined {
+  font-size: 16px;
+}
+.a1-pkg-spec-items {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
-.a1-svc-specs-list li {
+.a1-pkg-spec-items li {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px dashed #F3F4F6;
-  font-size: 0.86rem;
-  color: #374151;
-  line-height: 1.4;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #1F2937;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
 }
-.a1-svc-specs-list li:last-child {
+.a1-pkg-spec-items li:last-child {
   border-bottom: none;
+  padding-bottom: 0;
 }
-.a1-svc-specs-list li .icon-status {
-  color: #22A06B;
+.a1-pkg-spec-items li .spec-tick {
+  color: #16A34A;
   font-size: 16px;
   flex-shrink: 0;
   margin-top: 1px;
 }
-
-/* Desktop Before & After Slider */
-.a1-desktop-ba-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.25rem;
+.a1-pkg-spec-items li .spec-cross {
+  color: #DC2626;
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
 }
-.a1-desktop-ba-chip {
+.btn-a1-pkg-dropdown-book {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 1rem;
-  border-radius: 50px;
-  background: #FFFFFF;
-  border: 1px solid #D1D5DB;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #0B2922;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.a1-desktop-ba-chip:hover {
-  border-color: #22A06B;
-  color: #22A06B;
-}
-.a1-desktop-ba-chip.is-active {
+  justify-content: center;
+  gap: 6px;
   background: #0B2922;
-  border-color: #0B2922;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  min-height: 50px;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s ease;
 }
-.a1-desktop-ba-chip.is-active .material-symbols-outlined {
-  color: #22A06B;
+.btn-a1-pkg-dropdown-book:hover {
+  background: #22A06B;
 }
-.a1-desktop-ba-wrapper {
-  max-width: 820px;
-  margin: 0 auto;
+
+/* Before & After Infinite Loop & Bidirectional Swipe Carousel */
+.a1-ba-section-sub {
+  margin-top: 0.45rem;
+  margin-bottom: 0;
+  color: #52635D;
+  font-size: 0.92rem;
 }
-.a1-desktop-ba-container {
+.a1-ba-marquee-shell {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  max-height: 480px;
-  border-radius: 14px;
+  margin: 0.35rem auto 0;
+  padding: 0;
+}
+.a1-ba-marquee-viewport {
+  position: relative;
+  width: 100%;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(11, 41, 34, 0.12);
+  padding: 0.75rem 0 1.25rem;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+.a1-ba-marquee-viewport.is-dragging {
+  cursor: grabbing;
+}
+.a1-ba-marquee-track {
+  display: flex;
+  align-items: stretch;
+  gap: 1.35rem;
+  width: max-content;
+  will-change: transform;
+}
+.a1-ba-card {
+  flex: 0 0 340px;
+  background: #FFFFFF;
+  border: 1px solid #E2EAE5;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(11, 41, 34, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.a1-ba-card:hover {
+  transform: translateY(-2px);
+  border-color: #B7DEC8;
+  box-shadow: 0 12px 28px rgba(11, 41, 34, 0.12);
+}
+.a1-ba-stage {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: clip;
   background: #0B2922;
   user-select: none;
   cursor: ew-resize;
+  --ba-split: 50%;
 }
-.a1-desktop-ba-img-after {
+.a1-ba-stage:has(.a1-ba-range:focus-visible) {
+  outline: 3px solid #22A06B;
+  outline-offset: -3px;
+}
+.a1-ba-img-after,
+.a1-ba-img-before {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
   object-fit: cover;
-  pointer-events: none;
   display: block;
+  pointer-events: none;
 }
-.a1-desktop-ba-before-wrap {
+.a1-ba-before-layer {
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  overflow: hidden;
+  inset: 0;
+  clip-path: inset(0 calc(100% - var(--ba-split, 50%)) 0 0);
   pointer-events: none;
   z-index: 2;
-  will-change: width;
 }
-.a1-desktop-ba-img-before {
+.a1-ba-badge {
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: var(--ba-desktop-w, 820px);
-  max-width: none;
-  object-fit: cover;
-  pointer-events: none;
-  display: block;
-}
-.a1-desktop-ba-badge {
-  position: absolute;
-  top: 12px;
-  padding: 4px 10px;
-  font-size: 0.7rem;
+  inset-block-start: 10px;
+  padding: 3px 9px;
+  font-size: 0.65rem;
   font-weight: 800;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.45px;
   border-radius: 5px;
   pointer-events: none;
   z-index: 4;
 }
-.a1-desktop-ba-badge.badge-after {
-  right: 12px;
-  background: rgba(34, 160, 107, 0.95);
+.a1-ba-badge.badge-after {
+  inset-inline-end: 10px;
+  background: rgba(34, 160, 107, 0.94);
   color: #FFFFFF;
 }
-.a1-desktop-ba-badge.badge-before {
-  left: 12px;
+.a1-ba-badge.badge-before {
+  inset-inline-start: 10px;
   background: rgba(11, 41, 34, 0.9);
   color: #FFFFFF;
 }
-.a1-desktop-ba-handle {
+.a1-ba-handle {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2.5px;
+  inset-block: 0;
+  inset-inline-start: var(--ba-split, 50%);
+  inline-size: 2.5px;
   background: #FFFFFF;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   pointer-events: none;
   z-index: 5;
   transform: translateX(-50%);
-  will-change: left;
 }
-.a1-desktop-ba-knob {
+.a1-ba-knob {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, -50%);
-  width: 34px;
-  height: 34px;
+  inline-size: 32px;
+  block-size: 32px;
   border-radius: 50%;
   background: #FFFFFF;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #0B2922;
+  transition: box-shadow 0.15s ease, background 0.15s ease;
 }
-.a1-desktop-ba-knob .material-symbols-outlined {
-  font-size: 18px;
+.a1-ba-knob .material-symbols-outlined {
+  font-size: 17px;
 }
-.a1-desktop-ba-range {
+.a1-ba-range {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  inline-size: 100%;
+  block-size: 100%;
   opacity: 0;
   cursor: ew-resize;
+  touch-action: pan-y;
   z-index: 6;
   margin: 0;
 }
-.a1-desktop-ba-caption {
+.a1-ba-range:focus-visible + .a1-ba-handle .a1-ba-knob {
+  background: #ECFDF5;
+  box-shadow: 0 0 0 4px rgba(34, 160, 107, 0.45), 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+.a1-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.a1-ba-card-head {
+  padding: 0.95rem 1.05rem 0.4rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.75rem;
-  font-size: 0.82rem;
-  color: #6B7280;
+  gap: 0.55rem;
 }
-.a1-desktop-ba-caption .caption-desc {
-  font-weight: 600;
+.a1-ba-head-icon {
+  inline-size: 30px;
+  block-size: 30px;
+  border-radius: 8px;
+  background: #EAF6EE;
+  color: #16794F;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.a1-ba-head-icon .material-symbols-outlined {
+  font-size: 17px;
+}
+.a1-ba-card-head h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.28;
   color: #0B2922;
 }
+.a1-ba-card-desc {
+  padding: 0 1.05rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.65rem;
+  flex: 1;
+}
+.a1-ba-card-desc p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.48;
+  color: #52635D;
+}
+.a1-ba-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #16794F;
+}
+.a1-ba-hint .material-symbols-outlined {
+  font-size: 15px;
+}
+@media (max-width: 640px) {
+  .a1-ba-card {
+    flex: 0 0 288px;
+  }
+}
 
-/* Add-ons Grid */
+/* Add-ons Grid (Symmetric 3x2 Desktop, 2x3 Tablet, 1-Col Mobile) */
 .a1-svc-addons-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  max-width: 1040px;
+  max-width: 1080px;
   margin: 0 auto;
+}
+@media (max-width: 991px) {
+  .a1-svc-addons-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .a1-svc-addons-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .a1-svc-addon-card {
   background: #FFFFFF;
@@ -1331,6 +1512,11 @@ require __DIR__ . '/../components/header.php';
   color: #6B7280;
   font-weight: 600;
 }
+.a1-svc-reviews-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 .a1-svc-reviews-stream {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1342,6 +1528,63 @@ require __DIR__ . '/../components/header.php';
   border-radius: 12px;
   padding: 1rem 1.15rem;
   box-shadow: 0 1px 6px rgba(11, 41, 34, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+.a1-svc-review-card[hidden] {
+  display: none;
+}
+.review-stars-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 0.5rem;
+}
+.review-plan-pill {
+  margin-left: auto;
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: #16794F;
+  background: #EAF6EE;
+  border: 1px solid #C6E3D3;
+  padding: 1px 7px;
+  border-radius: 999px;
+  max-width: 145px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.a1-svc-reviews-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+.btn-a1-reviews-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid #C6E3D3;
+  background: #F4FAF6;
+  color: #0B2922;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.btn-a1-reviews-more:hover {
+  background: #22A06B;
+  border-color: #22A06B;
+  color: #FFFFFF;
+}
+.btn-a1-reviews-more .material-symbols-outlined {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+.btn-a1-reviews-more.is-expanded .material-symbols-outlined {
+  transform: rotate(180deg);
 }
 .reviewer-avatar {
   width: 32px;
@@ -1372,11 +1615,6 @@ require __DIR__ . '/../components/header.php';
 .review-date {
   font-size: 0.74rem;
   color: #6B7280;
-}
-.review-stars-row {
-  display: flex;
-  gap: 1px;
-  margin-bottom: 0.5rem;
 }
 .review-stars-row .filled {
   color: #F59E0B;
@@ -1592,9 +1830,6 @@ require __DIR__ . '/../components/header.php';
   .a1-svc-reviews-layout {
     grid-template-columns: 1fr;
   }
-  .a1-svc-specs-grid {
-    grid-template-columns: 1fr;
-  }
   .cities-grid {
     grid-template-columns: 1fr;
   }
@@ -1609,8 +1844,7 @@ require __DIR__ . '/../components/header.php';
     width: 100%;
   }
   .btn-a1-hero-book,
-  .btn-a1-hero-wa,
-  .btn-a1-hero-call {
+  .btn-a1-hero-wa {
     width: 100%;
     justify-content: center;
   }
@@ -1631,33 +1865,62 @@ require __DIR__ . '/../components/header.php';
 const SVC_PACKAGES = <?= json_encode($packages, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
 const SVC_SLUG = "<?= $serviceSlug ?>";
 const SVC_NAME = "<?= addslashes($serviceName) ?>";
-const BA_PAIRS = <?= json_encode($beforeAfterPairs, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
 const SITE_ROOT = "<?= SITE_URL ?>";
 
 let currentSelectedPkgIndex = <?= $selectedPkgIdx ?>;
 
-function selectDesktopPackage(index) {
+function syncBookingLinksAndSummary() {
+  const pkg = SVC_PACKAGES[currentSelectedPkgIndex];
+  if (!pkg) return;
+
+  const combinedPrice = Number(pkg.price) || 0;
+
+  const bookBtn = document.getElementById('heroBookNowBtn');
+  if (bookBtn) {
+    bookBtn.href = `${SITE_ROOT}/book-now/?service=${SVC_SLUG}&package=${currentSelectedPkgIndex}`;
+  }
+
+  const finalBtn = document.getElementById('finalBookBtn');
+  if (finalBtn) {
+    finalBtn.href = `${SITE_ROOT}/book-now/?service=${SVC_SLUG}&package=${currentSelectedPkgIndex}`;
+    finalBtn.innerHTML = `<span class="material-symbols-outlined">calendar_month</span><span>Book Online (₹${combinedPrice.toLocaleString('en-IN')})</span>`;
+  }
+
+  document.querySelectorAll('.btn-a1-pkg-dropdown-book').forEach((link, idx) => {
+    link.href = `${SITE_ROOT}/book-now/?service=${SVC_SLUG}&package=${idx}`;
+  });
+
+  const waBtn = document.getElementById('heroWaBtn');
+  if (waBtn) {
+    const waMsg = `Hi A1 Cleaning, I want to book ${SVC_NAME} (${pkg.title}) for ₹${combinedPrice}.`;
+    waBtn.href = `https://wa.me/<?= BUSINESS_PHONE_RAW ?>?text=${encodeURIComponent(waMsg)}`;
+  }
+}
+
+function openPackagePanel(panel) { /* no-op: specs always visible */ }
+function closePackagePanel(panel) { /* no-op: specs always visible */ }
+
+function setButtonState(btn, isSelected) {
+  if (!btn) return;
+  btn.classList.toggle('is-active', isSelected);
+  btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+  const statusIcon = btn.querySelector('.btn-status-icon');
+  const labelSpan = btn.querySelector('.btn-label-text');
+  if (statusIcon) statusIcon.textContent = isSelected ? 'check_circle' : 'radio_button_unchecked';
+  if (labelSpan) labelSpan.textContent = isSelected ? 'Selected' : 'Select Plan';
+}
+
+function selectPackage(index) {
   if (!SVC_PACKAGES[index]) return;
   currentSelectedPkgIndex = index;
   const pkg = SVC_PACKAGES[index];
 
-  // Update card styles
-  document.querySelectorAll('.a1-svc-pkg-card').forEach((c, i) => {
-    if (i === index) {
-      c.classList.add('is-selected');
-      const btn = c.querySelector('.btn-a1-select-pkg');
-      if (btn) {
-        btn.classList.add('is-active');
-        btn.innerHTML = `<span class="material-symbols-outlined">check_circle</span><span>Selected</span>`;
-      }
-    } else {
-      c.classList.remove('is-selected');
-      const btn = c.querySelector('.btn-a1-select-pkg');
-      if (btn) {
-        btn.classList.remove('is-active');
-        btn.innerHTML = `<span class="material-symbols-outlined">radio_button_unchecked</span><span>Select Plan</span>`;
-      }
-    }
+  document.querySelectorAll('.a1-svc-pkg-card').forEach((card, i) => {
+    const btn = document.getElementById('pkg-trigger-' + i);
+    const isTarget = (i === index);
+    card.classList.toggle('is-selected', isTarget);
+    card.setAttribute('aria-pressed', isTarget ? 'true' : 'false');
+    setButtonState(btn, isTarget);
   });
 
   // Update Hero Price & Duration
@@ -1666,87 +1929,267 @@ function selectDesktopPackage(index) {
   if (hPrice) hPrice.textContent = '₹' + Number(pkg.price).toLocaleString('en-IN');
   if (hDur) hDur.textContent = pkg.duration || '60 mins';
 
-  // Update Booking URLs
-  const bookBtn = document.getElementById('heroBookNowBtn');
-  if (bookBtn) bookBtn.href = `${SITE_ROOT}/book-now/?service=${SVC_SLUG}&package=${index}`;
-  const finalBtn = document.getElementById('finalBookBtn');
-  if (finalBtn) {
-    finalBtn.href = `${SITE_ROOT}/book-now/?service=${SVC_SLUG}&package=${index}`;
-    finalBtn.innerHTML = `<span class="material-symbols-outlined">calendar_month</span><span>Book Online (₹${Number(pkg.price).toLocaleString('en-IN')})</span>`;
-  }
-  const waBtn = document.getElementById('heroWaBtn');
-  if (waBtn) {
-    const waMsg = `Hi A1 Cleaning, I want to book ${SVC_NAME} (${pkg.title}) for ₹${pkg.price}.`;
-    waBtn.href = `https://wa.me/<?= BUSINESS_PHONE_RAW ?>?text=${encodeURIComponent(waMsg)}`;
+  // Sync Package into Booking & WhatsApp URLs
+  syncBookingLinksAndSummary();
+  syncPackageReviewsAndSummary(index);
+}
+
+let allSvcReviewsExpanded = false;
+
+function escapeHtmlSafe(str) {
+  return String(str || '').replace(/[&<>"']/g, (m) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[m]));
+}
+
+function syncPackageReviewsAndSummary(pkgIdx) {
+  const pkg = SVC_PACKAGES[pkgIdx];
+  if (!pkg) return;
+
+  const big = document.getElementById('svcRatingBig');
+  const cntEl = document.getElementById('svcRatingCount');
+  const barsEl = document.getElementById('svcRatingBars');
+  if (big && pkg.rating) big.textContent = pkg.rating;
+  if (cntEl && pkg.reviewCount) cntEl.textContent = `Based on ${pkg.reviewCount} verified reviews`;
+  if (barsEl && pkg.breakdown) {
+    const bd = pkg.breakdown;
+    const tot = [5, 4, 3, 2, 1].reduce((s, st) => s + (Number(bd[st]) || 0), 0) || 24;
+    barsEl.innerHTML = [5, 4, 3, 2, 1].map((star) => {
+      const c = Number(bd[star]) || 0;
+      const pct = Math.round((c / tot) * 100);
+      return `<div class="bar-row"><span class="star-lbl">${star} <span class="material-symbols-outlined" style="font-size: 13px;">star</span></span><div class="bar-track"><div class="bar-fill" style="width: ${pct}%;"></div></div><span class="bar-count">${c}</span></div>`;
+    }).join('');
   }
 
-  // Update Inclusions & Exclusions
-  const nameEl = document.getElementById('specsPackageName');
-  if (nameEl) nameEl.textContent = pkg.title;
+  const stream = document.getElementById('svcReviewsStream');
+  if (!stream) return;
 
-  const incListEl = document.getElementById('includedList');
-  if (incListEl && pkg.includes) {
-    let incHtml = '';
-    pkg.includes.forEach(item => {
-      incHtml += `<li><span class="material-symbols-outlined icon-status">check</span><span>${item}</span></li>`;
+  const order = [pkgIdx, ...SVC_PACKAGES.map((_, i) => i).filter((i) => i !== pkgIdx)];
+  const seen = new Set();
+  const list = [];
+  order.forEach((i) => {
+    const p = SVC_PACKAGES[i];
+    if (!p || !Array.isArray(p.reviews)) return;
+    p.reviews.forEach((r) => {
+      const k = `${(r.name || '').trim().toLowerCase()}|${(r.comment || '').trim().toLowerCase()}`;
+      if (!seen.has(k) && r.comment) {
+        seen.add(k);
+        list.push({ ...r, plan: p.title || SVC_NAME });
+      }
     });
-    incListEl.innerHTML = incHtml;
-  }
+  });
+  if (!list.length) return;
 
-  const excListEl = document.getElementById('excludedList');
-  if (excListEl) {
-    const excItems = pkg.excludes || [
-      'Structural civil repairs and tile replacement are not included',
-      'Hazardous areas beyond safe human reach are not included'
-    ];
-    let excHtml = '';
-    excItems.forEach(item => {
-      excHtml += `<li><span class="material-symbols-outlined icon-status" style="color: #DC2626;">close</span><span>${item}</span></li>`;
-    });
-    excListEl.innerHTML = excHtml;
-  }
-}
+  const limit = 6;
+  stream.innerHTML = list.map((rev, idx) => {
+    const hide = !allSvcReviewsExpanded && idx >= limit;
+    const starsHtml = [1, 2, 3, 4, 5].map((s) => `<span class="material-symbols-outlined star-icon ${s <= (Number(rev.stars) || 5) ? 'filled' : 'empty'}">star</span>`).join('');
+    return `<div class="a1-svc-review-card ${idx >= limit ? 'is-extra-review' : ''}" ${hide ? 'hidden' : ''}>
+      <div class="review-header">
+        <div class="reviewer-avatar"><span class="material-symbols-outlined">person</span></div>
+        <div class="review-meta-wrap">
+          <h4 class="reviewer-name">${escapeHtmlSafe(rev.name)}</h4>
+          <span class="review-date">${escapeHtmlSafe(rev.date)} &bull; Verified Client</span>
+        </div>
+      </div>
+      <div class="review-stars-row">${starsHtml}<span class="review-plan-pill">${escapeHtmlSafe(rev.plan)}</span></div>
+      <p class="review-comment">${escapeHtmlSafe(rev.comment)}</p>
+    </div>`;
+  }).join('');
 
-// Interactive Desktop Before & After Slider
-function updateDesktopBaSlider(val) {
-  const beforeWrap = document.getElementById('desktopBaBeforeWrap');
-  const handle = document.getElementById('desktopBaHandle');
-  if (beforeWrap) beforeWrap.style.width = val + '%';
-  if (handle) handle.style.left = val + '%';
-}
-
-function syncDesktopBaWidth() {
-  const container = document.getElementById('desktopBaContainer');
-  if (container) {
-    const w = container.clientWidth;
-    if (w > 0) container.style.setProperty('--ba-desktop-w', w + 'px');
+  const btn = document.getElementById('svcReviewsToggleBtn');
+  if (btn) {
+    const lbl = btn.querySelector('.btn-reviews-more-text');
+    if (lbl) lbl.textContent = allSvcReviewsExpanded ? 'Show Fewer Reviews' : `Show All ${list.length} Reviews`;
   }
 }
 
-function switchDesktopBaPair(index, btn) {
-  if (!BA_PAIRS[index]) return;
-  const pair = BA_PAIRS[index];
+function toggleAllSvcReviews() {
+  const btn = document.getElementById('svcReviewsToggleBtn');
+  const extras = document.querySelectorAll('#svcReviewsStream .is-extra-review');
+  if (!btn || !extras.length) return;
 
-  const imgBefore = document.getElementById('desktopBaImgBefore');
-  const imgAfter = document.getElementById('desktopBaImgAfter');
-  const descEl = document.getElementById('desktopBaDesc');
-  const range = document.getElementById('desktopBaRangeInput');
+  allSvcReviewsExpanded = !allSvcReviewsExpanded;
+  extras.forEach((card) => {
+    if (allSvcReviewsExpanded) card.removeAttribute('hidden');
+    else card.setAttribute('hidden', '');
+  });
 
-  let bUrl = pair.before;
-  let aUrl = pair.after;
-  if (bUrl.startsWith('./')) bUrl = SITE_ROOT + '/' + bUrl.slice(2);
-  if (aUrl.startsWith('./')) aUrl = SITE_ROOT + '/' + aUrl.slice(2);
-
-  if (imgBefore) imgBefore.src = bUrl;
-  if (imgAfter) imgAfter.src = aUrl;
-  if (descEl) descEl.textContent = pair.desc || '';
-
-  if (range) range.value = 50;
-  updateDesktopBaSlider(50);
-
-  document.querySelectorAll('.a1-desktop-ba-chip').forEach(c => c.classList.remove('is-active'));
-  if (btn) btn.classList.add('is-active');
+  btn.classList.toggle('is-expanded', allSvcReviewsExpanded);
+  btn.setAttribute('aria-expanded', allSvcReviewsExpanded ? 'true' : 'false');
+  const lbl = btn.querySelector('.btn-reviews-more-text');
+  const totalCount = document.querySelectorAll('#svcReviewsStream .a1-svc-review-card').length;
+  if (lbl) {
+    lbl.textContent = allSvcReviewsExpanded ? 'Show Fewer Reviews' : `Show All ${totalCount} Reviews`;
+  }
 }
+
+function togglePackageDropdown(index) {
+  selectPackage(index);
+}
+
+function selectDesktopPackage(index) {
+  selectPackage(index);
+}
+
+// Interactive Before & After Card Sliders
+function updateBaCardSlider(input) {
+  if (!input) return;
+  const pct = Math.min(100, Math.max(0, Number(input.value) || 0));
+  const stage = input.closest('.a1-ba-stage');
+  if (stage) {
+    stage.style.setProperty('--ba-split', pct + '%');
+    const bBadge = stage.querySelector('.badge-before');
+    const aBadge = stage.querySelector('.badge-after');
+    if (bBadge) bBadge.style.opacity = pct < 10 ? '0' : '1';
+    if (aBadge) aBadge.style.opacity = pct > 90 ? '0' : '1';
+  }
+  input.setAttribute('aria-valuetext', `${pct}% Before, ${100 - pct}% After`);
+}
+
+// Before & After Seamless Left-to-Right Auto-Loop + Bidirectional Swipe/Drag
+(function initBaMarquee() {
+  const viewport = document.getElementById('baMarqueeViewport');
+  const track = document.getElementById('baMarqueeTrack');
+  if (!viewport || !track || track.dataset.baInit === '1') return;
+  track.dataset.baInit = '1';
+
+  const cards = Array.from(track.querySelectorAll('.a1-ba-card'));
+  const halfCount = Math.floor(cards.length / 2);
+  if (!cards.length || halfCount === 0) return;
+
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const AUTO_SPEED_PX_PER_SEC = prefersReducedMotion ? 0 : 42;
+
+  let halfWidth = 0;
+  let offset = 0;
+  let isDragging = false;
+  let isHovering = false;
+  let isRangeActive = false;
+  let lastX = 0;
+  let velocity = 0;
+  let lastTime = performance.now();
+
+  function measureHalfWidth() {
+    const first = cards[0];
+    const secondHalfStart = cards[halfCount];
+    if (first && secondHalfStart) {
+      const measured = secondHalfStart.offsetLeft - first.offsetLeft;
+      if (measured > 0) {
+        const wasZero = (halfWidth === 0);
+        halfWidth = measured;
+        if (wasZero) {
+          offset = -halfWidth / 2;
+        }
+      }
+    }
+  }
+
+  function wrapOffset() {
+    if (halfWidth <= 0) return;
+    while (offset >= 0) offset -= halfWidth;
+    while (offset < -halfWidth) offset += halfWidth;
+  }
+
+  measureHalfWidth();
+  window.addEventListener('resize', measureHalfWidth);
+  window.addEventListener('load', measureHalfWidth);
+
+  // Pause auto-scroll while hovering or sliding Before/After range dividers
+  viewport.addEventListener('mouseenter', () => { isHovering = true; });
+  viewport.addEventListener('mouseleave', () => { isHovering = false; });
+
+  const pauseRange = (e) => {
+    if (e.target.closest && e.target.closest('.a1-ba-range')) {
+      isRangeActive = true;
+    }
+  };
+  const resumeRange = () => { isRangeActive = false; };
+  viewport.addEventListener('mousedown', pauseRange);
+  viewport.addEventListener('touchstart', pauseRange, { passive: true });
+  window.addEventListener('mouseup', resumeRange);
+  window.addEventListener('touchend', resumeRange);
+  window.addEventListener('touchcancel', resumeRange);
+
+  // Mouse drag anywhere on track/cards (outside the Before/After range slider)
+  viewport.addEventListener('mousedown', (e) => {
+    if (e.target.closest && e.target.closest('.a1-ba-range')) return;
+    isDragging = true;
+    lastX = e.clientX;
+    velocity = 0;
+    viewport.classList.add('is-dragging');
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const delta = e.clientX - lastX;
+    lastX = e.clientX;
+    offset += delta;
+    velocity = delta * 45;
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    viewport.classList.remove('is-dragging');
+  });
+
+  // Touch swipe in any horizontal direction
+  viewport.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    if (e.target.closest && e.target.closest('.a1-ba-range')) return;
+    isDragging = true;
+    lastX = e.touches[0].clientX;
+    velocity = 0;
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || e.touches.length !== 1) return;
+    const curX = e.touches[0].clientX;
+    const delta = curX - lastX;
+    lastX = curX;
+    offset += delta;
+    velocity = delta * 45;
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    isDragging = false;
+  });
+
+  // Trackpad horizontal wheel support (left & right)
+  viewport.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+      offset -= e.deltaX * 0.85;
+      velocity = -e.deltaX * 1.8;
+    }
+  }, { passive: false });
+
+  function tick(now) {
+    const dtSec = Math.min(0.05, Math.max(0.001, (now - lastTime) / 1000));
+    lastTime = now;
+
+    if (halfWidth <= 0) measureHalfWidth();
+
+    if (!isDragging) {
+      if (Math.abs(velocity) > 3) {
+        offset += velocity * dtSec;
+        velocity *= Math.pow(0.06, dtSec);
+      } else {
+        velocity = 0;
+        if (!isHovering && !isRangeActive && AUTO_SPEED_PX_PER_SEC > 0) {
+          offset += AUTO_SPEED_PX_PER_SEC * dtSec;
+        }
+      }
+    }
+
+    wrapOffset();
+    track.style.transform = `translate3d(${offset.toFixed(2)}px, 0, 0)`;
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+})();
 
 // FAQ Accordion Toggle
 function toggleSvcFaq(btn) {
@@ -1755,12 +2198,12 @@ function toggleSvcFaq(btn) {
     item.classList.toggle('is-open');
   }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  syncDesktopBaWidth();
-  window.addEventListener('resize', syncDesktopBaWidth);
-  setTimeout(syncDesktopBaWidth, 200);
-});
 </script>
 
-<?php require __DIR__ . '/../components/footer.php'; ?>
+<div class="a1-section-gap-white" aria-hidden="true"></div>
+
+<?php
+$footerPrevIsDark = false;
+$footerWaveBg = '#FFFFFF';
+require __DIR__ . '/../components/footer.php';
+?>

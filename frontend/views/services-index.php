@@ -15,28 +15,65 @@ require __DIR__ . '/../components/header.php';
 
 
 
-<!-- Hero Banner -->
-<section style="background: linear-gradient(145deg, var(--color-deep-green) 0%, #154034 100%); color: #FFFFFF; padding: 3.5rem 0 4rem; text-align: center; position: relative; overflow: hidden;">
-  <div class="container" style="position: relative; z-index: 2;">
-    <span style="display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(34, 160, 107, 0.25); border: 1px solid var(--color-fresh-green); color: #EAF3EE; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.35rem 0.95rem; border-radius: var(--radius-pill); margin-bottom: 1rem;">
-      <span class="material-symbols-outlined icon-xs">verified</span> 100% Mechanized Doorstep Solutions
-    </span>
-    <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: #FFFFFF; margin-bottom: 0.85rem; letter-spacing: -0.02em;">
-      Professional Cleaning Services
-    </h1>
-    <p style="font-size: 1.05rem; color: #D6E8DC; max-width: 720px; margin: 0 auto 1.75rem; line-height: 1.6;">
-      Industrial-grade scrubbing, hot-water injection extraction, and hospital-grade sanitization delivered straight to your doorstep across <strong>Kashipur, Jaspur &amp; Ramnagar</strong>.
-    </p>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap">
+
+<!-- 3D Concave Services Video Showcase Hero -->
+<section class="a1-services-concave-hero" aria-label="Professional Cleaning Services Video Showcase">
+  <div class="a1-concave-hero-glow a1-concave-glow-tl" aria-hidden="true"></div>
+  <div class="a1-concave-hero-glow a1-concave-glow-br" aria-hidden="true"></div>
+
+  <div class="container">
+    <?php
+    $serviceShowcaseSpec = [
+      ['slug' => 'home-cleaning',       'file' => 'deep_home_cleaning_6ce7a0e5.mp4',                  'badge' => 'Full Home'],
+      ['slug' => 'bathroom-cleaning',   'file' => 'bathroom_deep_cleaning_9d6155cb_1080p.mp4',        'badge' => 'Deep Scrub'],
+      ['slug' => 'sofa-cleaning',       'file' => 'sofa_shampoo_cleaning_6c6a0420.mp4',               'badge' => 'Living Room'],
+      ['slug' => 'kitchen-cleaning',    'file' => 'Person_cleaning_kitchen_82bbe15d.mp4',             'badge' => 'Kitchen Care'],
+      ['slug' => 'balcony-cleaning',    'file' => 'balcony_and_floor_deep_scrub_9643e5bc_1080p.mp4',  'badge' => 'Pressure Scrub'],
+      ['slug' => 'water-tank-cleaning', 'file' => 'Person_cleaning_water_tank_bc0ad2f8.mp4',          'badge' => 'Pure Water'],
+      ['slug' => 'carpet-cleaning',     'file' => 'carpet_and_rug_deep_wash_ed47a45e.mp4',            'badge' => 'Fabric Care'],
+      ['slug' => 'curtain-cleaning',    'file' => 'curtain_steam_clean_6bd86d98.mp4',                 'badge' => 'Steam Care'],
+      ['slug' => 'move-in-move-out',    'file' => 'Moving_and_cleaning_service_64e5dea4.mp4',         'badge' => 'Move Ready'],
+      ['slug' => 'post-construction',   'file' => 'Post_construction_cleaning_service_866a34c4.mp4',  'badge' => 'Turnkey Scrub'],
+      ['slug' => 'commercial-cleaning', 'file' => 'office_and_commercial_cleaning_6ca03922.mp4',      'badge' => 'Commercial'],
+    ];
+
+    $serviceVideoItems = [];
+    foreach ($serviceShowcaseSpec as $itemSpec) {
+      $svc = $servicesList[$itemSpec['slug']] ?? [];
+      $svcName = $svc['name'] ?? ucwords(str_replace('-', ' ', $itemSpec['slug']));
+      $startPrice = $svc['starting_price'] ?? '';
+      $serviceVideoItems[] = [
+        'file'     => $itemSpec['file'],
+        'badge'    => $itemSpec['badge'],
+        'title'    => $svcName,
+        'subtitle' => ($startPrice ? "From {$startPrice} • " : '') . 'View Packages →',
+        'href'     => SITE_URL . '/services/' . $itemSpec['slug'] . '/',
+      ];
+    }
+
+    $concaveConfig = [
+      'badge'        => '100% Mechanized Doorstep Solutions',
+      'headingTag'   => 'h1',
+      'heading'      => 'Professional Cleaning Services',
+      'doodleText'   => 'Tap Any Service',
+      'subheading'   => 'Swipe or drag in any direction (left & right) to preview our industrial cleaning services across Kashipur, Jaspur & Ramnagar.',
+      'ariaLabel'    => 'Services 3D Concave Video Ribbon',
+      'sectionClass' => 'is-services-hero',
+      'items'        => $serviceVideoItems,
+    ];
+    require __DIR__ . '/../components/concave-video-carousel.php';
+    ?>
 
     <!-- 3 Quick Guarantee Badges -->
-    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
-      <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 700; color: #FFFFFF;">
+    <div class="a1-hero-guarantee-strip">
+      <span class="a1-hero-guarantee-item">
         <span class="material-symbols-outlined text-fresh-green icon-sm">check_circle</span> Zero Advance Payment
       </span>
-      <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 700; color: #FFFFFF;">
+      <span class="a1-hero-guarantee-item">
         <span class="material-symbols-outlined text-fresh-green icon-sm">check_circle</span> Verified &amp; Uniformed Staff
       </span>
-      <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 700; color: #FFFFFF;">
+      <span class="a1-hero-guarantee-item">
         <span class="material-symbols-outlined text-fresh-green icon-sm">check_circle</span> Pay After 100% Satisfaction
       </span>
     </div>
@@ -188,23 +225,29 @@ require __DIR__ . '/../components/header.php';
 </section>
 
 <!-- Bottom CTA Banner -->
-<section style="background: linear-gradient(145deg, var(--color-deep-green) 0%, #154034 100%); color: #FFFFFF; padding: 3.5rem 0; text-align: center;">
-  <div class="container">
-    <h3 style="font-size: 1.85rem; font-weight: 900; color: #FFFFFF; margin-bottom: 0.65rem;">
+<section class="a1-services-cta-banner" style="position: relative; overflow: hidden; background: #FFFFFF; color: #0B2922; padding: 4.5rem 0 4.25rem; text-align: center; border-top: 1px solid var(--color-border);">
+  <img src="<?= SITE_URL ?>/assets/images/theme/services-cta-bg.jpg" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 68%; opacity: 0.42; pointer-events: none;">
+  <div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse 64% 70% at 50% 45%, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 72%, #FFFFFF 100%); pointer-events: none;"></div>
+  <div class="container" style="position: relative; z-index: 2;">
+    <h3 style="font-size: 1.95rem; font-weight: 900; color: #0B2922; margin-bottom: 0.65rem; text-shadow: 0 1px 12px rgba(255, 255, 255, 0.85);">
       Need a Tailored Quote for Your Space?
     </h3>
-    <p style="font-size: 0.95rem; color: #D6E8DC; max-width: 600px; margin: 0 auto 1.75rem;">
+    <p style="font-size: 0.98rem; font-weight: 600; color: #162E27; max-width: 600px; margin: 0 auto 1.85rem; text-shadow: 0 1px 10px rgba(255, 255, 255, 0.85);">
       Talk directly to our operations team or share photos of your space on WhatsApp for an instant estimate.
     </p>
     <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-      <a href="<?= SITE_URL ?>/book-now/" class="btn btn-action" style="border-radius: var(--radius-pill); padding: 0.75rem 1.75rem;">
+      <a href="<?= SITE_URL ?>/book-now/" class="btn btn-action" style="border-radius: var(--radius-pill); padding: 0.8rem 1.85rem; box-shadow: 0 8px 22px rgba(34, 160, 107, 0.28);">
         Book Online Now <span class="material-symbols-outlined icon-sm">arrow_forward</span>
       </a>
-      <a href="https://wa.me/917906366271?text=Hi%20A1%20Cleaning,%20I%20want%20a%20quote%20for%20cleaning%20services" target="_blank" rel="noopener" class="btn btn-whatsapp" style="border-radius: var(--radius-pill); padding: 0.75rem 1.75rem;">
-        <span class="material-symbols-outlined icon-sm">chat</span> WhatsApp Estimate
+      <a href="https://wa.me/917906366271?text=Hi%20A1%20Cleaning,%20I%20want%20a%20quote%20for%20cleaning%20services" target="_blank" rel="noopener" class="btn btn-whatsapp" style="border-radius: var(--radius-pill); padding: 0.8rem 1.85rem; background: rgba(255, 255, 255, 0.9); border: 1.5px solid #0B2922; backdrop-filter: blur(6px); color: #0B2922;">
+        <span class="material-symbols-outlined icon-sm" style="color: #22A06B;">chat</span> WhatsApp Estimate
       </a>
     </div>
   </div>
 </section>
 
-<?php require __DIR__ . '/../components/footer.php'; ?>
+<?php
+$footerPrevIsDark = false;
+$footerWaveBg = '#FFFFFF';
+require __DIR__ . '/../components/footer.php';
+?>

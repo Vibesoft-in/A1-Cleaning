@@ -48,6 +48,14 @@ $selectedAddons = Security::cleanInput($_POST['selected_addons'] ?? '');
 $email = Security::cleanInput($_POST['email'] ?? '');
 $messageInput = Security::cleanInput($_POST['message'] ?? '');
 $sourcePage = Security::cleanInput($_POST['source_page'] ?? 'Direct /book-now/');
+$agreeTerms = !empty($_POST['agree_terms']);
+$agreeFutureUpdates = !empty($_POST['agree_future_updates']);
+
+if (!$agreeTerms) {
+    $_SESSION['form_error'] = "Kripya Terms & Conditions aur Privacy Policy padh kar checkbox tick karein.";
+    header("Location: " . SITE_URL . "/book-now/");
+    exit;
+}
 
 // Combine Address with Locality & Pincode
 $addressParts = array_filter([$addressInput, $locality, $pincode ? "PIN: {$pincode}" : null]);
@@ -69,6 +77,8 @@ if ($estimatedAmount) $metaDetails[] = "Estimate: ₹{$estimatedAmount}";
 if ($selectedAddons) $metaDetails[] = "Add-ons: {$selectedAddons}";
 if ($paymentMode) $metaDetails[] = "Payment: " . ($paymentMode === 'upi_online' ? 'Instant UPI' : 'Pay After Inspection');
 if ($email) $metaDetails[] = "Email: {$email}";
+$metaDetails[] = "Policy Accepted: Yes";
+$metaDetails[] = "Future Updates Consent: " . ($agreeFutureUpdates ? 'Yes' : 'No');
 
 $message = $messageInput;
 if (!empty($metaDetails)) {

@@ -57,22 +57,13 @@ require __DIR__ . '/../components/header.php';
   <div class="container rev-canvas-container">
 
     <!-- ===================================================================
-         TOP NAVIGATION BAR (Matching Reference 1:1)
-         ❝ REviews. | Links: About • Services • Testimonials • Support | Home
+         1. TOP HEADER BAR (REviews. Brand + Home Link)
          =================================================================== -->
     <header class="rev-showcase-header">
       <div class="rev-brand-title">
         <span class="rev-quote-badge" aria-hidden="true">❝</span>
         <span class="rev-logo-text">REviews.</span>
       </div>
-
-      <nav class="rev-nav-links" aria-label="Review Categories">
-        <button type="button" class="rev-nav-link active" onclick="filterBentoReviews('all', this)">All (520+)</button>
-        <button type="button" class="rev-nav-link" onclick="filterBentoReviews('home', this)">Home Care</button>
-        <button type="button" class="rev-nav-link" onclick="filterBentoReviews('sofa', this)">Sofa &amp; Fabric</button>
-        <button type="button" class="rev-nav-link" onclick="filterBentoReviews('resort', this)">Resorts &amp; Villas</button>
-        <button type="button" class="rev-nav-link" onclick="filterBentoReviews('tank', this)">Water Tank</button>
-      </nav>
 
       <div class="rev-header-actions">
         <a href="<?= SITE_URL ?>/" class="rev-home-pill" title="Return to A1 Cleaning Home">
@@ -82,79 +73,51 @@ require __DIR__ . '/../components/header.php';
       </div>
     </header>
 
+    <!-- ===================================================================
+         2. VERIFIED VIDEO REVIEWS: 3D ARCHED CYLINDER VIDEO RIBBON
+         =================================================================== -->
+    <?php
+    $videoReviews = [
+      ['file' => 'sofa_shampoo_cleaning_6c6a0420.mp4',              'title' => 'Ankit Chauhan',    'subtitle' => 'Sofa Foam Extraction',         'badge' => 'Living Room'],
+      ['file' => 'bathroom_deep_cleaning_9d6155cb_1080p.mp4',       'title' => 'Vikram Rawat',     'subtitle' => 'Bathroom Descaling',           'badge' => 'Deep Scrub'],
+      ['file' => 'deep_home_cleaning_6ce7a0e5.mp4',                 'title' => 'Dr. Alok Verma',   'subtitle' => 'Full Villa Deep Sanitization', 'badge' => 'Full Villa'],
+      ['file' => 'balcony_and_floor_deep_scrub_9643e5bc_1080p.mp4', 'title' => 'Ritu Joshi',       'subtitle' => 'Balcony & Tile Rotary Scrub',  'badge' => 'Pressure Scrub'],
+      ['file' => 'Person_cleaning_kitchen_82bbe15d.mp4',            'title' => 'Meenakshi Pant',   'subtitle' => 'Kitchen Chimney & Degreasing', 'badge' => 'Kitchen Care'],
+      ['file' => 'carpet_and_rug_deep_wash_ed47a45e.mp4',           'title' => 'Deepak Mehrotra',  'subtitle' => 'Kashmiri Carpet Injection',    'badge' => 'Fabric Care'],
+      ['file' => 'Person_cleaning_water_tank_bc0ad2f8.mp4',         'title' => 'Praveen Bisht',    'subtitle' => 'Water Tank UV Sanitization',   'badge' => 'Pure Water'],
+      ['file' => 'curtain_steam_clean_6bd86d98.mp4',                'title' => 'Sunita Agarwal',   'subtitle' => 'Curtain On-Site Steaming',     'badge' => 'Steam Care'],
+    ];
+
+    $concaveConfig = [
+      'badge'      => 'Verified Video Proof',
+      'headingTag' => 'h1',
+      'heading'    => 'Live Cleaning In Action',
+      'doodleText' => '100% Unedited Proof',
+      'subheading' => 'Swipe or drag in any direction (left & right) to explore verified doorstep cleaning results across Uttarakhand.',
+      'ariaLabel'  => 'Customer Video Reviews 3D Arched Ribbon',
+      'items'      => $videoReviews,
+    ];
+    require __DIR__ . '/../components/concave-video-carousel.php';
+    ?>
+
+    <!-- ===================================================================
+         3. CATEGORY FILTER BAR & VERIFIED EXPERIENCES INTRO (Below Video)
+         =================================================================== -->
+    <nav class="rev-nav-links rev-filter-bar" aria-label="Review Categories">
+      <button type="button" class="rev-nav-link active" onclick="filterBentoReviews('all', this)">All (520+)</button>
+      <button type="button" class="rev-nav-link" onclick="filterBentoReviews('home', this)">Home Care</button>
+      <button type="button" class="rev-nav-link" onclick="filterBentoReviews('sofa', this)">Sofa &amp; Fabric</button>
+      <button type="button" class="rev-nav-link" onclick="filterBentoReviews('resort', this)">Resorts &amp; Villas</button>
+      <button type="button" class="rev-nav-link" onclick="filterBentoReviews('tank', this)">Water Tank</button>
+    </nav>
+
     <!-- Sub-header Headline for SEO & Authority -->
     <div class="rev-hero-intro text-center">
-      <h1 class="rev-hero-title">Verified Customer Experiences</h1>
+      <h2 class="rev-hero-title">Verified Customer Experiences</h2>
       <p class="rev-hero-sub">
         Explore genuine feedback, ratings, and unedited satisfaction reports from families, resorts, and businesses across Kashipur, Jaspur &amp; Ramnagar.
       </p>
     </div>
-
-    <!-- ===================================================================
-         VERIFIED VIDEO REVIEWS: 3D ARCHED CYLINDER VIDEO RIBBON
-         Inspired by Modern Hero Video Ribbon (Continuous 60fps auto-scroll,
-         uniform vertical cards, 3D parabolic arch, rotateY & depth curve, soft fade)
-         =================================================================== -->
-    <section class="rev-video-carousel-section" aria-label="Customer Video Reviews 3D Arched Ribbon">
-      <div class="rev-video-section-header text-center">
-        <div class="rev-video-badge">
-          <span class="rev-video-badge-dot"></span>
-          <span>Verified Video Proof</span>
-        </div>
-        <div class="rev-video-title-wrap">
-          <h2 class="rev-video-heading">Live Cleaning In Action</h2>
-          <!-- Hand-Drawn Doodle Annotation (Matching Reference Aesthetic) -->
-          <div class="rev-doodle-annotation" aria-hidden="true">
-            <span class="rev-doodle-text">100% Unedited Proof</span>
-            <svg class="rev-doodle-arrow" width="34" height="30" viewBox="0 0 34 30" fill="none" stroke="currentColor">
-              <path d="M4 4C12 4 26 8 28 22M28 22L22 19M28 22L31 15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>
-        <p class="rev-video-subheading">Swipe or drag in any direction (left &amp; right) to explore verified doorstep cleaning results across Uttarakhand.</p>
-      </div>
-
-      <div class="rev-cylinder-viewport" id="cylinderViewport">
-        <div class="rev-cylinder-track" id="cylinderTrack">
-          <?php
-          $videoReviews = [
-            ['file' => 'sofa_shampoo_cleaning_6c6a0420.mp4', 'customer' => 'Ankit Chauhan', 'service' => 'Sofa Foam Extraction', 'badge' => 'Living Room'],
-            ['file' => 'bathroom_deep_cleaning_9d6155cb_1080p.mp4', 'customer' => 'Vikram Rawat', 'service' => 'Bathroom Descaling', 'badge' => 'Deep Scrub'],
-            ['file' => 'deep_home_cleaning_6ce7a0e5.mp4', 'customer' => 'Dr. Alok Verma', 'service' => 'Full Villa Deep Sanitization', 'badge' => 'Full Villa'],
-            ['file' => 'balcony_and_floor_deep_scrub_9643e5bc_1080p.mp4', 'customer' => 'Ritu Joshi', 'service' => 'Balcony & Tile Rotary Scrub', 'badge' => 'Pressure Scrub'],
-            ['file' => 'Person_cleaning_kitchen_82bbe15d.mp4', 'customer' => 'Meenakshi Pant', 'service' => 'Kitchen Chimney & Degreasing', 'badge' => 'Kitchen Care'],
-            ['file' => 'carpet_and_rug_deep_wash_ed47a45e.mp4', 'customer' => 'Deepak Mehrotra', 'service' => 'Kashmiri Carpet Injection', 'badge' => 'Fabric Care'],
-            ['file' => 'Person_cleaning_water_tank_bc0ad2f8.mp4', 'customer' => 'Praveen Bisht', 'service' => 'Water Tank UV Sanitization', 'badge' => 'Pure Water'],
-            ['file' => 'curtain_steam_clean_6bd86d98.mp4', 'customer' => 'Sunita Agarwal', 'service' => 'Curtain On-Site Steaming', 'badge' => 'Steam Care']
-          ];
-
-          // Tripled array to ensure seamless infinite looping across all screen sizes
-          $loopVideos = array_merge($videoReviews, $videoReviews, $videoReviews);
-
-          foreach ($loopVideos as $idx => $v):
-            $videoSrc = SITE_URL . '/assets/cleaning%20videos/' . rawurlencode($v['file']);
-          ?>
-            <article class="rev-cylinder-card" data-index="<?= $idx ?>" tabindex="0" role="article" aria-label="Review by <?= htmlspecialchars($v['customer']) ?>">
-              <video 
-                class="rev-cylinder-video" 
-                src="<?= $videoSrc ?>#t=0.5" 
-                preload="auto" 
-                muted 
-                loop 
-                playsinline 
-                webkit-playsinline 
-                autoplay
-              ></video>
-              <span class="rev-cylinder-pill"><?= htmlspecialchars($v['badge']) ?></span>
-              <div class="rev-cylinder-overlay">
-                <div class="rev-cylinder-name"><?= htmlspecialchars($v['customer']) ?></div>
-                <div class="rev-cylinder-serv"><?= htmlspecialchars($v['service']) ?></div>
-              </div>
-            </article>
-          <?php endforeach; ?>
-        </div>
-      </div>
-    </section>
 
     <!-- ===================================================================
          THE BENTO GRID CANVAS (11 Distinct Cards matching User Reference 1:1)
@@ -523,6 +486,11 @@ require __DIR__ . '/../components/header.php';
         <textarea id="revModalFeedback" class="rev-modal-textarea" rows="3" placeholder="Tell us how our team and equipment performed..." required></textarea>
       </div>
 
+      <label class="rev-modal-consent">
+        <input type="checkbox" id="revModalConsent" required>
+        <span>I agree to the <a href="<?= SITE_URL ?>/privacy/" target="_blank" rel="noopener">Privacy Policy</a> &amp; <a href="<?= SITE_URL ?>/terms/" target="_blank" rel="noopener">Terms</a> and allow A1 Cleaning to display my feedback &amp; contact me for quality follow-up if needed. *</span>
+      </label>
+
       <button type="submit" class="btn-rev-modal-submit" id="revSubmitBtn">
         <span>Submit Real Review</span>
         <span class="material-symbols-outlined icon-xs">send</span>
@@ -537,240 +505,6 @@ require __DIR__ . '/../components/header.php';
      Matching Reference Aesthetics: Translucent Glass, Ambient Glows & Neon Accents
      ======================================================================= -->
 <style>
-/* ==========================================================================
-   3D ARCHED CYLINDER VIDEO RIBBON (Inspired by Modern Hero Video Ribbon)
-   Continuous 60fps auto-scroll marquee, uniform 9:16 vertical cards,
-   3D parabolic arch (translateY + translateZ + rotateY), soft edge fade
-   ========================================================================== */
-.rev-video-carousel-section {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  margin-top: 1.5rem;
-  margin-bottom: 3.5rem;
-  overflow: visible;
-}
-.rev-video-section-header {
-  margin-bottom: 1rem;
-  padding: 0 1rem;
-  position: relative;
-}
-.rev-video-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(34, 160, 107, 0.16);
-  border: 1px solid rgba(52, 211, 153, 0.35);
-  color: #34D399;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.35rem 0.95rem;
-  border-radius: 9999px;
-  margin-bottom: 0.6rem;
-}
-.rev-video-badge-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #34D399;
-  box-shadow: 0 0 10px #34D399;
-  animation: revPulseDot 1.8s infinite ease-in-out;
-}
-@keyframes revPulseDot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.5; }
-}
-.rev-video-title-wrap {
-  position: relative;
-  display: inline-block;
-  margin: 0 auto;
-}
-.rev-video-heading {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #FFFFFF;
-  margin: 0 0 0.45rem;
-  letter-spacing: -0.02em;
-}
-/* Hand-Drawn Doodle Annotation (Matching Reference Aesthetic) */
-.rev-doodle-annotation {
-  position: absolute;
-  top: -12px;
-  right: -135px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  color: #34D399;
-  pointer-events: none;
-}
-.rev-doodle-text {
-  font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  line-height: 1;
-  transform: rotate(5deg);
-  white-space: nowrap;
-  text-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
-}
-.rev-doodle-arrow {
-  margin-left: 10px;
-  margin-top: 2px;
-  color: #34D399;
-  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.4));
-}
-@media (max-width: 768px) {
-  .rev-doodle-annotation {
-    display: none;
-  }
-}
-.rev-video-subheading {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.72);
-  max-width: 650px;
-  margin: 0 auto;
-  line-height: 1.55;
-}
-
-/* 3D Concave Cylinder Viewport: IMAX Depth, Interactive Grab / Swipe */
-.rev-cylinder-viewport {
-  width: 100%;
-  height: 440px;
-  position: relative;
-  overflow: hidden;
-  perspective: 1300px;
-  perspective-origin: 50% 50%;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: grab;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.rev-cylinder-viewport.is-dragging {
-  cursor: grabbing;
-}
-.rev-cylinder-viewport.is-dragging .rev-cylinder-card {
-  pointer-events: none;
-}
-
-/* 3D Stage Center */
-.rev-cylinder-track {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  transform-style: preserve-3d;
-}
-
-/* 3D Concave Cards: 100% Uniform Polar Spacing, Zero Overlap */
-.rev-cylinder-card {
-  position: absolute;
-  width: 185px;
-  height: 320px;
-  top: -160px;
-  left: -92.5px;
-  border-radius: 20px;
-  overflow: hidden;
-  background: #0B2922;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.65);
-  cursor: pointer;
-  transform-style: preserve-3d;
-  will-change: transform;
-  backface-visibility: hidden;
-  opacity: 1; /* Solid 100% opacity */
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.rev-cylinder-card:hover {
-  border-color: #34D399;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(52, 211, 153, 0.45);
-  z-index: 50 !important;
-}
-
-/* Pure Video inside Card */
-.rev-cylinder-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  pointer-events: none;
-}
-
-/* Tiny Category Pill at Top Left */
-.rev-cylinder-pill {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: rgba(7, 25, 20, 0.82);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(52, 211, 153, 0.45);
-  color: #34D399;
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 9999px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  z-index: 5;
-  pointer-events: none;
-}
-
-/* Soft Bottom Gradient Overlay: Only on Hover */
-.rev-cylinder-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 16px 12px 12px;
-  background: linear-gradient(to top, rgba(7, 25, 20, 0.95), rgba(7, 25, 20, 0.5) 60%, transparent);
-  z-index: 6;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
-}
-.rev-cylinder-card:hover .rev-cylinder-overlay {
-  opacity: 1;
-  transform: translateY(0);
-}
-.rev-cylinder-name {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  margin-bottom: 2px;
-}
-.rev-cylinder-serv {
-  font-size: 0.7rem;
-  color: #A7F3D0;
-}
-
-/* Mobile Responsive: Proportional Card Sizing */
-@media (max-width: 600px) {
-  .rev-cylinder-viewport {
-    height: 340px;
-  }
-  .rev-cylinder-card {
-    width: 145px;
-    height: 250px;
-    top: -125px;
-    left: -72.5px;
-    border-radius: 16px;
-  }
-  .rev-cylinder-pill {
-    top: 8px;
-    left: 8px;
-    font-size: 0.6rem;
-    padding: 2px 7px;
-  }
-}
-
 /* --------------------------------------------------------------------------
    Canvas & Ambient Lighting
    -------------------------------------------------------------------------- */
@@ -822,16 +556,29 @@ require __DIR__ . '/../components/header.php';
 }
 
 /* --------------------------------------------------------------------------
-   Top Navigation Ribbon
+   Top Navigation Ribbon & Filter Bar
    -------------------------------------------------------------------------- */
+.rev-dark-canvas .rev-video-carousel-section {
+  margin-top: 0.25rem;
+  margin-bottom: 2.25rem;
+}
 .rev-showcase-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.85rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
   gap: 1rem;
+}
+.rev-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 0 auto 1.75rem;
 }
 .rev-brand-title {
   display: flex;
@@ -939,32 +686,34 @@ require __DIR__ . '/../components/header.php';
   gap: 1.35rem;
 }
 
-/* Glassmorphic Card Foundation */
+/* Glassmorphic Card Foundation (High-Transparency Frosted White Glass over Dark Emerald Canvas) */
 .rev-card {
-  background: rgba(18, 48, 38, 0.55);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.44) 100%);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.48);
   border-radius: 20px;
   padding: 1.35rem 1.4rem;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  color: #071E18;
+  box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.65);
   position: relative;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
   overflow: hidden;
   box-sizing: border-box;
 }
 .rev-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(52, 211, 153, 0.45);
-  box-shadow: 0 16px 40px rgba(34, 160, 107, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.56) 100%);
+  border-color: rgba(52, 211, 153, 0.78);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.5), 0 0 24px rgba(52, 211, 153, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.8);
 }
 .rev-card-close {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.45);
   border: none;
-  color: #A3B8B0;
+  color: #1F3F36;
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -977,8 +726,8 @@ require __DIR__ . '/../components/header.php';
   z-index: 3;
 }
 .rev-card-close:hover {
-  background: rgba(220, 38, 38, 0.3);
-  color: #F87171;
+  background: rgba(220, 38, 38, 0.16);
+  color: #DC2626;
 }
 
 /* Common Stars */
@@ -986,7 +735,7 @@ require __DIR__ . '/../components/header.php';
   display: flex;
   align-items: center;
   gap: 3px;
-  color: #34D399;
+  color: #057A4B;
   font-size: 0.95rem;
 }
 .rev-star {
@@ -994,18 +743,18 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-pill-tag {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #D6E8DC;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(11, 41, 34, 0.16);
+  color: #071E18;
   font-size: 0.68rem;
   font-weight: 700;
   padding: 3px 9px;
   border-radius: 20px;
 }
 .rev-pill-accent {
-  background: rgba(34, 160, 107, 0.2);
-  border-color: #34D399;
-  color: #A7F3D0;
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(5, 122, 75, 0.4);
+  color: #065F3C;
 }
 
 /* --------------------------------------------------------------------------
@@ -1026,7 +775,7 @@ require __DIR__ . '/../components/header.php';
 .rev-story-headline {
   font-size: 1.05rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #071E18;
   margin: 0;
   line-height: 1.35;
 }
@@ -1037,7 +786,7 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-story-author {
   font-size: 0.76rem;
-  color: #94A3B8;
+  color: #1F3F36;
   font-style: italic;
   margin-top: 2px;
 }
@@ -1080,7 +829,7 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-tagged-text {
   font-size: 0.82rem;
-  color: #D1D5DB;
+  color: #0E2B23;
   line-height: 1.5;
   margin: 0;
 }
@@ -1101,16 +850,16 @@ require __DIR__ . '/../components/header.php';
   height: 34px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid #34D399;
+  border: 1.5px solid #059669;
 }
 .rev-author-name {
   font-size: 0.78rem;
-  color: #FFFFFF;
+  color: #071E18;
   display: block;
 }
 .rev-author-role {
   font-size: 0.68rem;
-  color: #94A3B8;
+  color: #1F3F36;
   display: block;
 }
 
@@ -1144,31 +893,31 @@ require __DIR__ . '/../components/header.php';
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #071914;
+  border: 2px solid rgba(255, 255, 255, 0.88);
 }
 .duo-1 { left: 0; z-index: 2; }
 .duo-2 { left: 16px; z-index: 1; }
 .rev-capsule-name {
   font-size: 0.86rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #071E18;
 }
 .rev-capsule-time {
   font-size: 0.7rem;
-  color: #94A3B8;
+  color: #1F3F36;
 }
 .rev-score-badge {
   font-size: 0.74rem;
   font-weight: 800;
-  color: #34D399;
-  background: rgba(52, 211, 153, 0.15);
-  border: 1px solid rgba(52, 211, 153, 0.35);
+  color: #065F3C;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(5, 122, 75, 0.4);
   padding: 2px 8px;
   border-radius: 12px;
 }
 .rev-capsule-body {
   font-size: 0.86rem;
-  color: #D1D5DB;
+  color: #0E2B23;
   line-height: 1.5;
   margin: 0;
 }
@@ -1178,7 +927,7 @@ require __DIR__ . '/../components/header.php';
 .rev-toggle-btn {
   background: none;
   border: none;
-  color: #34D399;
+  color: #065F3C;
   font-size: 0.76rem;
   font-weight: 700;
   cursor: pointer;
@@ -1192,8 +941,8 @@ require __DIR__ . '/../components/header.php';
 
 /* Card 5: Hero Featured Review */
 .rev-card-hero {
-  background: rgba(15, 52, 40, 0.7);
-  border-color: rgba(52, 211, 153, 0.28);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.66) 0%, rgba(255, 255, 255, 0.5) 100%);
+  border-color: rgba(255, 255, 255, 0.58);
   padding: 1.75rem 1.65rem;
   display: flex;
   flex-direction: column;
@@ -1214,17 +963,18 @@ require __DIR__ . '/../components/header.php';
   height: 46px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #34D399;
+  border: 2px solid #059669;
 }
 .rev-hero-name {
   font-size: 1rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #071E18;
   margin: 0;
 }
 .rev-hero-subtitle {
   font-size: 0.74rem;
-  color: #A7F3D0;
+  color: #065F3C;
+  font-weight: 700;
 }
 .rev-hero-rating-wrap {
   display: flex;
@@ -1232,15 +982,15 @@ require __DIR__ . '/../components/header.php';
   gap: 0.65rem;
 }
 .rev-dots-more {
-  color: #64748B;
+  color: #334E46;
   letter-spacing: 2px;
   font-weight: 900;
   font-size: 0.9rem;
 }
 .rev-pill-stars {
-  background: rgba(52, 211, 153, 0.2);
-  border: 1px solid rgba(52, 211, 153, 0.4);
-  color: #34D399;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(5, 122, 75, 0.4);
+  color: #065F3C;
   font-size: 0.78rem;
   padding: 3px 10px;
   border-radius: 20px;
@@ -1249,14 +999,14 @@ require __DIR__ . '/../components/header.php';
 .rev-hero-quote {
   font-size: 1.45rem;
   font-weight: 900;
-  color: #FFFFFF;
+  color: #071E18;
   margin: 0;
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
 .rev-hero-description {
   font-size: 0.86rem;
-  color: #CBD5E1;
+  color: #0E2B23;
   line-height: 1.55;
   margin: 0;
 }
@@ -1274,11 +1024,11 @@ require __DIR__ . '/../components/header.php';
 .rev-slider-title {
   font-size: 0.88rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #071E18;
 }
 .rev-slider-badge {
-  background: #34D399;
-  color: #071914;
+  background: #065F3C;
+  color: #FFFFFF;
   font-size: 0.72rem;
   font-weight: 900;
   padding: 2px 8px;
@@ -1294,7 +1044,7 @@ require __DIR__ . '/../components/header.php';
   appearance: none;
   width: 100%;
   height: 6px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(11, 41, 34, 0.22);
   border-radius: 4px;
   outline: none;
   cursor: pointer;
@@ -1305,8 +1055,8 @@ require __DIR__ . '/../components/header.php';
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #34D399;
-  box-shadow: 0 0 10px #34D399;
+  background: #059669;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.45);
   cursor: pointer;
   transition: transform 0.15s ease;
 }
@@ -1315,7 +1065,7 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-slider-reaction {
   font-size: 0.78rem;
-  color: #D1D5DB;
+  color: #0E2B23;
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -1339,12 +1089,12 @@ require __DIR__ . '/../components/header.php';
 .rev-big-quote {
   font-size: 2rem;
   line-height: 1;
-  color: #34D399;
+  color: #057A4B;
   margin-bottom: 0.25rem;
 }
 .rev-mini-quote-text {
   font-size: 0.74rem;
-  color: #D1D5DB;
+  color: #0E2B23;
   line-height: 1.45;
   margin: 0 0 0.85rem;
 }
@@ -1355,7 +1105,7 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-mini-score {
   font-size: 0.7rem;
-  color: #94A3B8;
+  color: #1F3F36;
   margin-left: 2px;
 }
 .rev-mini-author-box {
@@ -1378,19 +1128,19 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-split-date {
   font-size: 0.68rem;
-  color: #94A3B8;
+  color: #1F3F36;
   font-weight: 600;
 }
 .rev-split-title {
   font-size: 0.98rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #071E18;
   margin: 0.2rem 0;
   line-height: 1.25;
 }
 .rev-split-sub {
   font-size: 0.72rem;
-  color: #CBD5E1;
+  color: #0E2B23;
   margin: 0 0 0.5rem;
   line-height: 1.35;
 }
@@ -1419,9 +1169,9 @@ require __DIR__ . '/../components/header.php';
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(52, 211, 153, 0.2);
-  border: 1px solid rgba(52, 211, 153, 0.4);
-  color: #34D399;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(5, 122, 75, 0.4);
+  color: #065F3C;
   font-size: 0.65rem;
   font-weight: 800;
   padding: 1px 6px;
@@ -1430,19 +1180,20 @@ require __DIR__ . '/../components/header.php';
 .rev-stat-title {
   font-size: 0.86rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #071E18;
   margin-bottom: 2px;
 }
 .rev-stat-score {
   font-size: 0.74rem;
-  color: #94A3B8;
+  color: #1F3F36;
 }
 
 /* Card 7: Search Widget Pill */
 .rev-search-widget {
-  background: rgba(18, 48, 38, 0.55);
-  backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.64) 0%, rgba(255, 255, 255, 0.48) 100%);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.52);
   border-radius: 9999px;
   padding: 4px;
 }
@@ -1455,19 +1206,19 @@ require __DIR__ . '/../components/header.php';
 .rev-search-input {
   background: none;
   border: none;
-  color: #FFFFFF;
+  color: #071E18;
   font-size: 0.8rem;
   outline: none;
   width: 100%;
   font-family: inherit;
 }
 .rev-search-input::placeholder {
-  color: #94A3B8;
+  color: #1F3F36;
 }
 .rev-search-clear {
   background: none;
   border: none;
-  color: #64748B;
+  color: #1F3F36;
   cursor: pointer;
   font-size: 11px;
   padding: 2px;
@@ -1480,15 +1231,15 @@ require __DIR__ . '/../components/header.php';
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #34D399;
+  background: #059669;
   border: none;
-  color: #071914;
+  color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
   transition: transform 0.2s ease;
 }
 .rev-search-btn:hover {
@@ -1509,18 +1260,18 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-feed-handle {
   font-size: 0.72rem;
-  color: #94A3B8;
+  color: #1F3F36;
   margin-bottom: 0.25rem;
 }
 .rev-feed-title {
   font-size: 0.95rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #071E18;
   margin: 0 0 0.4rem;
 }
 .rev-feed-body {
   font-size: 0.74rem;
-  color: #CBD5E1;
+  color: #0E2B23;
   line-height: 1.45;
   margin: 0 0 0.75rem;
 }
@@ -1531,7 +1282,7 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-score-text {
   font-size: 0.68rem;
-  color: #94A3B8;
+  color: #1F3F36;
 }
 
 /* Card 9: Circular Avatar Card with Likes */
@@ -1547,7 +1298,7 @@ require __DIR__ . '/../components/header.php';
   height: 62px;
   border-radius: 50%;
   padding: 3px;
-  background: linear-gradient(135deg, #34D399, #14B8A6);
+  background: linear-gradient(135deg, #22A06B, #14B8A6);
   margin-bottom: 0.5rem;
 }
 .rev-likes-avatar {
@@ -1559,12 +1310,12 @@ require __DIR__ . '/../components/header.php';
 .rev-likes-title {
   font-size: 0.95rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #071E18;
   margin: 0 0 0.25rem;
 }
 .rev-likes-quote {
   font-size: 0.72rem;
-  color: #CBD5E1;
+  color: #0E2B23;
   line-height: 1.4;
   margin: 0 0 0.85rem;
 }
@@ -1578,9 +1329,9 @@ require __DIR__ . '/../components/header.php';
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(11, 41, 34, 0.16);
+  color: #071E18;
   font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 10px;
@@ -1590,12 +1341,12 @@ require __DIR__ . '/../components/header.php';
   font-family: inherit;
 }
 .rev-counter-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: #F87171;
+  background: rgba(239, 68, 68, 0.14);
+  border-color: #EF4444;
 }
 .rev-counter-btn.is-liked {
   border-color: #EF4444;
-  background: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.2);
 }
 .rev-counter-btn.is-liked .rev-heart-icon {
   transform: scale(1.3);
@@ -1606,7 +1357,7 @@ require __DIR__ . '/../components/header.php';
 }
 .rev-views-pill {
   font-size: 0.75rem;
-  color: #94A3B8;
+  color: #1F3F36;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -1814,6 +1565,29 @@ require __DIR__ . '/../components/header.php';
 .star-pick.active {
   color: #FBBF24;
 }
+.rev-modal-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.42;
+  color: #D3E8DD;
+  margin: 0.25rem 0 0.65rem;
+  cursor: pointer;
+}
+.rev-modal-consent input[type="checkbox"] {
+  accent-color: #34D399;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.rev-modal-consent a {
+  color: #34D399;
+  font-weight: 700;
+  text-decoration: underline;
+}
 .btn-rev-modal-submit {
   width: 100%;
   display: flex;
@@ -1858,9 +1632,11 @@ require __DIR__ . '/../components/header.php';
 
 @media (max-width: 768px) {
   .rev-showcase-header {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 0.65rem 0.75rem;
     gap: 0.75rem;
+  }
+  .rev-filter-bar {
+    justify-content: flex-start;
   }
   .rev-nav-links {
     width: 100%;
@@ -2086,168 +1862,10 @@ function cycleReviews(delta) {
   currentDotIndex = (currentDotIndex + delta + dots.length) % dots.length;
   dots[currentDotIndex].classList.add('active');
 }
-
-// ============================================================================
-// 9. 3D ARCHED VIDEO RIBBON - INTERACTIVE SWIPEABLE (Matching Reference Image 2)
-// ZERO continuous auto-scroll; fully draggable & swipable in BOTH directions
-// Uniform cards (185px x 320px), uniform gap (16px), zero overlap, parabolic arch
-// ============================================================================
-(function initCylinderMarquee() {
-  const track = document.getElementById('cylinderTrack');
-  const viewport = document.getElementById('cylinderViewport');
-  if (!track || !viewport) return;
-
-  const cards = Array.from(track.querySelectorAll('.rev-cylinder-card'));
-  if (!cards.length) return;
-
-  // SWIPE & DRAG PHYSICS (ZERO AUTO-SCROLL)
-  let scrollX = 0;
-  let isDragging = false;
-  let startX = 0;
-  let lastX = 0;
-  let velocity = 0;
-  let hoveredCard = null;
-
-  cards.forEach(card => {
-    card.addEventListener('mouseenter', () => { if (!isDragging) hoveredCard = card; });
-    card.addEventListener('mouseleave', () => { if (hoveredCard === card) hoveredCard = null; });
-  });
-
-  // Ensure all videos play on load
-  cards.forEach(card => {
-    const video = card.querySelector('video');
-    if (video) {
-      video.muted = true;
-      video.playsInline = true;
-      video.play().catch(() => {});
-    }
-  });
-
-  // Mouse Drag Events (Desktop)
-  viewport.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.clientX;
-    lastX = e.clientX;
-    velocity = 0;
-    viewport.classList.add('is-dragging');
-  });
-
-  window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const delta = e.clientX - lastX;
-    lastX = e.clientX;
-    velocity = delta;
-    scrollX -= delta; // Direct 1:1 manual drag in any direction
-  });
-
-  window.addEventListener('mouseup', () => {
-    if (!isDragging) return;
-    isDragging = false;
-    viewport.classList.remove('is-dragging');
-  });
-
-  // Touch Swipe Events (Mobile)
-  viewport.addEventListener('touchstart', (e) => {
-    if (e.touches.length !== 1) return;
-    isDragging = true;
-    startX = e.touches[0].clientX;
-    lastX = e.touches[0].clientX;
-    velocity = 0;
-  }, { passive: true });
-
-  window.addEventListener('touchmove', (e) => {
-    if (!isDragging || e.touches.length !== 1) return;
-    const currentX = e.touches[0].clientX;
-    const delta = currentX - lastX;
-    lastX = currentX;
-    velocity = delta;
-    scrollX -= delta; // Direct 1:1 manual swipe
-  }, { passive: true });
-
-  window.addEventListener('touchend', () => {
-    if (!isDragging) return;
-    isDragging = false;
-  });
-
-  // Optional Mouse Wheel horizontal pan
-  viewport.addEventListener('wheel', (e) => {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-      e.preventDefault();
-      scrollX += e.deltaX * 0.7;
-    }
-  }, { passive: false });
-
-  function renderLoop() {
-    const isMobile = window.innerWidth <= 600;
-    const cardWidth = isMobile ? 145 : 185;
-    const gap = isMobile ? 12 : 18;
-    const cardSpacing = cardWidth + gap;
-    const totalCards = cards.length;
-    const totalTrackLen = totalCards * cardSpacing;
-
-    // True 3D Concave Cylinder Radius & Inward Depth
-    const R = isMobile ? 650 : 980;
-    const centerDepth = isMobile ? 80 : 130;
-
-    // Inertia & momentum decay when user releases drag
-    if (!isDragging) {
-      if (Math.abs(velocity) > 0.15) {
-        scrollX -= velocity;
-        velocity *= 0.92; // smooth friction decay
-      } else {
-        velocity = 0;
-      }
-    }
-
-    // Infinite wrap for scrollX
-    scrollX = ((scrollX % totalTrackLen) + totalTrackLen) % totalTrackLen;
-
-    cards.forEach((card, idx) => {
-      // Base linear position along the cylinder perimeter
-      let basePos = idx * cardSpacing - scrollX;
-
-      // Wrap basePos to [-totalTrackLen / 2, totalTrackLen / 2]
-      while (basePos < -totalTrackLen / 2) basePos += totalTrackLen;
-      while (basePos > totalTrackLen / 2) basePos -= totalTrackLen;
-
-      // Polar angle theta along cylinder in radians
-      const theta = basePos / R;
-      const deg = theta * (180 / Math.PI);
-
-      // Culling: if card rotated too far away (|deg| > 72 deg)
-      if (Math.abs(deg) > 72) {
-        card.style.display = 'none';
-        const video = card.querySelector('video');
-        if (video && !video.paused) video.pause();
-        return;
-      }
-
-      card.style.display = 'block';
-
-      // 3D True Concave Coordinates:
-      // Center card (theta=0) pushed deep into screen (-centerDepth)
-      // Sides curve forward towards viewer (+Z) wrapping around the user (BOWL / THEATER)
-      const x = R * Math.sin(theta);
-      const z = (R * (1 - Math.cos(theta))) - centerDepth;
-      const rotY = -deg; // Faces inwards towards the deep center
-
-      const isHov = (card === hoveredCard && !isDragging);
-      const scale = isHov ? 1.06 : 1.0;
-
-      card.style.transform = `translate3d(${x.toFixed(1)}px, 0px, ${z.toFixed(1)}px) rotateY(${rotY.toFixed(1)}deg) scale(${scale})`;
-      card.style.zIndex = isHov ? 100 : Math.round(50 + Math.abs(deg));
-
-      const video = card.querySelector('video');
-      if (video && video.paused) {
-        video.play().catch(() => {});
-      }
-    });
-
-    requestAnimationFrame(renderLoop);
-  }
-
-  requestAnimationFrame(renderLoop);
-})();
 </script>
 
-<?php require __DIR__ . '/../components/footer.php'; ?>
+<?php
+$footerPrevIsDark = true;
+$footerWaveBg = '#071914';
+require __DIR__ . '/../components/footer.php';
+?>
